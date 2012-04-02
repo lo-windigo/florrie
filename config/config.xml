@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+
+<config>
+	<florrie>
+		<comic>
+			<name>Comic Name</name>
+		</comic>
+		<!--<theme></theme>-->
+		<database>
+			<!--<server>localhost</server>-->
+			<!--<port>3304</port>-->
+			<schema>testcomic</schema>
+			<!--<prefix></prefix>-->
+			<driver>mysql</driver>
+			<user>florrie</user>
+			<pass></pass>
+		</database>
+		<err>php</err>
+		<file>
+			<method>ftp</method>
+			<server></server>
+			<user></user>
+			<pass></pass>
+		</file>
+		<version>0.1</version>
+	</florrie>
+	<news>
+	</news>
+</config>
