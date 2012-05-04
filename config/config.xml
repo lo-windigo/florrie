@@ -6,7 +6,7 @@
 			<name>Comic Name</name>
 		</comic>
 		<!--<theme></theme>-->
-		<database>
+		<data>
 			<!--<server>localhost</server>-->
 			<!--<port>3304</port>-->
 			<schema>testcomic</schema>
@@ -14,7 +14,7 @@
 			<driver>mysql</driver>
 			<user>florrie</user>
 			<pass></pass>
-		</database>
+		</data>
 		<err>php</err>
 		<file>
 			<method>ftp</method>
