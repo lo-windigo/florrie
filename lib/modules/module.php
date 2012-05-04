@@ -20,6 +20,7 @@
 */
 
 
+
 abstract class FlorrieModule
 {
 	// Class Constants
