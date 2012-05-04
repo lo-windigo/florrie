@@ -25,24 +25,32 @@
 // FTP-based Filesystem Interaction Class
 class FilesystemFTP extends Filesystem
 {
+	// Configuration indices
+	public const CFG_SERVER	= 'server';
+	public const CFG_USER	= 'user';
+	public const CFG_PASS	= 'pass';
+
 	// FTP server connection
 	private $ftp;
-	
 
 	
 	// Constructor
 	// Purpose: Connect to the FTP server, and save the connection
 	public function __construct($config)
 	{
-		// Get the connection details from the configuration array
-		die('Unfinished: FTP configuration details');
+		// Verify that we have valid config values
+		if(empty($config[self::CFG_SERVER]) || empty($config[self::CFG_USER])
+			|| empty($config[self::CFG_USER]))
+		{
+			throw new exception('Missing configuration values');
+		} 
 
 		// Attempt to connect to the FTP server
-		($ftp = ftp_connect(FTP_SERVER)) or
+		($ftp = ftp_connect(self::CFG_SERVER)) or
 			throw new exception('Cannot connect to FTP server: bad response');
 
 		// Login using the appropriate credentials
-		(ftp_login($ftp, FTP_USER, FTP_PASS)) or
+		(ftp_login($ftp, self::CFG_USER, self::CFG_PASS)) or
 			throw new exception('Cannot connect to FTP server: bad login');
 			
 		// Save the FTP connection for later
@@ -63,7 +71,7 @@ class FilesystemFTP extends Filesystem
 	// DeleteFile() - Delete a file from the filesystem using FTP
 	public function DeleteFile($folder, $filename)
 	{
-		$this->Connected() or return false;
+		$this->Connected();
 
 		(ftp_delete($ftp, $folder.'/'.$filename)) or
 			throw new exception('Unable to delete file');
@@ -84,16 +92,23 @@ class FilesystemFTP extends Filesystem
 		$this->Connected();
 
 		// Check to make sure the file resource is a resource (is open)
-		is_resource($file) or
-			throw new exception('Papidackus... this should be finished.');
+		is_string($file) or
+			throw new exception('Cannot access uploaded file');
 
 		// Try to upload the file
-		die('FTP Save needs to be modified to accept a string!!');
-		$result = ftp_fput($ftp, $folder.'/'.$filename, $file, FTP_BINARY);
+		// NOTE: Needs to be modified to use strings instead of file resources!
+		if(ftp_fput($ftp, $folder.'/'.$filename, $file, FTP_BINARY))
 
-		ftp_close($ftp);					// Close connection
+		{
+			// Close connection
+			ftp_close($ftp);
 
-		return $result;						// Here's hoping!
+			return true;
+		}
+		else
+		{
+			throw new exception('Cannot save uploaded file');
+		}
 	}
 }
 ?>

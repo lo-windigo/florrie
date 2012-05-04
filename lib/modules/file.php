@@ -23,8 +23,8 @@
 
 abstract class Filesystem
 {
-	abstract function DeleteFile();
-	abstract function SaveFile();
+	abstract public function DeleteFile();
+	abstract public function SaveFile();
 
 
 
@@ -34,7 +34,7 @@ abstract class Filesystem
 	//	index	 - Index of the POST variable that contains the file upload
 	//	folder	 - Existing folder where the file should be moved
 	//	filename - New name of the file
-	function GetUploadedFile($index, $folder, $filename)
+	protected function GetUploadedFile($index, $folder, $filename)
 	{
 		// Check to make sure the form's been filled out
 		if(empty($_FILES[$index]) || empty($_FILES[$index]['error']) ||
