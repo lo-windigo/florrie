@@ -19,10 +19,19 @@
 	along with Florrie.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-abstract class FlorrieData
+class FlorrieData
 {
-	abstract public GetEpisode();
-	abstract public GetStrip();
+	// Class Constants
+	// 	- CONFIG: node that contains the module config
+	const CONFIG = 'data';
+
+
+	// Class Constructor
+	// Purpose: Do some stuff to make data things. More later!
+	public function __construct($config)
+	{
+
+	}	
 }
 
 ?>
