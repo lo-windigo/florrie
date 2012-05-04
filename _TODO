@@ -6,7 +6,8 @@ To Do list:
 - Finish _README
 - Add actual check for previous installation
 - Alter all SQL statements to be prepared
-- Push to Gitorious
+- Alter SQL-based modules to use PDO
+X Push to Gitorious
 
 Wish List:
 ------
