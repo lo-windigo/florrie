@@ -1,6 +1,6 @@
 <?php
 /*
-	Florrie Abstract Database Connection Layer
+	Florrie Abstract SQL Layer
 	By Jacob Hume
 
 	This file is part of Florrie.
@@ -19,35 +19,21 @@
 	along with Florrie.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-abstract class FlorrieDb
+abstract static class FlorrieDb
 {
-	protected $conn;
-
-
 	//
 	// Abstract Methods
 	//
-	//	These functions can vary depending on which database you are using, so
-	//		they should be implemented by the extending class.
+	//	Mostly CRUD (create, read, update, delete), but they must be
+	//		implemented by each object
 	//
 	//___________________________________________________________________________
 
-	abstract public function AddEpisode();
-	abstract public function AddNews();
-	abstract public function AddStrip();
-	abstract public function AddUser();
-	abstract public function DeleteEpisode();
-	abstract public function DeleteNews();
-	abstract public function DeleteStrip();
-	abstract public function DeleteUser();
-	abstract public function GetEpisode();
-	abstract public function GetNews();
-	abstract public function GetStrip();
-	abstract public function GetUser();
-	abstract public function UpdateEpisode();
-	abstract public function UpdateNews();
-	abstract public function UpdateStrip();
-	abstract public function UpdateUser();
+
+	abstract public function Create();
+	abstract public function Delete();
+	abstract public function Get();
+	abstract public function Save();
 
 
 

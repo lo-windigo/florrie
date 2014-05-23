@@ -9,11 +9,11 @@
 		<data>
 			<!--<server>localhost</server>-->
 			<!--<port>3304</port>-->
-			<schema>testcomic</schema>
+			<!--<schema>testcomic</schema>-->
 			<!--<prefix></prefix>-->
 			<driver>mysql</driver>
 			<user>florrie</user>
-			<pass></pass>
+			<pass>1SuperSecret</pass>
 		</data>
 		<err>php</err>
 		<file>
@@ -22,7 +22,6 @@
 			<user></user>
 			<pass></pass>
 		</file>
-		<version>0.1</version>
 	</florrie>
 	<news>
 	</news>

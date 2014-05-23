@@ -1,6 +1,6 @@
 <?php
 /*
-	Florrie Data Retrieval Module
+	Abstract Data
 	By Jacob Hume
 
 	This file is part of Florrie.
@@ -19,19 +19,20 @@
 	along with Florrie.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-class FlorrieData
+abstract static class FlorrieData
 {
-	// Class Constants
-	// 	- CONFIG: node that contains the module config
-	const CONFIG = 'data';
+	//
+	// Abstract Methods
+	//
+	//	Mostly CRUD (create, read, update, delete), but they must be
+	//		implemented by each object
+	//
+	//___________________________________________________________________________
 
 
-	// Class Constructor
-	// Purpose: Do some stuff to make data things. More later!
-	public function __construct($config)
-	{
-
-	}	
+	abstract static public function Create();
+	abstract static public function Delete();
+	abstract static public function Get();
+	abstract static public function Save();
 }
-
 ?>
