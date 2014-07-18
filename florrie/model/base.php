@@ -1,6 +1,6 @@
 <?php
 /*
-	Abstract Data
+	Florrie Core Classes
 	By Jacob Hume
 
 	This file is part of Florrie.
@@ -19,20 +19,83 @@
 	along with Florrie.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-abstract static class FlorrieData
-{
-	//
-	// Abstract Methods
-	//
-	//	Mostly CRUD (create, read, update, delete), but they must be
-	//		implemented by each object
-	//
-	//___________________________________________________________________________
 
 
-	abstract static public function Create();
-	abstract static public function Delete();
-	abstract static public function Get();
-	abstract static public function Save();
+// FlorrieData: A base class for building florrie objects
+abstract class FlorrieObject {
+
+	public $id;
+
+
+	public function __construct($id) {
+
+		// Get an existing object if an ID was passed in
+		if($id !== false) {
+
+			// TODO: Match up the "get data" part
+			$data = GetDataOrSomething();
+
+			// Go through each value, and assign it to a data member
+			//  if that data member exists
+			array_walk($data, function($val, $var, $object) {
+
+				if(property_exists($object, $var)) {
+					$object->$var = $val;
+				}
+			}, $this);
+		}	
+	}
+
+
+
+	public function Save() {
+	}
+}
+
+
+
+// An orderable object
+abstract class FlorrieOrderable extends FlorrieObject {
+
+	public $index;
+
+
+	public function MoveIndex($index = false) {
+
+		// TODO: All objects after this one should be re-indexed
+
+		// TODO: Increment all of the indexes >= the new one back
+		//  by one to make room for this object
+
+		// Save this object, with this order
+		$this->index = $index;
+		$this->Save();
+	}
+}
+
+
+
+// Strip: the basic strip object
+class FlorrieStrip implements FlorrieObject {
+
+	public $date, $file, $episode, $alt, $title;
+
+
+	public function __construct($id = false) {
+		parent::__construct($id);
+	}
+}
+
+
+
+// Episode: A collection of strips. Optional.
+class FlorrieEpisode implementes FlorrieObject {
+
+	public $title, $desc;
+
+
+	public function __construct($id = false) {
+		parent::__construct($id);
+	}
 }
 ?>

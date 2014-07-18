@@ -20,65 +20,130 @@
 */
 
 
-class Florrie
-{
-	// Class Constants:
-	//	CONFIG	- Configuration File
-	public const CONFIG = '../../config/config.xml';
+if(!class_exists('Florrie')) {
+class Florrie {
 
-	protected $config;
+	// Class Constants:
+	//	BASE    - Installed directory
+	//	CONFIG	- Configuration File
+	const CONFIG     = '/config/config.xml';
+	const CONTROLLER = '/florrie/controller/';
+
+	public $config, $urls;
 
 	// Constructor
 	// Purpose:	Set up all of the basic stuff required to run the comic
-	public function __construct()
-	{
-		// If Florrie hasn't been installed yet, we should probably address that
-		if(!$this->Installed())
-		{
-			// Include the installation class
-			require_once('install.php');
+	public function __construct() {
 
-			// Create a new object that will show an installation wizard
-			$page = new FlorrieInstall();
+		// If Florrie hasn't been installed yet, we should probably address that
+		if(!$this->installed()) {
+
+			// TODO: Florrie install procedure
 		}
 
 
+		//----------------------------------------
+		// Handle requests
+		//----------------------------------------
+
+		// Sanitize type & actions
+		$type   = filter_input(INPUT_GET, 't', FILTER_SANITIZE_URL);
+		$action = filter_input(INPUT_GET, 'a', FILTER_SANITIZE_URL);
+
+		// Types and actions should be alphabetic characters
+		if(($type !== null && !ctype_alpha($type)) ||
+			($action !== null && !ctype_alpha($action))) {
+
+			// Funny business
+			throw new exception('Invalid controller type');
+		}
+
+
+		try {
+			// Get controller object
+			$controller = $this->getController($type);
+
+			// If there is no action, show the main index
+			if($action === null) {
+
+				$controller->Index();
+			}
+			// Otherwise, check and see if this controller supports
+			//  this action
+			else if(method_exists($controller, $action)) {
+
+				call_user_func(array($controller, $action));
+			}
+		}
+		catch (NotFoundException $e) {
+			// TODO: Handle a 404
+		}
 	}
 
 
 
-	// GetConfig
-	// Purpose:	Get the configuration file, if present, and return the
-	//	configuration array
-	// Return:	array
-	protected function GetConfig()
-	{
-		// Return the cached config array if present
-		if(!empty($this->config) && is_array($this->config))
-		{
-			return $this->config;
+	// ReadConfig
+	// Purpose:	Get the configuration file, if present, and store for later
+	protected function readConfig() {
+
+		// Skip this step if data is already present
+		if(!empty($this->config) && is_array($this->config)) {
+
+			return;
 		}
+
+		// Check to see if the configuration file exists
+		$configFile = realpath($_SERVER['DOCUMENT_ROOT'].self::CONFIG);
+
+		if(!file_exists($configFile)) {
+
+			throw new exception('Configuration file not present!');
+		}
+
 
 		// If this is the first time getting the config, try to parse the
 		//	configuration file. The second argument returns a multidimensional
 		//	array based on sections
+		//$config = parse_ini_file($configFile, true);
 
-		// Old INI-file code
-		//	$config = parse_ini_file(self::CONFIG, true);
+		// If we failed to get the configuration, throw an exception
+		if(empty($config)) {
 
-		$config = new DOMDocument('UTF-8');
-		$config->load(self::CONFIG);
-
-		// If the configuration file was parsed successfully, and returned a
-		//	properly formed array, return those values after caching
-		if(!empty($config) && is_array($config))
-		{
-			$this->config = $config;
-			return $config;
+			throw new exception('Unable to parse "'.basename(self::CONFIG).'".');
 		}
 
-		// If unable to grab any configuration values, throw an exception
-		throw new exception('Unable to parse "'.basename(self::CONFIG).'".');
+		$this->config = $config;
+	}
+
+
+
+	// GetController
+	// Purpose: Return the appropriate controller object
+	public function getController($type) {
+
+		// Get the controller path
+		$cPath = $_SERVER['DOCUMENT_ROOT'].self::CONTROLLER;
+
+		// Check the standard Florrie controllers
+		if(file_exists($cPath.$type.'.php')) {
+
+			return include $cPath.$type.'.php';
+		}
+
+		// Plugins! TODO
+//		if(file_exists(self::CONTROLLER.$type.'.php')) {
+//
+//			return include self::CONTROLLER.$type.'.php';
+//		}
+
+		// Default to the main controller
+		if($type === null) {
+
+			// Set up a main controller, and serve up the index
+			return include $cPath.'main.php';
+		}
+
+		throw new NotFoundException();
 	}
 
 
@@ -87,7 +152,7 @@ class Florrie
 	// Purpose:	Get the configuration file, if present, and return the
 	//	configuration array
 	// Return:	void, but an exception may be thrown
-	public function GetPlugins()
+	public function getPlugins()
 	{
 		// Work Ongoing!
 		//	Love,
@@ -98,24 +163,55 @@ class Florrie
 
 	// Installed
 	// Purpose:	Check to see if Florrie's installed or not
-	public function Installed()
+	public function installed()
 	{
+		$installed = false;
+
 		try
 		{
 			// Attempt to get required components, like configuration files
-			$this->GetConfig();
-			$this->GetPlugins();
+			$this->readConfig();
+			$this->getPlugins();
 
 			// If all of these checks occur without issue, then it must be installed!
-			return true;
+			$installed = true;
 		}
 		catch (exception $e)
 		{
 			// Log stuff
-
-			// Florrie install is missing or incomplete
-			return false;
 		}
+
+		return $installed;
 	}
+
+
+
+	// RouteRequest
+	// Purpose: Take a HTTP request, and route it to the correct controller
+	public function routeRequest() {
+
+
+		throw new NotFoundException();
+	}
+}}
+
+
+
+//----------------------------------------
+// Custom Exception Types
+//----------------------------------------
+
+// An exception thrown in a HTTP404 case.
+if(!class_exists('NotFoundException')) {
+	class NotFoundException extends exception {}
 }
+
+
+
+
+//----------------------------------------
+// Return an instance of the application
+//----------------------------------------
+
+return new Florrie();
 ?>
