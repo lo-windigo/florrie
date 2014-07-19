@@ -19,20 +19,27 @@
 	along with Florrie.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/controller.php';
 
-if(!class_exists('Main')) {
-class Main {
+class Main extends Controller {
+
+	public function __construct($config) {
+
+		parent::__construct($config['data']);
+
+		$this->templateDir = $_SERVER['DOCUMENT_ROOT'].'/templates/';
+	}
+
 
 	// Index page
 	public function index() {
-		return;
+		
+		$this->render('index');
 	}
 
 
 	public static function notFound() {
 		return;
 	}
-}}
-
-return new Main();
+}
 ?>

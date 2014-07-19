@@ -22,11 +22,10 @@ CREATE TABLE episodes
 # Comic strip table creation statement
 CREATE TABLE strips
 (
-	img VARCHAR(9),
-	episode INT NOT NULL,
-	back INT,
-	forth INT,
 	id INT NOT NULL AUTO_INCREMENT,
+	title VARCHAR(500),
+	img VARCHAR(200) NOT NULL,
+	episode INT,
 	item_order INT NOT NULL,
 	posted DATETIME NOT NULL,
 	PRIMARY KEY(id),

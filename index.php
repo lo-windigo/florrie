@@ -1,5 +1,6 @@
 <?php
 
-$florrie = include 'florrie/application.php';
+require 'florrie/application.php';
+$florrie = new Florrie();
 
 ?>

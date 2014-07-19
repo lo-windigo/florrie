@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+
+<head>
+	<title>{% block title %}{{ comicName }}{% endblock %}</title>
+	<meta charset="{{ _charset }}">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0">
+	<link rel="stylesheet" type="text/css" href="/css/layout.css">
+</head>
+
+<body>
+	<a class="a11y-link" href="#content">Skip to content</a>
+	<header class="header">
+		<div class="site-title">
+			<a href="/">{{ comicName }}</a>
+		</div>
+		<nav>
+			<ul class="nav">
+				<li class="nav-item"><a href="#">About</a></li>
+				<li class="nav-item"><a href="#">Contact</a></li>
+			</ul>
+		</nav>
+	</header>
+	<section class="content">{% block content %}{% endblock %}</section>
+	<footer>
+		© {{ "now"|date('Y') }} {{ comicName }}
+	</footer>
+</body>
+
+</html>

@@ -1,6 +1,6 @@
 <?php
 /*
-	Main "Home" Controller
+	Comic Strip Controller
 	By Jacob Hume
 
 	This file is part of Florrie.
@@ -21,18 +21,32 @@
 
 
 
-class Strip {
+class Strip extends Controller {
+
+	public function __construct() {
+
+		parent::__construct();
+
+		$this->templateDir = $_SERVER['DOCUMENT_ROOT'].'/templates/';
+	}
+
+
+	// Show the first strip
+	public function first() {
+
+	}
+
 
 	// Index page
-	public function Index() {
+	public function index() {
 
 		// Get latest strip and display it
 	}
 
 
-	public function View() {
+	// Show a strip
+	public function view() {
 
-		// Show a strip
 	}
 }
 ?>
