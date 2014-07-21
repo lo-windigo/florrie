@@ -1,6 +1,6 @@
 <?php
 /*
-	Main Controller
+	Controller - Florrie Base Module
 	By Jacob Hume
 
 	This file is part of Florrie.
@@ -19,29 +19,14 @@
 	along with Florrie.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/controller.php';
 
-class Main extends Controller {
+// Database-based exception
+class DBException extends exception {}
 
-	public function __construct($config) {
+// HTTP404 - file not found
+class NotFoundException extends exception {}
 
-		parent::__construct($config['data']);
+// An unrecoverable error
+class ServerErrorException extends exception {}
 
-		// Save this controller's configuration values
-		if(!empty($config['comic'])) {
-
-			$this->config = $config['comic'];
-		}
-
-		// Set the template directory for Twig
-		$this->templateDir = $_SERVER['DOCUMENT_ROOT'].'/templates/';
-	}
-
-
-	// Index page
-	public function index() {
-		
-		$this->render('index');
-	}
-}
 ?>

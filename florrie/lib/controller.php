@@ -26,15 +26,10 @@ abstract class Controller {
 	const MODEL_PATH = '/florrie/model/';
 
 
-	public $db, $templateDir;
+	public $db, $config, $templateDir;
 
 
-	public function __construct($config) {
-
-		if(empty($config['dsn']) || empty($config['user']) || empty($config['pass'])) {
-
-			throw new exception('Database configuration values not present');
-		}
+	public function __construct($dbConfig) {
 
 		// Include & initialize the Twig templating library
 		require_once 'twig/lib/Twig/Autoloader.php';
@@ -45,7 +40,16 @@ abstract class Controller {
 			PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,
 			PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION);
 
-		$db = new PDO($config['dsn'], $config['user'], $config['pass'], $options);
+		if(empty($dbConfig['dsn']) || empty($dbConfig['user']) ||
+			empty($dbConfig['pass'])) {
+
+			//throw new exception('Database dbConfiguration values not present');
+		}
+		else {
+
+			$db = new PDO($dbConfig['dsn'], $dbConfig['user'],
+				$dbConfig['pass'], $options);
+		}
 	}
 
 

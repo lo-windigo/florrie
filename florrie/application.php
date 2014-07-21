@@ -234,20 +234,4 @@ class Florrie {
 		$this->config = $config;
 	}
 }
-
-
-
-//----------------------------------------
-// Custom Exception Types
-//----------------------------------------
-
-// An exception thrown in a HTTP404 case.
-if(!class_exists('NotFoundException')) {
-	class NotFoundException extends exception {}
-}
-
-// An exception thrown for an unrecoverable error
-if(!class_exists('ServerErrorException')) {
-	class ServerErrorException extends exception {}
-}
 ?>
