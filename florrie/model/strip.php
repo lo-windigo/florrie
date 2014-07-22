@@ -97,7 +97,7 @@ Q;
 
 		$q = <<<Q
 SELECT
-	id, img, item_order, posted
+	id, img, item_order, posted, title
 FROM strips
 WHERE id = :id
 Q;
@@ -117,7 +117,7 @@ Q;
 
 		$q = <<<Q
 SELECT
-	id, img, item_order, posted
+	id, img, item_order, posted, title
 FROM strips
 Q;
 
@@ -162,9 +162,10 @@ Q;
 
 			$strip->id = -1;
 			$strip->item_order = -1;
-			// TODO: Replace with the template directory
-			$strip->img = self::STRIP_PATH.'img/placeholder.jpg';
+			// TODO: Replace with the dynamic template directory
+			$strip->img = '/templates/default/'.'img/uh-oh.gif';
 			$strip->posted = new DateTime();
+			$strip->title = 'Uh oh...';
 		}
 		else {
 

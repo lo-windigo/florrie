@@ -1,6 +1,10 @@
-		<h1 class="content-title">{{ strip.title }}</h1>
+		{% if title is defined %}
+		<h1 class="content-title">{{ title }}</h1>
+		{% endif %}
 		<p class="strip">
-			<img src="{{ strip.img }}" title="{{ strip.title }}" alt="TODO">
+			<img src="{{ img }}"
+				{% if title is defined %}title="{{ title }}"{% endif %}
+				alt="TODO">
 		</p>
 		<ul class="strip-nav">
 			<li class="strip-prev"><a href="strip0001.html">prev</a></li>

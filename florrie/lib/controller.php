@@ -94,7 +94,7 @@ abstract class Controller {
 
 		// Load the template requested, and display it
 		$template = $twig->loadTemplate('page-'.$templateName.'.html');
-		$template->display($this->config, $data);
+		$template->display(array_merge($this->config, $data));
 	}
 }
 ?>
