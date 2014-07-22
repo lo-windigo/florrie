@@ -20,12 +20,14 @@
 */
 
 
+require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/controller.php';
+
 
 class Strip extends Controller {
 
-	public function __construct() {
+	public function __construct($config) {
 
-		parent::__construct();
+		parent::__construct($config['data']);
 
 		$this->templateDir = $_SERVER['DOCUMENT_ROOT'].'/templates/';
 	}

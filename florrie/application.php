@@ -20,6 +20,10 @@
 */
 
 
+// Include the exception classes
+require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/error.php';
+
+
 class Florrie {
 
 	// Class Constants:
@@ -54,7 +58,7 @@ class Florrie {
 		if((!is_null($type) && !ctype_alpha($type)) ||
 			(!is_null($action) && !ctype_alpha($action))) {
 
-			// Funny business
+			// TODO: Funny business
 			echo 'Invalid controller type';
 		}
 
@@ -84,17 +88,21 @@ class Florrie {
 			if(get_class($e) === 'NotFoundException') {
 
 				// TODO: Handle a 404
-				echo '404';
+				echo '404: '.$e->getMessage();
 			}
 			else if(get_class($e) === 'ServerErrorException') {
 
 				// TODO: Handle a server error
-				echo '500';
+				echo '500: '.$e->getMessage();
+			}
+			else if(get_class($e) === 'ServerErrorException') {
+				// TODO: Handle DB connection errors
+				echo 'DB error: '.$e->getMessage();
 			}
 			else {
 
 				// TODO
-				echo 'Other';
+				echo 'Other: '.$e->getMessage();
 			}
 		}
 	}
@@ -113,7 +121,17 @@ class Florrie {
 
 			require_once $cPath.strtolower($controller).'.php';
 
-			return new $controller($this->config['florrie']);
+			// Send in a config array
+			if(empty($this->config[$controller])) {
+				$config = $this->config['florrie'];
+			}
+			else {
+				$config = array_merge($this->config[$controller],
+					$this->config['florrie']);
+			}
+
+			// Return the new controller
+			return new $controller($config);
 		}
 
 		// Plugins! TODO
@@ -130,6 +148,9 @@ class Florrie {
 
 			return new Main($this->config['florrie']);
 		}
+
+		// Default to 404
+		throw new NotFoundException('Controller not found');
 	}
 
 
@@ -205,7 +226,7 @@ class Florrie {
 	protected function readConfig() {
 
 		// Check to see if the configuration file exists
-		$configFile = realpath($_SERVER['DOCUMENT_ROOT'].self::CONFIG);
+		$configFile = $_SERVER['DOCUMENT_ROOT'].self::CONFIG;
 
 		if(!file_exists($configFile)) {
 
@@ -216,7 +237,8 @@ class Florrie {
 		// If this is the first time getting the config, try to parse the
 		//	configuration file. The second argument returns a multidimensional
 		//	array based on sections
-		$configDoc = DOMDocument::load($configFile);
+		$configDoc = new DOMDocument();
+		$configDoc->load($configFile);
 
 		// If we failed to get the configuration, throw an exception
 		if($configDoc === false) {

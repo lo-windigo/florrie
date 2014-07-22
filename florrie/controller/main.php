@@ -34,14 +34,17 @@ class Main extends Controller {
 		}
 
 		// Set the template directory for Twig
-		$this->templateDir = $_SERVER['DOCUMENT_ROOT'].'/templates/';
+		$this->templateDir = $_SERVER['DOCUMENT_ROOT'].'/templates/default/';
 	}
 
 
 	// Index page
 	public function index() {
 		
-		$this->render('index');
+		$strip = $this->loadModel('Strip');
+		$latest = $strip->getLatest();
+
+		$this->render('index', array('strip' => $latest));
 	}
 }
 ?>

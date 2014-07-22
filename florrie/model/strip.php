@@ -23,6 +23,10 @@
 
 class StripModel {
 
+
+	const STRIP_PATH = '/strips/';
+
+
 	public function __construct($db) {
 
 		// Save the database connection for later
@@ -78,7 +82,9 @@ Q;
 		$statement = $this->db->prepare($q);
 		$statement->execute();
 
-		return $statement->fetch();
+		$strip = $statement->fetch();
+
+		return $this->formatStripData($strip);
 	}
 
 
@@ -100,24 +106,78 @@ Q;
 		$statement->bindValue(':id', $id);
 		$statement->execute();
 
-		return $statement->fetch();
+		$strip = $statement->fetch();
+
+		return $this->formatStripData($strip);
 	}
 
 
+	// Get all strips in the system, optionally filtered by episode
 	public function getEpisodeStrips($episode = null) {
 
-		// TODO
 		$q = <<<Q
 SELECT
 	id, img, item_order, posted
 FROM strips
 Q;
 
+		// Filter by episode, if present
+		if(!is_null($episode)) {
+
+			$q .= ' WHERE episode = :episode';
+		}
+
 		$statement = $this->db->prepare($q);
-		$statement->bindValue(':episode', $episode);
+
+		if(!is_null($episode)) {
+
+			$statement->bindValue(':episode', $episode);
+		}
+
 		$statement->execute();
 
-		$statement->fetchAll();
+		if(!($strips = $statement->fetchAll())) {
+
+			return array();
+		}
+
+		// Format all strips before they're returned
+		array_walk($strips, function(&$strip, $index, $stripModel) {
+
+			$strip = $stripModel->formatStripData($strip);
+
+		}, $this);
+
+		return $strips;
+	}
+
+
+	// Massage some of the strip data to get it ready for being displayed
+	protected function formatStripData($strip) {
+
+		// Supply a sensible default if strip is empty
+		if(empty($strip)) {
+
+			$strip = new stdClass();
+
+			$strip->id = -1;
+			$strip->item_order = -1;
+			// TODO: Replace with the template directory
+			$strip->img = self::STRIP_PATH.'img/placeholder.jpg';
+			$strip->posted = new DateTime();
+		}
+		else {
+
+			if(!empty($strip->posted)) {
+				$strip->posted = dateTime::createFromFormat('d/m/Y h:i a', $strip->posted);
+			}
+
+			if(!empty($strip->img)) {
+				$strip->img = $_SERVER['DOCUMENT_ROOT'].self::STRIP_PATH.$strip->img;
+			}
+		}
+
+		return $strip;
 	}
 }
 ?>

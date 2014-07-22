@@ -20,6 +20,9 @@
 */
 
 
+// Include the exception classes
+require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/error.php';
+
 
 abstract class Controller {
 
@@ -43,11 +46,11 @@ abstract class Controller {
 		if(empty($dbConfig['dsn']) || empty($dbConfig['user']) ||
 			empty($dbConfig['pass'])) {
 
-			//throw new exception('Database dbConfiguration values not present');
+			throw new ServerErrorException('Database dbConfiguration values not present');
 		}
 		else {
 
-			$db = new PDO($dbConfig['dsn'], $dbConfig['user'],
+			$this->db = new PDO($dbConfig['dsn'], $dbConfig['user'],
 				$dbConfig['pass'], $options);
 		}
 	}
@@ -56,10 +59,11 @@ abstract class Controller {
 	// Get a model object
 	public function loadModel($name) {
 
-		$modulePath = $_SERVER['DOCUMENT_ROOT'].self::CONFIG_PATH.
+		$modulePath = $_SERVER['DOCUMENT_ROOT'].self::MODEL_PATH.
 			strtolower($name).'.php';
+		$name .= 'Model';
 
-		if(file_exists($modulePath)) {
+		if(!file_exists($modulePath)) {
 			
 			throw new ServerException('Module does not exist: '.$name);
 		}
@@ -71,8 +75,8 @@ abstract class Controller {
 	}
 
 
-	// Render a page
-	public function render($templateName, $values = array('comicName' => 'COMIC')) {
+	// Render a page and pass it appropriate variables
+	public function render($templateName, $data = array()) {
 
 		// Check to make sure the template dir is valid
 		if(realpath($this->templateDir) === false) {
@@ -89,8 +93,8 @@ abstract class Controller {
 //		)); 
 
 		// Load the template requested, and display it
-		$template = $twig->loadTemplate($templateName.'.html');
-		$template->display($values);
+		$template = $twig->loadTemplate('page-'.$templateName.'.html');
+		$template->display($this->config, $data);
 	}
 }
 ?>
