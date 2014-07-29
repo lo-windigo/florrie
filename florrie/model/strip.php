@@ -28,6 +28,9 @@ class StripModel {
 	const MYSQL_DATE   = 'd/m/Y h:i a';
 
 
+	//------------------------------
+	// Public methods
+	//------------------------------
 	public function __construct($db) {
 
 		// Save the database connection for later
@@ -50,20 +53,46 @@ class StripModel {
 	// Return the very first strip
 	public function getFirst() {
 
+		// Get the bulk of the strip data
 		$q = <<<Q
 SELECT
-	s.id AS id, s.img AS img, s.posted AS posted
-FROM strips s
-LEFT OUTER JOIN episodes e
-ON s.episode = e.id
-ORDER BY e.item_order, s.item_order
+	id, img, item_order, posted, title
+FROM strips
+ORDER BY item_order
 LIMIT 0, 1
 Q;
 
 		$statement = $this->db->prepare($q);
 		$statement->execute();
 
-		return $statement->fetch();
+		if($strip = $statement->fetch()) {
+			return $this->prepareStripData($strip);
+		}
+		
+		return false;
+	}
+
+
+	// Return a random strip
+	public function getRandom() {
+
+		// Get the bulk of the strip data
+		$q = <<<Q
+SELECT
+	id, img, item_order, posted, title
+FROM strips
+ORDER BY RAND()
+LIMIT 0, 1
+Q;
+
+		$statement = $this->db->prepare($q);
+		$statement->execute();
+
+		if($strip = $statement->fetch()) {
+			return $this->prepareStripData($strip);
+		}
+		
+		return false;
 	}
 
 
@@ -72,11 +101,9 @@ Q;
 
 		$q = <<<Q
 SELECT
-	s.id AS id, s.img AS img, s.item_order as item_order, s.posted AS posted
-FROM strips s
-LEFT OUTER JOIN episodes e
-ON s.episode = e.id
-ORDER BY e.item_order DESC, s.item_order DESC
+	id, img, item_order, posted, title
+FROM strips
+ORDER BY item_order DESC
 LIMIT 0, 1
 Q;
 
@@ -85,7 +112,7 @@ Q;
 
 		$strip = $statement->fetch();
 
-		return $this->formatStripData($strip);
+		return $this->prepareStripData($strip);
 	}
 
 
@@ -109,12 +136,12 @@ Q;
 
 		$strip = $statement->fetch();
 
-		return $this->formatStripData($strip);
+		return $this->prepareStripData($strip);
 	}
 
 
-	// Get all strips in the system, optionally filtered by episode
-	public function getEpisodeStrips($episode = null) {
+	// Get all strips
+	public function getStrips() {
 
 		$q = <<<Q
 SELECT
@@ -122,19 +149,7 @@ SELECT
 FROM strips
 Q;
 
-		// Filter by episode, if present
-		if(!is_null($episode)) {
-
-			$q .= ' WHERE episode = :episode';
-		}
-
 		$statement = $this->db->prepare($q);
-
-		if(!is_null($episode)) {
-
-			$statement->bindValue(':episode', $episode);
-		}
-
 		$statement->execute();
 
 		if(!($strips = $statement->fetchAll())) {
@@ -145,7 +160,7 @@ Q;
 		// Format all strips before they're returned
 		array_walk($strips, function(&$strip, $index, $stripModel) {
 
-			$strip = $stripModel->formatStripData($strip);
+			$strip = $stripModel->prepareStripData($strip);
 
 		}, $this);
 
@@ -153,8 +168,12 @@ Q;
 	}
 
 
+	//------------------------------
+	// Protected (internal) methods
+	//------------------------------
+
 	// Massage some of the strip data to get it ready for being displayed
-	protected function formatStripData($strip) {
+	protected function prepareStripData($strip) {
 
 		// Supply a sensible default if strip is empty
 		if(empty($strip)) {
@@ -165,6 +184,7 @@ Q;
 			$strip->item_order = -1;
 			$strip->img = false;
 			$strip->posted = new DateTime();
+			$strip->next = $strip->prev = null;
 			$strip->title = 'Uh oh...';
 		}
 		else {
@@ -177,10 +197,62 @@ Q;
 				$strip->img = self::DEFAULT_PATH.$strip->img;
 			}
 
-			//
+			// Get the "previous" and "next" strip IDs
+			$strip->next = $this->getNextID($strip->item_order);
+			$strip->prev = $this->getPrevID($strip->item_order);
 		}
 
 		return $strip;
+	}
+
+
+	// Get the next strip id
+	protected function getNextID($order) {
+
+		$q = <<<Q
+SELECT id
+FROM strips
+WHERE item_order > :order
+ORDER BY item_order
+LIMIT 0, 1
+Q;
+
+		$statement = $this->db->prepare($q);
+		$statement->bindValue(':order', $order);
+		$statement->execute();
+
+		$next = $statement->fetch();
+
+		if(isset($next->id)) {
+			return $next->id;
+		}
+
+		return null;
+	}
+
+
+	// Get the previous strip id
+	protected function getPrevID($order) {
+
+		$q = <<<Q
+SELECT id
+FROM strips
+WHERE item_order < :order
+ORDER BY item_order DESC
+LIMIT 0, 1
+Q;
+
+		$statement = $this->db->prepare($q);
+		$statement->bindValue(':order', $order);
+		$statement->execute();
+
+		$prev = $statement->fetch();
+
+		if(isset($prev->id)) {
+			return $prev->id;
+		}
+
+		return null;
 	}
 }
 ?>

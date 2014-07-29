@@ -10,7 +10,7 @@
 			</li>
 {% endmacro %}
 		
-{% macro prev(disable) %}
+{% macro prev(disable, prev) %}
 			<li class="strip-prev {{ disable }}">
 				{% if disable is empty %}
 				<a href="strip/{{ prev }}">

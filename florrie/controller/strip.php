@@ -30,25 +30,35 @@ class Strip extends Controller {
 		parent::__construct($config['data']);
 
 		$this->templateDir = $_SERVER['DOCUMENT_ROOT'].'/templates/';
+		$this->model = $this->loadModel('Strip');
 	}
 
 
 	// Show the first strip
 	public function first() {
 
+		$strip = $this->model->getFirst();
+
+		$this->render('index', array('strip' => $strip));
 	}
 
 
-	// Index page
-	public function index() {
+	// Index: Render a single strip
+	public function index($id) {
 
-		// Get latest strip and display it
+		// TODO: Get the strip and display it
+		$strip = $this->model->getStrip($id);
+
+		$this->render('index', array('strip' => $strip));
 	}
 
 
-	// Show a strip
-	public function view() {
+	// Show a random strip
+	public function random() {
 
+		$strip = $this->model->getRandom();
+
+		$this->render('index', array('strip' => $strip));
 	}
 }
 ?>

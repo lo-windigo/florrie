@@ -18,13 +18,13 @@ DROP TABLE IF EXISTS episodes;
 
 
 # Episode table creation statement
-CREATE TABLE episodes
-(
-	title VARCHAR(500) NOT NULL,
-	id INT NOT NULL AUTO_INCREMENT,
-	item_order INT NOT NULL,
-	PRIMARY KEY(id)
-);
+#CREATE TABLE episodes
+#(
+#	title VARCHAR(500) NOT NULL,
+#	id INT NOT NULL AUTO_INCREMENT,
+#	item_order INT NOT NULL,
+#	PRIMARY KEY(id)
+#);
 
 # Comic strip table creation statement
 CREATE TABLE strips
@@ -32,11 +32,9 @@ CREATE TABLE strips
 	id INT NOT NULL AUTO_INCREMENT,
 	title VARCHAR(500),
 	img VARCHAR(200) NOT NULL,
-	episode INT,
 	item_order INT NOT NULL,
 	posted DATETIME NOT NULL,
-	PRIMARY KEY(id),
-	FOREIGN KEY (episode) REFERENCES episodes (id) ON DELETE CASCADE
+	PRIMARY KEY(id)
 );
 
 # Characters table creation statement

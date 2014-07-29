@@ -1,8 +1,8 @@
 {% import "macro-nav.html" as nav %}
 
-		{% if title is defined %}
-		<h1 class="content-title">{{ title }}</h1>
-		{% endif %}
+		<h1 class="content-title">
+			{{ title is not empty ? title : posted|date("l, F jS, Y") }}
+		</h1>
 		<p class="strip">
 			{% if img is defined %}
 			<img src="{{ img }}"
