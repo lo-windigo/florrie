@@ -24,7 +24,8 @@
 class StripModel {
 
 
-	const STRIP_PATH = '/strips/';
+	const DEFAULT_PATH = '/strips/';
+	const MYSQL_DATE   = 'd/m/Y h:i a';
 
 
 	public function __construct($db) {
@@ -162,20 +163,21 @@ Q;
 
 			$strip->id = -1;
 			$strip->item_order = -1;
-			// TODO: Replace with the dynamic template directory
-			$strip->img = '/templates/default/'.'img/uh-oh.gif';
+			$strip->img = false;
 			$strip->posted = new DateTime();
 			$strip->title = 'Uh oh...';
 		}
 		else {
 
 			if(!empty($strip->posted)) {
-				$strip->posted = dateTime::createFromFormat('d/m/Y h:i a', $strip->posted);
+				$strip->posted = dateTime::createFromFormat(self::MYSQL_DATE, $strip->posted);
 			}
 
 			if(!empty($strip->img)) {
-				$strip->img = $_SERVER['DOCUMENT_ROOT'].self::STRIP_PATH.$strip->img;
+				$strip->img = self::DEFAULT_PATH.$strip->img;
 			}
+
+			//
 		}
 
 		return $strip;

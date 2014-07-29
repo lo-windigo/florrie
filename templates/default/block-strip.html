@@ -1,13 +1,53 @@
+{% import "macro-nav.html" as nav %}
+
 		{% if title is defined %}
 		<h1 class="content-title">{{ title }}</h1>
 		{% endif %}
 		<p class="strip">
+			{% if img is defined %}
 			<img src="{{ img }}"
 				{% if title is defined %}title="{{ title }}"{% endif %}
 				alt="TODO">
+			{% else %}
+			<img src=""
+				{% if title is defined %}title="{{ title }}"{% endif %}
+				alt="TODO">
+			{% endif %}
 		</p>
 		<ul class="strip-nav">
-			<li class="strip-prev"><a href="strip0001.html">prev</a></li>
-			<li class="disabled"><!--<a href="#">-->random<!--</a>--></li>
-			<li class="strip-next disabled"><!--<a href=#">-->next<!--</a>--></li>
+		{% if next is empty %}
+			{% if prev is empty %}
+
+				{{ nav.first("disabled") }}
+				{{ nav.prev("disabled") }}
+				{{ nav.random("disabled") }}
+				{{ nav.next("disabled") }}
+				{{ nav.latest("disabled") }}
+
+			{% else %}
+
+				{{ nav.first() }}
+				{{ nav.prev('', prev) }}
+				{{ nav.random() }}
+				{{ nav.next("disabled") }}
+				{{ nav.latest("disabled") }}
+
+			{% endif %}
+		{% elseif prev is not empty %}
+
+				{{ nav.first() }}
+				{{ nav.prev('', prev) }}
+				{{ nav.random() }}
+				{{ nav.next('', next) }}
+				{{ nav.latest() }}
+
+		{% else %}
+
+				{{ nav.first("disabled") }}
+				{{ nav.prev("disabled") }}
+				{{ nav.random() }}
+				{{ nav.next('', next) }}
+				{{ nav.latest() }}
+
+		{% endif %}
 		</ul>
