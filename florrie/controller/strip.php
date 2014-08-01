@@ -48,10 +48,24 @@ class Strip extends Controller {
 
 
 	// Index: Render a single strip
-	public function index($id) {
+	public function index($id = false) {
+
+		if($id === false) {
+
+			throw new NotFoundException('Strip ID not provided');
+		}
 
 		// TODO: Get the strip and display it
 		$strip = $this->model->getStrip($id);
+
+		$this->render('index', array('strip' => $strip));
+	}
+
+
+	// Show the latest strip
+	public function latest() {
+
+		$strip = $this->model->getLatest();
 
 		$this->render('index', array('strip' => $strip));
 	}
@@ -68,6 +82,16 @@ class Strip extends Controller {
 
 	// Route a request to a controller function, based on the URI data
 	public function route($uriArray = array()) {
+
+		// Get the first value (if any) of the array
+		$value = current($uriArray);
+
+		// If a strip ID has been sent in, display that
+		if($value !== false && (is_int($value) || ctype_digit($value))) {
+
+			$this->index($value);
+		}
+
 
 		// The parent router can handle everything else
 		parent::route($uriArray);

@@ -51,14 +51,9 @@ class Florrie {
 		// Handle requests
 		//----------------------------------------
 
-		// Sanitize the URL
+		// Sanitize the URL, and trim the leading/trailing slashes
 		$uri = filter_input(INPUT_GET, 'u', FILTER_SANITIZE_URL);
-
-		// Trim off the leading slash, if present
-		if(strlen($uri) > 0) {
-	
-			$uri = substr($uri, 1);
-		}
+		$uri = trim($uri, '/');
 
 		// Burst into an array and remove the controller type
 		$uriArray = explode('/', $uri);
