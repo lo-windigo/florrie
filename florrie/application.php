@@ -1,6 +1,6 @@
 <?php
 /*
-	Controller - Florrie Base Module
+	Main Application - Florrie
 	By Jacob Hume
 
 	This file is part of Florrie.
@@ -43,6 +43,7 @@ class Florrie {
 		if(!$this->installed()) {
 
 			// TODO: Florrie install procedure
+			die('IOU: One installer. - Windigo');
 		}
 
 
@@ -50,53 +51,40 @@ class Florrie {
 		// Handle requests
 		//----------------------------------------
 
-		// Sanitize type & actions
-		$type   = filter_input(INPUT_GET, 't', FILTER_SANITIZE_URL);
-		$action = filter_input(INPUT_GET, 'a', FILTER_SANITIZE_URL);
+		// Sanitize the URL
+		$uri = filter_input(INPUT_GET, 'u', FILTER_SANITIZE_URL);
 
-		// Types and actions should be alphabetic characters
-		if((!is_null($type) && !ctype_alpha($type)) ||
-			(!is_null($action) && !ctype_alpha($action))) {
-
-			// TODO: Funny business
-			echo 'Invalid controller type';
+		// Trim off the leading slash, if present
+		if(strlen($uri) > 0) {
+	
+			$uri = substr($uri, 1);
 		}
 
+		// Burst into an array and remove the controller type
+		$uriArray = explode('/', $uri);
+		$type = array_shift($uriArray);
 
 		try {
-			// Get controller object
+
+			// Get controller object, and route the request
 			$controller = $this->getController($type);
-
-			// If there is no action, show the main index
-			if(is_null($action)) {
-
-				$controller->index();
-			}
-			// Otherwise, check and see if this controller supports
-			//  this action
-			else if(method_exists($controller, $action)) {
-
-				call_user_func(array($controller, $action));
-			}
-			else {
-
-				throw new NotFoundException();
-			}
+			$controller->route($uriArray);
 		}
+		// Handle any errors that may have occurred
 		catch (exception $e) {
 
 			if(get_class($e) === 'NotFoundException') {
 
-				// TODO: Handle a 404
+				// TODO: Properly handle a 404
 				echo '404: '.$e->getMessage();
 			}
 			else if(get_class($e) === 'ServerErrorException') {
 
-				// TODO: Handle a server error
+				// TODO: Properly handle a server error
 				echo '500: '.$e->getMessage();
 			}
 			else if(get_class($e) === 'ServerErrorException') {
-				// TODO: Handle DB connection errors
+				// TODO: Properly handle DB connection errors
 				echo 'DB error: '.$e->getMessage();
 			}
 			else {
@@ -115,6 +103,14 @@ class Florrie {
 
 		// Get the controller path
 		$cPath = $_SERVER['DOCUMENT_ROOT'].self::CONTROLLER;
+
+		// If no controller was specified, use the main controller
+		if(empty($controller)) {
+
+			require $cPath.'main.php';
+
+			return new Main($this->config['florrie']);
+		}
 
 		// Check the standard Florrie controllers
 		if(file_exists($cPath.strtolower($controller).'.php')) {
@@ -140,17 +136,9 @@ class Florrie {
 //			return include self::CONTROLLER.$controller.'.php';
 //		}
 
-		// Default to the main controller
-		if($controller === null) {
-
-			// Set up a main controller, and serve up the index
-			require $cPath.'main.php';
-
-			return new Main($this->config['florrie']);
-		}
-
 		// Default to 404
-		throw new NotFoundException('Controller not found');
+		throw new NotFoundException('Unknown controller/type. Controller: "'.
+			$controller.'"');
 	}
 
 

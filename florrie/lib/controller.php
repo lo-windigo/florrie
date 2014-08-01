@@ -68,7 +68,7 @@ abstract class Controller {
 			throw new ServerException('Module does not exist: '.$name);
 		}
 
-		// Create a new module object
+		// Create a new module object, and return it
 		require_once $modulePath;
 
 		return new $name($this->db);
@@ -95,6 +95,31 @@ abstract class Controller {
 		// Load the template requested, and display it
 		$template = $twig->loadTemplate('page-'.$templateName.'.html');
 		$template->display(array_merge($this->config, $data));
+	}
+
+
+	// Route a request to a controller function, based on the URI data
+	public function route($uriArray = array()) {
+
+		// If there is no additional URI data, show the main index
+		if(empty($uriArray)) {
+
+			$this->index();
+		}
+		// Otherwise, check and see if this controller supports
+		//  this action
+		else {
+
+			$value = array_shift($uriArray);
+
+			if(method_exists($this, $value)) {
+				call_user_func(array($this, $value));
+			}
+			else {
+
+				throw new NotFoundException('Controller does not have a good way to handle this URI');
+			}
+		}
 	}
 }
 ?>

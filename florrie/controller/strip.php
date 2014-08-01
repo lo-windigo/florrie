@@ -29,8 +29,12 @@ class Strip extends Controller {
 
 		parent::__construct($config['data']);
 
-		$this->templateDir = $_SERVER['DOCUMENT_ROOT'].'/templates/';
+		// TODO: Pull from config
+		$this->templateDir = $_SERVER['DOCUMENT_ROOT'].'/templates/default/';
 		$this->model = $this->loadModel('Strip');
+
+		// Save the config for later
+		$this->config = $config;
 	}
 
 
@@ -59,6 +63,14 @@ class Strip extends Controller {
 		$strip = $this->model->getRandom();
 
 		$this->render('index', array('strip' => $strip));
+	}
+
+
+	// Route a request to a controller function, based on the URI data
+	public function route($uriArray = array()) {
+
+		// The parent router can handle everything else
+		parent::route($uriArray);
 	}
 }
 ?>
