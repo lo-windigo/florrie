@@ -81,7 +81,7 @@ abstract class Controller {
 		// Check to make sure the template dir is valid
 		if(realpath($this->templateDir) === false) {
 			
-			throw new exception(get_class($this).' Template directory not set');
+			throw new ServerErrorException(get_class($this).' Template directory not set');
 		}
 
 		// Set up the template system 

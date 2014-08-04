@@ -24,15 +24,19 @@
 require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/error.php';
 
 
+// Main class - kicks things off, starts the party
 class Florrie {
 
 	// Class Constants:
-	//	BASE    - Installed directory
-	//	CONFIG	- Configuration File
+	//  CONFIG	   - Configuration File
+	//  CONTROLLER - Directory for main controllers
 	const CONFIG     = '/florrie.cfg';
 	const CONTROLLER = '/florrie/controller/';
 
-	public $config, $urls;
+
+	// Data members:
+	//  config - The configuration for this controller
+	public $config;
 
 
 	// Constructor
@@ -78,7 +82,7 @@ class Florrie {
 				// TODO: Properly handle a server error
 				echo '500: '.$e->getMessage();
 			}
-			else if(get_class($e) === 'ServerErrorException') {
+			else if(get_class($e) === 'DBException') {
 				// TODO: Properly handle DB connection errors
 				echo 'DB error: '.$e->getMessage();
 			}
@@ -144,7 +148,7 @@ class Florrie {
 	// Return:	void, but an exception may be thrown
 	public function getPlugins()
 	{
-		// Work Ongoing!
+		// TODO: Work Ongoing!
 		//	Love,
 		//	- Windigo
 		return;

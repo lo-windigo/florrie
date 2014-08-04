@@ -1,0 +1,23 @@
+{% extends "page-base.html" %}
+
+{% block title %}{{ name }}{% endblock %}
+
+{% block content %}
+		<h1 class="content-title">Archive</h1>
+		<ol>
+		{% for strip in strips %}
+			<li>
+				{% if strip.title is not empty %}
+				{{ strip.posted|date("l, F jS, Y") }}:
+				{% endif %}
+				<a href="/strip/{{ strip.id }}">
+					{% if strip.title is empty %}
+					{{ strip.posted|date("l, F jS, Y") }}
+					{% else %}
+					{{ strip.title }}
+					{% endif %}
+				</a>
+			</li>
+		{% endfor %}
+		</ol>
+{% endblock %}

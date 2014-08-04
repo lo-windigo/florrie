@@ -38,6 +38,15 @@ class Strip extends Controller {
 	}
 
 
+	// Show an archive of strips
+	public function archive() {
+
+		$strips = $this->model->getStrips();
+
+		$this->render('archive', array('strips' => $strips));
+	}
+
+
 	// Show the first strip
 	public function first() {
 
@@ -55,7 +64,7 @@ class Strip extends Controller {
 			throw new NotFoundException('Strip ID not provided');
 		}
 
-		// TODO: Get the strip and display it
+		// Get the strip and display it
 		$strip = $this->model->getStrip($id);
 
 		$this->render('index', array('strip' => $strip));

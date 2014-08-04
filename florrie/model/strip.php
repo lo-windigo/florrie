@@ -25,7 +25,8 @@ class StripModel {
 
 
 	const DEFAULT_PATH = '/strips/';
-	const MYSQL_DATE   = 'd/m/Y h:i a';
+	const MYSQL_DATE   = 'Y-m-d H:i:s';
+	//const MYSQL_DATE   = 'd/m/Y h:i a';
 
 
 	//------------------------------
