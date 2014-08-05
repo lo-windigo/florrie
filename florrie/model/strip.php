@@ -24,14 +24,22 @@
 class StripModel {
 
 
+	//----------------------------------------
+	// Class Constants
+	//----------------------------------------
 	const DEFAULT_PATH = '/strips/';
 	const MYSQL_DATE   = 'Y-m-d H:i:s';
 	//const MYSQL_DATE   = 'd/m/Y h:i a';
 
 
-	//------------------------------
+	//========================================
 	// Public methods
-	//------------------------------
+	//========================================
+
+
+	//----------------------------------------
+	// Constructor
+	//----------------------------------------
 	public function __construct($db) {
 
 		// Save the database connection for later
@@ -39,19 +47,27 @@ class StripModel {
 	}
 
 
+	//----------------------------------------
+	// Add a strip to the database
+	//----------------------------------------
 	public function addStrip($img, $title = null, $episode = null) {
 
 		// TODO: Add a strip!
 	}
 
 
+	//----------------------------------------
+	// Delete a strip
+	//----------------------------------------
 	public function delStrip($id) {
 
 		// TODO: Delete a strip!
 	}
 
 
+	//----------------------------------------
 	// Return the very first strip
+	//----------------------------------------
 	public function getFirst() {
 
 		// Get the bulk of the strip data
@@ -74,7 +90,9 @@ Q;
 	}
 
 
+	//----------------------------------------
 	// Return a random strip
+	//----------------------------------------
 	public function getRandom() {
 
 		// Get the bulk of the strip data
@@ -97,7 +115,9 @@ Q;
 	}
 
 
+	//----------------------------------------
 	// Get the most recent strip
+	//----------------------------------------
 	public function getLatest() {
 
 		$q = <<<Q
@@ -117,6 +137,9 @@ Q;
 	}
 
 
+	//----------------------------------------
+	// Get a specific strip
+	//----------------------------------------
 	public function getStrip($id) {
 
 		if(empty($id)) {
@@ -141,7 +164,9 @@ Q;
 	}
 
 
+	//----------------------------------------
 	// Get all strips
+	//----------------------------------------
 	public function getStrips() {
 
 		$q = <<<Q
@@ -169,11 +194,15 @@ Q;
 	}
 
 
-	//------------------------------
-	// Protected (internal) methods
-	//------------------------------
 
-	// Massage some of the strip data to get it ready for being displayed
+	//========================================
+	// Protected (internal) methods
+	//========================================
+
+	//----------------------------------------
+	// Massage some of the strip data to get
+	//   it ready for being displayed
+	//----------------------------------------
 	protected function prepareStripData($strip) {
 
 		// Supply a sensible default if strip is empty
@@ -207,7 +236,9 @@ Q;
 	}
 
 
+	//----------------------------------------
 	// Get the next strip id
+	//----------------------------------------
 	protected function getNextID($order) {
 
 		$q = <<<Q
@@ -232,7 +263,9 @@ Q;
 	}
 
 
+	//----------------------------------------
 	// Get the previous strip id
+	//----------------------------------------
 	protected function getPrevID($order) {
 
 		$q = <<<Q
