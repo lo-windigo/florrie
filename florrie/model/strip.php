@@ -75,6 +75,7 @@ class StripModel {
 SELECT
 	id, img, item_order, posted, title
 FROM strips
+WHERE posted < NOW()
 ORDER BY item_order
 LIMIT 0, 1
 Q;
@@ -100,6 +101,7 @@ Q;
 SELECT
 	id, img, item_order, posted, title
 FROM strips
+WHERE posted < NOW()
 ORDER BY RAND()
 LIMIT 0, 1
 Q;
@@ -124,6 +126,7 @@ Q;
 SELECT
 	id, img, item_order, posted, title
 FROM strips
+WHERE posted < NOW()
 ORDER BY item_order DESC
 LIMIT 0, 1
 Q;
@@ -151,7 +154,10 @@ Q;
 SELECT
 	id, img, item_order, posted, title
 FROM strips
-WHERE id = :id
+
+WHERE
+	id = :id AND
+	posted < NOW()
 Q;
 
 		$statement = $this->db->prepare($q);
@@ -173,6 +179,7 @@ Q;
 SELECT
 	id, img, item_order, posted, title
 FROM strips
+WHERE posted < NOW()
 Q;
 
 		$statement = $this->db->prepare($q);
@@ -244,7 +251,9 @@ Q;
 		$q = <<<Q
 SELECT id
 FROM strips
-WHERE item_order > :order
+WHERE
+	item_order > :order AND
+	posted < NOW()
 ORDER BY item_order
 LIMIT 0, 1
 Q;
@@ -271,7 +280,9 @@ Q;
 		$q = <<<Q
 SELECT id
 FROM strips
-WHERE item_order < :order
+WHERE
+	item_order < :order AND
+	posted < NOW()
 ORDER BY item_order DESC
 LIMIT 0, 1
 Q;
