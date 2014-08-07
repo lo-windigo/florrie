@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<rss version="2.0">
+	<channel>
+		<title>{{ title }} Updates</title>
+		<description>TODO</description>
+		<link>/</link>
+		<language>en-US</language>
+		<docs>http://blogs.law.harvard.edu/tech/rss</docs>
+		<generator>FragDev.com - RSS Division</generator>
+		{% for strip in strips %}
+		<item>
+			<title></title>
+			<description></description>
+			<link>/strip/{{ strip.id }}</link>
+			<guid>/strip/{{ strip.id }}</guid>
+			<pubDate>{{ strip.posted:date("D, d M Y H:i:s O") }}</pubDate>
+		</item>
+		{% endfor %}
+	</channel>
+</rss>

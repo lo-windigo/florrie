@@ -21,11 +21,59 @@
 
 
 
-class Home {
+class Feeds {
+
+	// Constructor
+	public function __construct() {
+
+		$this->templateDir = $_SERVER['DOCUMENT_ROOT'].'/templates/default/';
+		$this->model = $this->loadModel('Strip');
+
+		// Save the config for later
+		$this->config = $config;
+	}
+
 
 	// Index page
-	public function Index() {
+	public function index() {
 
 	}
+
+
+	// RSS feed
+	public function rss() {
+
+		// Send the appropriate headers
+		header('Content-Type: application/rss+xml');
+
+		$strips = $this->model->getStrips();
+
+		$this->render('archive', array('strips' => $strips));
+	}
+
+
+	// Render a feed and pass it appropriate variables
+	public function render($templateName, $data = array()) {
+
+		// Check to make sure the template dir is valid
+		if(realpath($this->templateDir) === false) {
+			
+			throw new ServerErrorException(get_class($this).' Template directory not set');
+		}
+
+		// Set up the template system 
+		$loader = new Twig_Loader_Filesystem($this->templateDir);
+		$twig = new Twig_Environment($loader);
+// TODO: Figure out "cache"
+//			, array(
+//			'cache' => '/path/to/compilation_cache',
+//		)); 
+
+		// Load the template requested, and display it
+		$template = $twig->loadTemplate('page-'.$templateName.'.html');
+		$template->display(array_merge($this->config, $data));
+	}
+
+
 }
 ?>

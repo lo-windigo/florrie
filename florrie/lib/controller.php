@@ -56,6 +56,20 @@ abstract class Controller {
 	}
 
 
+	//----------------------------------------
+	// Add configuration values
+	//----------------------------------------
+	public function addConfig($config, $index = false) {
+
+		// Use the controller name as the index if not present
+		if(!$index) {
+			$index = get_class($this);
+		}
+
+		$this->config = array_merge($this->config, array($index => $config));
+	}
+
+
 	// Get a model object
 	public function loadModel($name) {
 
