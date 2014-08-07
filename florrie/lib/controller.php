@@ -32,11 +32,31 @@ abstract class Controller {
 	public $db, $config, $templateDir;
 
 
-	public function __construct($dbConfig) {
+	public function __construct($config) {
+
+		//----------------------------------------
+		// Set up the templating system
+		//----------------------------------------
 
 		// Include & initialize the Twig templating library
 		require_once 'twig/lib/Twig/Autoloader.php';
 		Twig_Autoloader::register();
+
+		$this->templateDir = $_SERVER['DOCUMENT_ROOT'].'/templates/';
+
+		// If there is a theme present, use that folder.
+		// Use basename to prevent directory traversal.
+		if(empty($config['florrie']) || empty($config['florrie']['theme']) &&
+			file_exists($this->templateDir.$config['florrie']['theme'])) {
+
+			$this->templatedir .= $config['florrie']['theme'];
+		}
+		else {
+
+			$this->templatedir .= 'default';
+		}
+
+		$this->templatedir .= '/';
 
 		// Get a database connection
 		$options = array(

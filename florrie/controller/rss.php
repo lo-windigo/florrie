@@ -34,6 +34,19 @@ class Feeds {
 	}
 
 
+	// Atom feed
+	public function atom() {
+
+		// Send the appropriate headers
+		// TODO: Verify this mime type
+		header('Content-Type: application/atom+xml');
+
+		$strips = $this->model->getStrips();
+
+		$this->render('feed-atom', array('strips' => $strips));
+	}
+
+
 	// Index page
 	public function index() {
 
@@ -48,7 +61,7 @@ class Feeds {
 
 		$strips = $this->model->getStrips();
 
-		$this->render('archive', array('strips' => $strips));
+		$this->render('feed-rss', array('strips' => $strips));
 	}
 
 
@@ -70,7 +83,7 @@ class Feeds {
 //		)); 
 
 		// Load the template requested, and display it
-		$template = $twig->loadTemplate('page-'.$templateName.'.html');
+		$template = $twig->loadTemplate('page-'.$templateName.'.xml');
 		$template->display(array_merge($this->config, $data));
 	}
 

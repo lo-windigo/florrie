@@ -30,7 +30,6 @@ class Strip extends Controller {
 		parent::__construct($config['data']);
 
 		// TODO: Pull from config
-		$this->templateDir = $_SERVER['DOCUMENT_ROOT'].'/templates/default/';
 		$this->model = $this->loadModel('Strip');
 
 		// Save the config for later
