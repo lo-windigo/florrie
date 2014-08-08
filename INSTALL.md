@@ -2,7 +2,7 @@
 Installing Florrie - For Fun and Profit
 ========
 
-Written by Windigo < http://micro.fragdev.com/windigo/ >, licensed
+Written by [Windigo](http://fragdev.com/), licensed
 under the AGPL v3.
 
 
@@ -24,3 +24,7 @@ Installing
 --------
 
 To install Florrie, you humvrumvff mruffrmerf, and then bururrrmrmr...
+
+* **Note:** The developer responsible for writing this document has been kidnapped
+and forced to work on getting Florrie release-ready. Please check back later for
+updates.*
