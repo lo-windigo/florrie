@@ -23,21 +23,6 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/controller.php';
 
 class Main extends Controller {
 
-	public function __construct($config) {
-
-		parent::__construct($config['data']);
-
-		// Save this controller's configuration values
-		if(!empty($config['comic'])) {
-
-			$this->config = $config['comic'];
-		}
-
-		// Set the template directory for Twig
-		$this->templateDir = $_SERVER['DOCUMENT_ROOT'].'/templates/default/';
-	}
-
-
 	// Index page
 	public function index() {
 		

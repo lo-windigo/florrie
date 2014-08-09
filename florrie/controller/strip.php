@@ -27,13 +27,10 @@ class Strip extends Controller {
 
 	public function __construct($config) {
 
-		parent::__construct($config['data']);
+		parent::__construct($config);
 
 		// TODO: Pull from config
 		$this->model = $this->loadModel('Strip');
-
-		// Save the config for later
-		$this->config = $config;
 	}
 
 

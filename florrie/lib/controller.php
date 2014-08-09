@@ -43,50 +43,37 @@ abstract class Controller {
 		Twig_Autoloader::register();
 
 		$this->templateDir = $_SERVER['DOCUMENT_ROOT'].'/templates/';
+		$this->config = $config;
 
 		// If there is a theme present, use that folder.
 		// Use basename to prevent directory traversal.
 		if(empty($config['florrie']) || empty($config['florrie']['theme']) &&
-			file_exists($this->templateDir.$config['florrie']['theme'])) {
+			file_exists($this->templateDir.basename($config['florrie']['theme']))) {
 
-			$this->templatedir .= $config['florrie']['theme'];
+			$this->templateDir .= 'default';
 		}
 		else {
 
-			$this->templatedir .= 'default';
+			$this->templateDir .= basename($config['florrie']['theme']);
 		}
 
-		$this->templatedir .= '/';
+		$this->templateDir .= '/';
 
 		// Get a database connection
 		$options = array(
 			PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,
 			PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION);
 
-		if(empty($dbConfig['dsn']) || empty($dbConfig['user']) ||
-			empty($dbConfig['pass'])) {
+		if(empty($config['data']) || empty($config['data']['dsn']) ||
+			empty($config['data']['user']) || empty($config['data']['pass'])) {
 
-			throw new ServerErrorException('Database dbConfiguration values not present');
+			throw new ServerErrorException('Database configuration values not present');
 		}
 		else {
 
-			$this->db = new PDO($dbConfig['dsn'], $dbConfig['user'],
-				$dbConfig['pass'], $options);
+			$this->db = new PDO($config['data']['dsn'], $config['data']['user'],
+				$config['data']['pass'], $options);
 		}
-	}
-
-
-	//----------------------------------------
-	// Add configuration values
-	//----------------------------------------
-	public function addConfig($config, $index = false) {
-
-		// Use the controller name as the index if not present
-		if(!$index) {
-			$index = get_class($this);
-		}
-
-		$this->config = array_merge($this->config, array($index => $config));
 	}
 
 

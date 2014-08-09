@@ -108,7 +108,7 @@ class Florrie {
 
 			require $cPath.'main.php';
 
-			return new Main($this->config['florrie']);
+			return new Main($this->config);
 		}
 
 		// Check the standard Florrie controllers
@@ -116,17 +116,8 @@ class Florrie {
 
 			require_once $cPath.strtolower($controller).'.php';
 
-			// Send in a config array
-			if(empty($this->config[$controller])) {
-				$config = $this->config['florrie'];
-			}
-			else {
-				$config = array_merge($this->config[$controller],
-					$this->config['florrie']);
-			}
-
 			// Return the new controller
-			return new $controller($config);
+			return new $controller($this->config);
 		}
 
 		// Plugins! TODO
