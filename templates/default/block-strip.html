@@ -7,11 +7,11 @@
 			{% if img is defined %}
 			<img src="{{ img }}"
 				{% if title is defined %}title="{{ title }}"{% endif %}
-				alt="TODO">
+				{% if desc is defined %}alt="{{ desc }}"{% endif %}>
 			{% else %}
-			<img src=""
-				{% if title is defined %}title="{{ title }}"{% endif %}
-				alt="TODO">
+			<p>
+				No strips have been uploaded.
+			</p>
 			{% endif %}
 		</p>
 		<ul class="strip-nav">
