@@ -28,6 +28,7 @@ abstract class Controller {
 
 	const MODEL_PATH = '/florrie/model/';
 	const TEMPLATE_EXT = '.html';
+	const TEMPLATE_PRE = 'page-';
 
 
 
