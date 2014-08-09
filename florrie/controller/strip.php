@@ -29,7 +29,6 @@ class Strip extends Controller {
 
 		parent::__construct($config);
 
-		// TODO: Pull from config
 		$this->model = $this->loadModel('Strip');
 	}
 
