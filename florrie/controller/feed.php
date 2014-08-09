@@ -1,6 +1,6 @@
 <?php
 /*
-	Main "Home" Controller
+	Syndication Feed Controller
 	By Jacob Hume
 
 	This file is part of Florrie.
@@ -21,16 +21,22 @@
 
 
 
-class Feeds {
+require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/controller.php';
+
+
+class Feed extends Controller {
+
+	// Override the usual html template extension
+	const TEMPLATE_EXT = '.xml';
+	const TEMPLATE_PRE = 'feed-';
 
 	// Constructor
-	public function __construct() {
+	public function __construct($config) {
 
-		$this->templateDir = $_SERVER['DOCUMENT_ROOT'].'/templates/default/';
+		parent::__construct($config);
+
 		$this->model = $this->loadModel('Strip');
-
-		// Save the config for later
-		$this->config = $config;
+		$this->templateDir = $_SERVER['DOCUMENT_ROOT'].'/florrie/templates/';
 	}
 
 
@@ -40,16 +46,18 @@ class Feeds {
 		// Send the appropriate headers
 		// TODO: Verify this mime type
 		header('Content-Type: application/atom+xml');
+		header('Content-Disposition: inline');
 
 		$strips = $this->model->getStrips();
 
-		$this->render('feed-atom', array('strips' => $strips));
+		$this->render('atom', array('strips' => $strips));
 	}
 
 
 	// Index page
 	public function index() {
 
+		// TODO: Maybe list the available feeds?
 	}
 
 
@@ -61,32 +69,7 @@ class Feeds {
 
 		$strips = $this->model->getStrips();
 
-		$this->render('feed-rss', array('strips' => $strips));
+		$this->render('rss', array('strips' => $strips));
 	}
-
-
-	// Render a feed and pass it appropriate variables
-	public function render($templateName, $data = array()) {
-
-		// Check to make sure the template dir is valid
-		if(realpath($this->templateDir) === false) {
-			
-			throw new ServerErrorException(get_class($this).' Template directory not set');
-		}
-
-		// Set up the template system 
-		$loader = new Twig_Loader_Filesystem($this->templateDir);
-		$twig = new Twig_Environment($loader);
-// TODO: Figure out "cache"
-//			, array(
-//			'cache' => '/path/to/compilation_cache',
-//		)); 
-
-		// Load the template requested, and display it
-		$template = $twig->loadTemplate('page-'.$templateName.'.xml');
-		$template->display(array_merge($this->config, $data));
-	}
-
-
 }
 ?>

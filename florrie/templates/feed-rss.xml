@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+	<channel>
+		<title>{{ florrie.title }} Updates</title>
+		<language>en-US</language>
+		<link>{{ florrie.url }}</link>
+		<generator>Florrie Content Management System</generator>
+		<docs>http://blogs.law.harvard.edu/tech/rss</docs>
+		{% for strip in strips %}
+		<item>
+			<title>{{ title is not empty ? title : posted|date("l, F jS, Y") }}</title>
+			<description>TODO: Strip preview or image</description>
+			<link>/strip/{{ strip.id }}</link>
+			<guid>/strip/{{ strip.id }}</guid>
+			<pubDate>{{ strip.posted|date("D, d M Y H:i:s O") }}</pubDate>
+		</item>
+		{% endfor %}
+	</channel>
+</rss>

@@ -27,6 +27,8 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/error.php';
 abstract class Controller {
 
 	const MODEL_PATH = '/florrie/model/';
+	const TEMPLATE_EXT = '.html';
+
 
 
 	public $db, $config, $templateDir;
@@ -78,7 +80,7 @@ abstract class Controller {
 
 
 	// Get a model object
-	public function loadModel($name) {
+	protected function loadModel($name) {
 
 		$modulePath = $_SERVER['DOCUMENT_ROOT'].self::MODEL_PATH.
 			strtolower($name).'.php';
@@ -97,7 +99,7 @@ abstract class Controller {
 
 
 	// Render a page and pass it appropriate variables
-	public function render($templateName, $data = array()) {
+	protected function render($templateName, $data = array()) {
 
 		// Check to make sure the template dir is valid
 		if(realpath($this->templateDir) === false) {
@@ -114,7 +116,9 @@ abstract class Controller {
 //		)); 
 
 		// Load the template requested, and display it
-		$template = $twig->loadTemplate('page-'.$templateName.'.html');
+		$template = $twig->loadTemplate($this::TEMPLATE_PRE.$templateName.
+			$this::TEMPLATE_EXT);
+
 		$template->display(array_merge($this->config, $data));
 	}
 

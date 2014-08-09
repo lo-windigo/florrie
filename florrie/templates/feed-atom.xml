@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+	<title>{{ florrie.title }} Updates</title>
+	<id>{{ florrie.url }}</id>
+	<link rel="self" href="{{ florrie.url }}" />
+	<updated>TODO{{ "now"|date("Y-m-d\TH:i:sP") }}</updated>
+	<generator>Florrie Content Management System</generator>
+	{% for strip in strips %}
+	<entry>
+		<title>{{ title is not empty ? title : posted|date("l, F jS, Y") }}</title>
+		<link href="{{ florrie.url }}/strip/{{ strip.id }}" />
+		<guid>{{ florrie.url }}/strip/{{ strip.id }}</guid>
+		<published>{{ strip.posted|date("Y-m-d\TH:i:sP") }}</published>
+		<updated>{{ strip.posted|date("Y-m-d\TH:i:sP") }}</updated>
+		<content type="html">TODO: Strip preview and/or description</content>
+	</entry>
+	{% endfor %}
+</feed>
