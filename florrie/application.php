@@ -39,65 +39,60 @@ class Florrie {
 	public $config;
 
 
-	// Constructor
-	// Purpose:	Set up all of the basic stuff required to run the comic
+	// Set up all of the basic stuff required to run the comic
 	public function __construct() {
-
-		// If Florrie hasn't been installed yet, we should probably address that
-		if(!$this->installed()) {
-
-			// TODO: Florrie install procedure
-			die('IOU: One installer. - Windigo');
-		}
-
-
-		//----------------------------------------
-		// Handle requests
-		//----------------------------------------
-
-		// Sanitize the URL, and trim the leading/trailing slashes
-		$uri = filter_input(INPUT_GET, 'u', FILTER_SANITIZE_URL);
-		$uri = trim($uri, '/');
-
-		// Burst into an array and remove the controller type
-		$uriArray = explode('/', $uri);
-		$type = array_shift($uriArray);
 
 		try {
 
+			// If Florrie hasn't been installed yet, we should probably address that
+			if(!$this->installed()) {
+
+				// TODO: Florrie install procedure
+				die('IOU: One installer. - Windigo');
+			}
+
+			// shift the controller type off of the URI variables
+			$uri = $this->parseURI();
+			$type = array_shift($uri);
+
 			// Get controller object, and route the request
 			$controller = $this->getController($type);
-			$controller->route($uriArray);
+			$controller->route($uri);
 		}
 		// Handle any errors that may have occurred
 		catch (exception $e) {
 
+			$controller = $this->getController('error');
+
 			if(get_class($e) === 'NotFoundException') {
 
-				// TODO: Properly handle a 404
-				echo '404: '.$e->getMessage();
+				// Handle a 404
+				$controller->notFound($e->getMessage());
 			}
-			else if(get_class($e) === 'ServerErrorException') {
+			else if(get_class($e) === 'ServerException') {
 
-				// TODO: Properly handle a server error
-				echo '500: '.$e->getMessage();
+				// Handle a server error
+				$controller->serverError($e->getMessage());
+				//echo '500: '.$e->getMessage();
 			}
-			else if(get_class($e) === 'DBException') {
-				// TODO: Properly handle DB connection errors
-				echo 'DB error: '.$e->getMessage();
+			else if(get_class($e) === 'DBException' ||
+				get_class($e) === 'DBException') {
+
+				// Properly handle DB connection errors
+				$controller->dbError($e->getMessage());
+				//echo 'DB error: '.$e->getMessage();
 			}
 			else {
 
-				// TODO
-				echo 'Other: '.$e->getMessage();
+				// Properly handle DB connection errors
+				$controller->unknownError($e->getMessage());
+				//echo 'DB error: '.$e->getMessage();
 			}
 		}
 	}
 
 
-
-	// getController
-	// Purpose: Return the appropriate controller object
+	// Get the appropriate controller object
 	public function getController($controller) {
 
 		// Get the controller path
@@ -132,11 +127,8 @@ class Florrie {
 	}
 
 
-
-	// getPlugins
-	// Purpose:	Get the configuration file, if present, and return the
+	// Get the configuration file, if present, and return the
 	//	configuration array
-	// Return:	void, but an exception may be thrown
 	public function getPlugins()
 	{
 		// TODO: Work Ongoing!
@@ -146,8 +138,7 @@ class Florrie {
 	}
 
 
-	// installed
-	// Purpose:	Check to see if Florrie's installed or not
+	// Check to see if Florrie's installed or not
 	public function installed()
 	{
 		$installed = false;
@@ -171,8 +162,7 @@ class Florrie {
 	}
 
 
-
-	// parse an XML element, recursively, into an array
+	// Parse an XML element, recursively, into an array
 	protected function parseConfig($node) {
 
 		// If we have children, we will need to start an array and fill it with 
@@ -198,9 +188,19 @@ class Florrie {
 	}
 
 
+	// Split the URI into usable chunks
+	protected function parseURI() {
 
-	// readConfig
-	// Purpose:	Get the configuration file, if present, and store for later
+			// Sanitize the URL, and trim the leading/trailing slashes
+			$uri = filter_input(INPUT_GET, 'u', FILTER_SANITIZE_URL);
+			$uri = trim($uri, '/');
+
+			// Burst into an array
+			return explode('/', $uri);
+	}
+
+
+	// Read the configuration file, if present, and store for later
 	protected function readConfig() {
 
 		// Check to see if the configuration file exists

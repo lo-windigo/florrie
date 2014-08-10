@@ -70,7 +70,7 @@ abstract class Controller {
 		if(empty($config['data']) || empty($config['data']['dsn']) ||
 			empty($config['data']['user']) || empty($config['data']['pass'])) {
 
-			throw new ServerErrorException('Database configuration values not present');
+			throw new ServerException('Database configuration values not present');
 		}
 		else {
 
@@ -105,7 +105,7 @@ abstract class Controller {
 		// Check to make sure the template dir is valid
 		if(realpath($this->templateDir) === false) {
 			
-			throw new ServerErrorException(get_class($this).' Template directory not set');
+			throw new ServerException(get_class($this).' Template directory not set');
 		}
 
 		// Set up the template system 

@@ -27,6 +27,6 @@ class DBException extends exception {}
 class NotFoundException extends exception {}
 
 // An unrecoverable error
-class ServerErrorException extends exception {}
+class ServerException extends exception {}
 
 ?>
