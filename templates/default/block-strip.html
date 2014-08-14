@@ -3,6 +3,43 @@
 		<h1 class="content-title">
 			{{ title is not empty ? title : posted|date("l, F jS, Y") }}
 		</h1>
+		<ul class="strip-nav">
+		{% if next is empty %}
+			{% if prev is empty %}
+
+				{{ nav.first("disabled") }}
+				{{ nav.prev("disabled") }}
+				{{ nav.random("disabled") }}
+				{{ nav.next("disabled") }}
+				{{ nav.latest("disabled") }}
+
+			{% else %}
+
+				{{ nav.first() }}
+				{{ nav.prev('', prev) }}
+				{{ nav.random() }}
+				{{ nav.next("disabled") }}
+				{{ nav.latest("disabled") }}
+
+			{% endif %}
+		{% elseif prev is not empty %}
+
+				{{ nav.first() }}
+				{{ nav.prev('', prev) }}
+				{{ nav.random() }}
+				{{ nav.next('', next) }}
+				{{ nav.latest() }}
+
+		{% else %}
+
+				{{ nav.first("disabled") }}
+				{{ nav.prev("disabled") }}
+				{{ nav.random() }}
+				{{ nav.next('', next) }}
+				{{ nav.latest() }}
+
+		{% endif %}
+		</ul>
 		<p class="strip">
 			{% if img is defined %}
 			<img src="{{ img }}"

@@ -1,5 +1,5 @@
 {% macro first(disable) %}
-			<li class="strip-first {{ disable }}">
+			<li class="strip-nav-item strip-first {{ disable }}">
 				{% if disable is empty %}
 				<a href="/strip/first">
 				{% endif %}
@@ -11,7 +11,7 @@
 {% endmacro %}
 		
 {% macro prev(disable, prev) %}
-			<li class="strip-prev {{ disable }}">
+			<li class="strip-nav-item strip-prev {{ disable }}">
 				{% if disable is empty %}
 				<a href="/strip/{{ prev }}">
 				{% endif %}
@@ -23,7 +23,7 @@
 {% endmacro %}
 		
 {% macro random(disable) %}
-			<li class="strip-random {{ disable }}">
+			<li class="strip-nav-item strip-random {{ disable }}">
 				{% if disable is empty %}
 				<a href="/strip/random">
 				{% endif %}
@@ -35,7 +35,7 @@
 {% endmacro %}
 		
 {% macro next(disable, next) %}
-			<li class="strip-next {{ disable }}">
+			<li class="strip-nav-item strip-next {{ disable }}">
 				{% if disable is empty %}
 				<a href="/strip/{{ next }}">
 				{% endif %}
@@ -47,7 +47,7 @@
 {% endmacro %}
 		
 {% macro latest(disable) %}
-			<li class="strip-latest {{ disable }}">
+			<li class="strip-nav-item strip-latest {{ disable }}">
 				{% if disable is empty %}
 				<a href="/strip/latest">
 				{% endif %}
