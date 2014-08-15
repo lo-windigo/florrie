@@ -7,14 +7,16 @@
 	<generator>Florrie Comic Management System</generator>
 	{% for strip in strips %}
 	<entry>
-		<title>{{ title is not empty ? title : posted|date("l, F jS, Y") }}</title>
+		<title>
+			{{ strip.title is not empty ? strip.title : strip.posted|date("l, F jS, Y") }}
+		</title>
 		<link href="{{ florrie.url }}/strip/{{ strip.id }}" rel="alternate" />
 		<id>{{ florrie.url }}/strip/{{ strip.id }}</id>
 		<published>{{ strip.posted|date("Y-m-d\TH:i:sP") }}</published>
 		<updated>{{ strip.posted|date("Y-m-d\TH:i:sP") }}</updated>
 		<summary type="html">
 			&lt;a href="{{ florrie.url }}/strip/{{ strip.id }}"&gt;
-				&lt;img src="{{ florrie.url }}/strips/{{ strip.url }}"
+				&lt;img src="{{ florrie.url }}/strips/{{ strip.img }}"
 					{% if strip.title is defined %}title="{{ strip.title }}"{% endif %}
 					{% if strip.desc is defined %}alt="{{ strip.desc }}"{% endif %}/&gt;
 			&lt;/a&gt;

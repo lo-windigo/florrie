@@ -3,15 +3,23 @@
 	<channel>
 		<title>{{ florrie.title }} Updates</title>
 		<language>en-US</language>
-		<link>{{ florrie.url }}</link>
+		<link>{{ florrie.url }}/feed/rss</link>
 		<generator>Florrie Comic Management System</generator>
 		<docs>http://blogs.law.harvard.edu/tech/rss</docs>
 		{% for strip in strips %}
 		<item>
-			<title>{{ title is not empty ? title : posted|date("l, F jS, Y") }}</title>
-			<description>TODO: Strip preview or image</description>
-			<link>/strip/{{ strip.id }}</link>
-			<guid>/strip/{{ strip.id }}</guid>
+			<title>
+				{{ strip.title is not empty ? strip.title : strip.posted|date("l, F jS, Y") }}
+			</title>
+			<description>
+				&lt;a href="{{ florrie.url }}/strip/{{ strip.id }}"&gt;
+					&lt;img src="{{ florrie.url }}/strips/{{ strip.img }}"
+						{% if strip.title is defined %}title="{{ strip.title }}"{% endif %}
+						{% if strip.desc is defined %}alt="{{ strip.desc }}"{% endif %}/&gt;
+				&lt;/a&gt;
+			</description>
+			<link>{{ florrie.url }}/strip/{{ strip.id }}</link>
+			<guid>{{ florrie.url }}/strip/{{ strip.id }}</guid>
 			<pubDate>{{ strip.posted|date("D, d M Y H:i:s O") }}</pubDate>
 		</item>
 		{% endfor %}
