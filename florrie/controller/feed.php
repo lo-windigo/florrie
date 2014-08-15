@@ -44,9 +44,7 @@ class Feed extends Controller {
 	public function atom() {
 
 		// Send the appropriate headers
-		// TODO: Verify this mime type
 		header('Content-Type: application/atom+xml');
-		header('Content-Disposition: inline');
 
 		$strips = $this->model->getStrips();
 
@@ -58,6 +56,7 @@ class Feed extends Controller {
 	public function index() {
 
 		// TODO: Maybe list the available feeds?
+		throw new NotFoundException('No Feed Index');
 	}
 
 

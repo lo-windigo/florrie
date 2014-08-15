@@ -1,18 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom">
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en-us">
 	<title>{{ florrie.title }} Updates</title>
-	<id>{{ florrie.url }}</id>
-	<link rel="self" href="{{ florrie.url }}" />
-	<updated>TODO{{ "now"|date("Y-m-d\TH:i:sP") }}</updated>
-	<generator>Florrie Content Management System</generator>
+	<id>{{ florrie.url }}/feed/atom</id>
+	<link rel="self" href="{{ florrie.url }}/feed/atom" />
+	<updated>{{ "now"|date("Y-m-d\TH:i:sP") }}</updated>
+	<generator>Florrie Comic Management System</generator>
 	{% for strip in strips %}
 	<entry>
 		<title>{{ title is not empty ? title : posted|date("l, F jS, Y") }}</title>
-		<link href="{{ florrie.url }}/strip/{{ strip.id }}" />
-		<guid>{{ florrie.url }}/strip/{{ strip.id }}</guid>
+		<link href="{{ florrie.url }}/strip/{{ strip.id }}" rel="alternate" />
+		<id>{{ florrie.url }}/strip/{{ strip.id }}</id>
 		<published>{{ strip.posted|date("Y-m-d\TH:i:sP") }}</published>
 		<updated>{{ strip.posted|date("Y-m-d\TH:i:sP") }}</updated>
-		<content type="html">TODO: Strip preview and/or description</content>
+		<summary type="html">
+			&lt;a href="{{ florrie.url }}/strip/{{ strip.id }}"&gt;
+				&lt;img src="{{ florrie.url }}/strips/{{ strip.url }}"
+					{% if strip.title is defined %}title="{{ strip.title }}"{% endif %}
+					{% if strip.desc is defined %}alt="{{ strip.desc }}"{% endif %}/&gt;
+			&lt;/a&gt;
+		</summary>
 	</entry>
 	{% endfor %}
 </feed>

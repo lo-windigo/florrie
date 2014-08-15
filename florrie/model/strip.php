@@ -1,6 +1,6 @@
 <?php
 /*
-	Comic Strip Controller
+	Comic Strip Model
 	By Jacob Hume
 
 	This file is part of Florrie.
@@ -29,7 +29,6 @@ class StripModel {
 	//----------------------------------------
 	const DEFAULT_PATH = '/strips/';
 	const MYSQL_DATE   = 'Y-m-d H:i:s';
-	//const MYSQL_DATE   = 'd/m/Y h:i a';
 
 
 	//========================================

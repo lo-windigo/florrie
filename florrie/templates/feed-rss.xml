@@ -4,7 +4,7 @@
 		<title>{{ florrie.title }} Updates</title>
 		<language>en-US</language>
 		<link>{{ florrie.url }}</link>
-		<generator>Florrie Content Management System</generator>
+		<generator>Florrie Comic Management System</generator>
 		<docs>http://blogs.law.harvard.edu/tech/rss</docs>
 		{% for strip in strips %}
 		<item>
