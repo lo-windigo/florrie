@@ -20,6 +20,11 @@
 */
 
 
+/* TODO
+ *
+ *	Add a slug field for file naming and URL resolution
+ *
+ */
 
 class StripModel {
 
