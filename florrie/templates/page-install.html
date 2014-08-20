@@ -1,0 +1,106 @@
+{% extends "page-base.html" %}
+
+{% block title %}Install Florrie{% endblock %}
+
+{% block content %}
+		<h1 class="content-title">Install Florrie</h1>
+		<p>
+			Welcome to Florrie, the comic management system! It looks like this
+			is the first time Florrie has been run, so we're going to ask a
+			couple questions to help us get things set up.
+		</p>
+		<form method="post">
+			<fieldset>
+				<legend>Comic Details</legend>
+				<p>
+					<label for="florrie-name">
+						Name of your comic
+						<input type="text" required id="florrie-name" name="florrie-name">
+					</label>
+				</p>
+				<p>
+					<label for="florrie-desc">
+						Short description
+						<input type="text" required id="florrie-desc" name="florrie-desc">
+					</label>
+				</p>
+				<p>
+					<label for="florrie-url">
+						Comic URL
+						<input type="url" required id="florrie-url" name="florrie-url">
+					</label>
+				</p>
+			</fieldset>
+			<fieldset>
+				<legend>Database Configuration</legend>
+				<p>
+					<label for="data-server">
+						Server
+						<input type="text" id="data-server" name="data-server"
+						placeholder="localhost">
+					</label>
+				</p>
+				<p>
+					<label for="data-port">
+						Port
+						<input type="text" id="data-name" name="data-name"
+						placeholder="3307">
+					</label>
+				</p>
+				<p>
+					<label for="data-name">
+						Database/Schema Name
+						<input type="text" id="data-name" name="data-name"
+						placeholder="florrie">
+					</label>
+				</p>
+				<p>
+					<label for="data-user">
+						User
+						<input type="url" required id="data-user" name="data-user">
+					</label>
+				</p>
+				<p>
+					<label for="data-pass">
+						Password
+						<input type="password" required id="data-pass" name="data-pass">
+					</label>
+				</p>
+			</fieldset>
+			{% if ftp == "true" %}
+			<fieldset>
+				<legend>FTP Details</legend>
+				<p>
+					Unfortunately, it doesn't look like we can write files to
+					your server. We will need another way to add files; please
+					enter a FTP user.
+				</p>
+				<p>
+					<em>TODO: Coming soon! This part doesn't actually work yet.</em>
+				</p>
+				<p>
+					<label for="florrie-name">
+						Name of your comic
+						<input type="text" id="florrie-name" name="florrie-name">
+					</label>
+				</p>
+				<p>
+					<label for="florrie-desc">
+						Short description
+						<input type="text" id="florrie-name" name="florrie-name">
+					</label>
+				</p>
+				<p>
+					<label for="florrie-url">
+						Comic URL
+						<input type="url" id="florrie-url" name="florrie-url">
+					</label>
+				</p>
+			</fieldset>
+			{% endif %}
+			<p class="c">
+				<input type="submit" value="Install Florrie">
+				<input type="hidden" name="submitted" value="true">
+			</p>
+		</form>
+{% endblock %}

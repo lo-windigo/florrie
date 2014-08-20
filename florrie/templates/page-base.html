@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+
+<head>
+	<title>{% block title %}Florrie Administration{% endblock %}</title>
+	<meta charset="{{ _charset }}">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0">
+	<link rel="stylesheet" type="text/css" href="/templates/default/css/layout.css">
+	{% for script in scripts %}
+	<script type="text/javascript" src="{{ script }}"></script>
+	{% endfor %}
+</head>
+
+<body>
+	<a class="a11y-link" href="#content">Skip to content</a>
+	<header class="header">
+		<div class="site-title">
+			<a href="/admin/">Florrie</a>
+		</div>
+		<nav>
+			<ul class="main-nav">
+				{% block navigation %}{% endblock %}
+			</ul>
+		</nav>
+	</header>
+	<section class="content">{% block content %}{% endblock %}</section>
+	<footer class="footer">
+		© {{ "now"|date('Y') }} {{ florrie.name }}
+	</footer>
+</body>
+
+</html>
