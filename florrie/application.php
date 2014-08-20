@@ -44,16 +44,18 @@ class Florrie {
 
 		try {
 
-			// If Florrie hasn't been installed yet, we should probably address that
-			if(!$this->installed()) {
-
-				// TODO: Florrie install procedure
-				die('IOU: One installer. - Windigo');
-			}
-
 			// shift the controller type off of the URI variables
 			$uri = $this->parseURI();
 			$type = array_shift($uri);
+
+			// If Florrie hasn't been installed yet, we should probably address that
+			IF(!$this->installed() && $type != 'install') {
+
+				// Start the Florrie install procedure; redirect to the
+				//	installation page
+				header('Location: /install', true, 307);
+				return;
+			}
 
 			// Get controller object, and route the request
 			$controller = $this->getController($type);
@@ -141,8 +143,6 @@ class Florrie {
 	// Check to see if Florrie's installed or not
 	public function installed()
 	{
-		$installed = false;
-
 		try
 		{
 			// Attempt to get required components, like configuration files
