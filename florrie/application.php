@@ -32,6 +32,7 @@ class Florrie {
 	//  CONTROLLER - Directory for main controllers
 	const CONFIG     = '/florrie.cfg';
 	const CONTROLLER = '/florrie/controller/';
+	const THEMES     = '/templates/';
 
 
 	// Data members:

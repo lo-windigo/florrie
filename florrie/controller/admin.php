@@ -32,41 +32,93 @@ class Admin extends Controller {
 	}
 
 
+	// Get all of the installed/available themes
+	protected function getThemes() {
+
+		$themes = array();
+		$themesDir = $_SERVER['DOCUMENT_ROOT'].Florrie::THEMES;
+
+		// TODO: Actually fetch installed themes
+		$themes['default'] = "Default Theme";
+
+		return $themes;
+	}
+
+
 	// Take form input array and convert to multi-dimensional configuration 
 	// array, for use with the config file
 	protected function convertToConfigArray($flatConfig) {
 
-		$config = array();
+		$configArray = array();
+
+		// Recursive function to build multidimensional config arrays
+		$builder = function(&$indexes, $value) use (&$builder) {
+
+			$index = array_shift($indexes);
+
+			if(is_null($index)) {
+
+				return $value;
+			}
+
+			return array($index => $builder($indexes, $value));
+		};
 
 		foreach($flatConfig as $index => $value) {
 
 			$indexes = explode('-', $index);
 
-			$treeValue = $this->treeBuilder($indexes, $value);
+			$treeValue = $builder($indexes, $value);
 
-			$config = array_merge_recursive($config, $treeValue);
+			$configArray = array_merge_recursive($configArray, $treeValue);
 		}
 
-		return $config;
-	}
-
-
-	// Recursive function to build multidimensional config arrays
-	protected function configBuilder($indexes, $value) {
-
-		$index = array_pop($indexes);
-
-		if($index === null) {
-
-			return $value;
-		}
-
-		return array($index => $this->configBuilder($indexes, $value));
+		return $configArray;
 	}
 
 
 	// Write configuration values to the config file
-	protected function saveConfig($config) {
+	protected function saveConfig($configArray) {
+
+		$configXML = new DOMDocument();
+		$configXML->formatOutput = true;
+
+		// Recursive function to build config nodes
+		$builder = function($values, &$parent) use (&$builder) {
+
+			// BASE CASE: Set the value of the parent node, and return
+			if(!is_array($values)) {
+
+				$parent->nodeValue = $values;
+				return;
+			}
+
+			// Create nodes for each config value, and add it as a child
+			foreach($values as $index => $value) {
+
+				$thisNode = $parent->ownerDocument->createElement($index);
+
+				$builder($value, $thisNode);
+
+				$parent->appendChild($thisNode);
+			}
+		};
+
+		$configNode = $configXML->createElement('config');
+
+		$configNode->appendChild(
+			new DOMComment('!!! DO NOT MODIFY DIRECTLY: USE ADMIN SECTION !!!')
+		);
+
+		$builder($configArray, $configNode);
+
+		$configXML->appendChild($configNode);
+
+		$configData = $configXML->saveXML();
+
+		// TODO Use file API!
+		return (file_put_contents($_SERVER['DOCUMENT_ROOT'].Florrie::CONFIG,
+			$configData) > 0);
 	}
 }
 ?>

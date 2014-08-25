@@ -32,6 +32,18 @@
 				</p>
 			</fieldset>
 			<fieldset>
+				<legend>Theme</legend>
+				{% for dir, theme in themes %}
+				<p>
+					<label for="florrie-theme{{ dir }}">
+						<input type="radio" name="florrie-theme"
+							id="florrie-theme-{{ dir }}" value="{{ dir }}">
+						{{ theme }}
+					</label>
+				</p>
+				{% endfor %}
+			</fieldset>
+			<fieldset>
 				<legend>Database Configuration</legend>
 				<p>
 					<label for="data-server">
@@ -48,16 +60,16 @@
 					</label>
 				</p>
 				<p>
-					<label for="data-name">
+					<label for="data-db">
 						Database/Schema Name
-						<input type="text" id="data-name" name="data-name"
+						<input type="text" id="data-db" name="data-db"
 						placeholder="florrie">
 					</label>
 				</p>
 				<p>
 					<label for="data-user">
 						User
-						<input type="url" required id="data-user" name="data-user">
+						<input type="text" required id="data-user" name="data-user">
 					</label>
 				</p>
 				<p>

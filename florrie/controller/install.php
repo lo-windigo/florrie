@@ -55,7 +55,7 @@ class Install extends Admin {
 		$submitted = filter_input(INPUT_POST, 'submitted');
 
 		// Process form data if it has been submitted
-		if($submitted !== false) {
+		if($submitted !== null) {
 
 			// Defaults go here
 			$values = array(
@@ -72,17 +72,23 @@ class Install extends Admin {
 			$error = false;
 
 			// Process all form fields
-			foreach(&$values as $index => $value) {
+			foreach($values as $index => &$value) {
 
-				$input = filter_input(INPUT_POST, $value, FILTER_SANITIZE_STRING);
+				$input = filter_input(INPUT_POST, $index, FILTER_SANITIZE_STRING);
 
 				// If no value was submitted and no default exists, raise an 
 				// error
 				if(($input === null || $input === false) && empty($value)) {
 
-					$error = true;
+					//$error = true;
+					if($error === false) {
+
+						$error = '';
+					}
+
+					$error .= $index.' ';
 				}
-				else {
+				else if(!empty($input)) {
 
 					$value = $input;
 				}
@@ -91,17 +97,28 @@ class Install extends Admin {
 			if($error) {
 
 				// TODO: Type the right values, damnit!
-				die('Form Error Handling? Maybe later.');
+				die('Form Error Handling? Maybe later. Bad indexes: '.$error);
 
 			}
 			else {
 
-				// Convert the configuration values to a multidimensional array 
-				// that can be converted to XML
-				$config = $this->convertToConfigArray($values);
+				// Compile the db values into a DSN
+				// TODO: Database independent? Let people choose?
+				$values['data-dsn'] = 'mysql:host='.$values['data-server'].
+					';port='.$values['data-port'].';dbname='.
+					$values['data-db'];
 
-				// TODO: Convert the mutlidimensional array to XML!
+				unset(
+					$values['data-server'],
+					$values['data-port'],
+					$values['data-db']
+				);
 
+				$configArray = $this->convertToConfigArray($values);
+
+				$this->saveConfig($configArray);
+
+				// TODO: Install the database. Details, details.
 
 				// Installation complete; redirect to the homepage
 				header('Location: /');
@@ -109,9 +126,12 @@ class Install extends Admin {
 			}
 		}
 
+		$themes = $this->getThemes();
+
 		$this->render('install', array(
 			'scripts' => array('/florrie/templates/js/install.js'),
-			'ftp' => $this->filesWritable()?"false":"true"
+			'ftp' => $this->filesWritable()?"false":"true",
+			'themes' => $themes
 		));
 	}
 
@@ -140,7 +160,7 @@ class Install extends Admin {
 	// Test to see if the file locations are writeable
 	protected function filesWritable() {
 
-		$config = $_SERVER['DOCUMENT_ROOT'].'/florrie.cfg';
+		$config = $_SERVER['DOCUMENT_ROOT'].Florrie::CONFIG;
 		$strips = $_SERVER['DOCUMENT_ROOT'].'/strips/test';
 
 		if(!is_writable(dirname($config)) || !is_writable(dirname($strips))) {
