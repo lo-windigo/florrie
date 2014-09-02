@@ -1,4 +1,5 @@
 <?php
+session_start();
 /*
 	Admin Controller
 	By Jacob Hume
@@ -26,9 +27,35 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/controller.php';
 
 class Admin extends Controller {
 
+	public function __construct($config) {
+
+		//----------------------------------------
+		// Check for user credentials
+		//----------------------------------------
+		
+		if(empty($_SESSION['florrie-user']) {
+
+			// Users must be logged in!
+			header('Location: /login', true, 307);
+			exit;
+		}
+		else {
+
+			// TODO: Store user credentials... somewheres.
+		}
+		//----------------------------------------
+
+
+		parent::__construct($config);
+
+		// Use the system-level template directory
+		$this->templateDir = $_SERVER['DOCUMENT_ROOT'].'/florrie/templates/';
+	}
+
+
 	public function index() {
 
-		// TODO: An entire admin section
+		$this->render('admin');
 	}
 
 
