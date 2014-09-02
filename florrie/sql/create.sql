@@ -31,6 +31,7 @@ CREATE TABLE strips
 (
 	id INT NOT NULL AUTO_INCREMENT,
 	title VARCHAR(500),
+	slug VARCHAR(500),
 	desc TEXT,
 	img VARCHAR(200) NOT NULL,
 	item_order INT NOT NULL,
@@ -53,9 +54,8 @@ CREATE TABLE strips
 # Comic strip table creation statement
 CREATE TABLE users
 (
-	user VARCHAR(50) NOT NULL,
-	pass VARCHAR(40) NOT NULL,
-	salt VARCHAR(40) NOT NULL,
-	display VARCHAR(50),
+	user VARCHAR(300) NOT NULL,
+	pass VARCHAR(300),
+	display VARCHAR(300) NOT NULL,
 	PRIMARY KEY(user)
 );
