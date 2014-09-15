@@ -41,9 +41,10 @@ class Install extends Admin {
 	}
 
 
-	// Handle a Florrie installation via HTML form
+	// Route the various steps of the installation
 	public function index() {
 
+		// Check for a previous install
 		if(!(empty($this->config) || empty($this->config['florrie']))) {
 
 			$e = 'The install page cannot be accessed if 
@@ -51,6 +52,86 @@ class Install extends Admin {
 
 			throw new ServerError($e);
 		}
+
+		// Check for requirements: if any of these fail, Florrie cannot be 
+		//  installed until they are resolved.
+		$missingRequirements = $missingRecommends = array();
+
+		// SHA512 used for hashing passwords securely
+		if(empty(CRYPT_SHA512)) {
+
+			$missingRequirements[] = <<<SHA
+Your system does not support SHA512 hashing; this prevents Florrie from
+securely handling passwords. Upgrading to PHP 5.3 or newer will fix this.
+SHA;
+		}
+
+		// Use OpenSSL functions to generate salt
+		if(!function_exists('openssl_random_pseudo_bytes')) {
+
+			$missingRecommends[] = <<<OPENSSL
+We recommend OpenSSL for much more secure pseudo random number generation.
+Your numbers will still be random-ish without it, but not what they could be!
+OPENSSL;
+		}
+
+		if(!$this->filesWriteable) {
+
+			//$missingRecommends[] = <<<WRITE
+			$missingRequirements[] = <<<WRITE
+Florrie cannot write to the strips folder, or the configuration file.
+WRITE;
+		}
+
+		if(empty($missingRequirements)) {
+
+			$this->install();
+		}
+		else {
+
+			$this->requirements($missingRequirements, $missingRecommends);
+		}
+	}
+
+
+	//----------------------------------------
+	// Internal controller functions
+	//----------------------------------------
+
+	// Test to see if the file locations are writeable
+	protected function filesWritable() {
+
+		$config = $_SERVER['DOCUMENT_ROOT'].Florrie::CONFIG;
+		$strips = $_SERVER['DOCUMENT_ROOT'].'/strips/test';
+
+		if(!is_writable(dirname($config)) || !is_writable(dirname($strips))) {
+
+			echo 'Not writable!';
+			return false;
+		}
+
+		if(file_put_contents($config, 'test file') <= 0) {
+
+			echo 'Cant Write Config';
+			return false;
+		}
+
+		if(file_put_contents($strips, 'test file') <= 0) {
+
+			echo 'Cant Write strips';
+			unlink($config);
+			return false;
+		}
+
+		unlink($config);
+		unlink($strips);
+
+		return true;
+	}
+
+
+	// Handle a Florrie installation via HTML form
+	protected function install($missingRecommends) {
 
 		$submitted = filter_input(INPUT_POST, 'submitted');
 
@@ -136,6 +217,11 @@ class Install extends Admin {
 	}
 
 
+	// Display the requirements for Florrie, if they are not met
+	protected function requirements() {
+	}
+
+
 	// Render a page and pass it appropriate variables
 	protected function render($templateName, $data = array()) {
 
@@ -154,38 +240,6 @@ class Install extends Admin {
 			$this::TEMPLATE_EXT);
 
 		$template->display($data);
-	}
-
-
-	// Test to see if the file locations are writeable
-	protected function filesWritable() {
-
-		$config = $_SERVER['DOCUMENT_ROOT'].Florrie::CONFIG;
-		$strips = $_SERVER['DOCUMENT_ROOT'].'/strips/test';
-
-		if(!is_writable(dirname($config)) || !is_writable(dirname($strips))) {
-
-			echo 'Not writable!';
-			return false;
-		}
-
-		if(file_put_contents($config, 'test file') <= 0) {
-
-			echo 'Cant Write Config';
-			return false;
-		}
-
-		if(file_put_contents($strips, 'test file') <= 0) {
-
-			echo 'Cant Write strips';
-			unlink($config);
-			return false;
-		}
-
-		unlink($config);
-		unlink($strips);
-
-		return true;
 	}
 }
 ?>
