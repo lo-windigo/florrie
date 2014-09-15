@@ -1,0 +1,25 @@
+{% extends "page-base.html" %}
+
+{% block title %}Log in to Florrie{% endblock %}
+
+{% block content %}
+		<h1 class="content-title">Log in to Florrie</h1>
+		<p>
+			These pages require special permissions; please log in if you are
+			authorized to use them.
+		</p>
+		<form method="post">
+			<p>
+				<label for="florrie-name">
+					Username
+					<input type="text" required id="username" name="username">
+				</label>
+			</p>
+			<p>
+				<label for="florrie-desc">
+					Password
+					<input type="password" required id="password" name="password">
+				</label>
+			</p>
+		</form>
+{% endblock %}
