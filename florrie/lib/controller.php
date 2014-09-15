@@ -111,7 +111,7 @@ abstract class Controller {
 		// Set up the template system 
 		$loader = new Twig_Loader_Filesystem($this->templateDir);
 		$twig = new Twig_Environment($loader);
-// TODO: Figure out "cache"
+// Can be enabled for caching templates
 //			, array(
 //			'cache' => '/path/to/compilation_cache',
 //		)); 
