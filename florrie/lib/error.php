@@ -23,6 +23,13 @@
 // Database-based exception
 class DBException extends exception {}
 
+// Form validation errors
+class FormException extends exception {
+
+	// Contains any and all form data that needs to be passed back
+	public $formData;
+}
+
 // HTTP404 - file not found
 class NotFoundException extends exception {}
 
