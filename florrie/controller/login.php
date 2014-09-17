@@ -52,7 +52,7 @@ class Auth extends Controller {
 
 				ProcessFormInput($values);
 
-				$user = $this->model->matchesCredentials($values['username'], $values['password']);
+				$user = $this->model->authenticateUser($values['username'], $values['password']);
 
 				$_SESSION['user'] = $user;
 
@@ -79,57 +79,15 @@ class Auth extends Controller {
 	public function logout() {
 
 		unset($_SESSION['user']);
+
+		$this->render('logout', array());
 	}
 
 
-	// Index: Render a single strip
-	public function index($id = false) {
+	// Index: Nothing here ATM!
+	public function index() {
 
-		if($id === false) {
-
-			throw new NotFoundException('Strip ID not provided');
-		}
-
-		// Get the strip and display it
-		$strip = $this->model->getStrip($id);
-
-		$this->render('index', array('strip' => $strip));
-	}
-
-
-	// Show the latest strip
-	public function latest() {
-
-		$strip = $this->model->getLatest();
-
-		$this->render('index', array('strip' => $strip));
-	}
-
-
-	// Show a random strip
-	public function random() {
-
-		$strip = $this->model->getRandom();
-
-		$this->render('index', array('strip' => $strip));
-	}
-
-
-	// Route a request to a controller function, based on the URI data
-	public function route($uriArray = array()) {
-
-		// Get the first value (if any) of the array
-		$value = current($uriArray);
-
-		// If a strip ID has been sent in, display that
-		if($value !== false && (is_int($value) || ctype_digit($value))) {
-
-			$this->index($value);
-		}
-
-
-		// The parent router can handle everything else
-		parent::route($uriArray);
+		header('Location: /login');
 	}
 }
 ?>
