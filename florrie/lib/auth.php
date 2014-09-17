@@ -20,7 +20,9 @@
 */
 
 
-// Create a pre-5.6 version of the hash_equals function
+//----------------------------------------
+// Pre-5.6 version of hash_equals
+//----------------------------------------
 if(!function_exists('hash_equals')) {
 
 	function hash_equals($str1, $str2) {
@@ -36,5 +38,36 @@ if(!function_exists('hash_equals')) {
 
 		return $equal;
 	}
+}
+
+
+//----------------------------------------
+// Properly hash a password
+// NOTE: Someday could be superceeded with
+//	PHP's hash_password
+//----------------------------------------
+function hashPassword($pass, $salt = false) {
+
+	// If a salt value hasn't been passed in, create one
+	if(!$salt) {
+
+		// Here's hoping 10,000-ish rounds will hold 'em.
+		$salt = '$6$rounds=9999$';
+
+		// Use OpenSSL functions to generate salt
+		if(function_exists('openssl_random_pseudo_bytes')) {
+
+			$rand = openssl_random_pseudo_bytes(17);
+		}
+		// Fall back to mt_rand if openssl isn't available
+		else {
+
+			$rand = sha1(mt_rand(0, mt_getrandmax()));
+		}
+		
+		$salt .= substr(base64_encode($rand), 0, 16).'$';
+	}
+
+	return crypt($pass, $salt);
 }
 ?>
