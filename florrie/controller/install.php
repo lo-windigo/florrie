@@ -66,6 +66,15 @@ securely handling passwords. Upgrading to PHP 5.3 or newer will fix this.
 SHA;
 		}
 
+		// RIPE used for CSRF
+		if(!(function_exists('hash_algos') && in_array('ripemd320', hash_algos()))) {
+			$missingRequirements[] = <<<RIPE
+Your system does not support ripemd320 hashing; this prevents Florrie from
+generating CSRF tokens. However, IT DOESN'T HAVE TO BE THIS WAY! If you
+encounter this error, file a bug and we can fix it with little effort. Yay!
+RIPE;
+		}
+
 		// Use OpenSSL functions to generate salt
 		if(!function_exists('openssl_random_pseudo_bytes')) {
 
