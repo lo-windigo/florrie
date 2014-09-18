@@ -19,23 +19,28 @@
 	along with Florrie.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+session_start();
+
 
 require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/controller.php';
 require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/forms.php';
 
 
-class Auth extends Controller {
+class Login extends Controller {
 
 	public function __construct($config) {
 
 		parent::__construct($config);
 
 		$this->model = $this->loadModel('User');
+
+		// Use the system-level template directory
+		$this->templateDir = $_SERVER['DOCUMENT_ROOT'].'/florrie/templates/';
 	}
 
 
 	// Allow a user to log into the system
-	public function login() {
+	public function index() {
 
 		$submitted = filter_input(INPUT_POST, 'submitted');
 
@@ -59,8 +64,8 @@ class Auth extends Controller {
 				// Generate CSRF token: https://www.owasp.org/index.php/PHP_CSRF_Guard
 				$_SESSION['csrf'] = hash('ripemd320', mt_rand(0,mt_getrandmax()));
 
-				// Installation complete; redirect to the homepage
-				header('Location: '.$this->config['florrie']['url']);
+				// Installation complete; redirect to the admin section
+				header('Location: '.$this->config['florrie']['url'].'admin');
 				return;
 			}
 			catch (FormException $e) {
@@ -81,13 +86,6 @@ class Auth extends Controller {
 		unset($_SESSION['user']);
 
 		$this->render('logout', array());
-	}
-
-
-	// Index: Nothing here ATM!
-	public function index() {
-
-		header('Location: /login');
 	}
 }
 ?>

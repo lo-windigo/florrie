@@ -32,7 +32,7 @@ CREATE TABLE strips
 	id INT NOT NULL AUTO_INCREMENT,
 	title VARCHAR(500),
 	slug VARCHAR(500),
-	desc TEXT,
+	display TEXT,
 	img VARCHAR(200) NOT NULL,
 	item_order INT NOT NULL,
 	posted DATETIME NOT NULL,

@@ -8,18 +8,22 @@
 			These pages require special permissions; please log in if you are
 			authorized to use them.
 		</p>
-		<form method="post">
+		<form method="post" action="/login">
 			<p>
-				<label for="florrie-name">
+				<label for="username">
 					Username
 					<input type="text" required id="username" name="username">
 				</label>
 			</p>
 			<p>
-				<label for="florrie-desc">
+				<label for="password">
 					Password
 					<input type="password" required id="password" name="password">
 				</label>
+			</p>
+			<p>
+				<input type="hidden" name="submitted" value="true">
+				<input type="submit" value="Log in">
 			</p>
 		</form>
 {% endblock %}

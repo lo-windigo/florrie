@@ -85,7 +85,7 @@ Q;
 
 		// First, we're going to need user details
 		$user = $this->getUser($user);
-		$pass = $this->hashPass($pass);
+		$pass = hashPassword($pass, $user->pass);
 
 		if(hash_equals($user->pass, $pass)) {
 
@@ -93,7 +93,7 @@ Q;
 		}
 
 		// TODO: Create a better exception
-		throw new exception();	
+		throw new exception('Crap, that didn`t work');	
 	}
 
 

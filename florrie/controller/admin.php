@@ -1,5 +1,4 @@
 <?php
-session_start();
 /*
 	Admin Controller
 	By Jacob Hume
@@ -20,6 +19,7 @@ session_start();
 	along with Florrie.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+session_start();
 
 
 require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/controller.php';
@@ -33,15 +33,11 @@ class Admin extends Controller {
 		// Check for user credentials
 		//----------------------------------------
 		
-		if(empty($_SESSION['florrie-user']) {
+		if(empty($_SESSION['user'])) {
 
 			// Users must be logged in!
 			header('Location: /login', true, 307);
 			exit;
-		}
-		else {
-
-			// TODO: Store user credentials... somewheres.
 		}
 		//----------------------------------------
 
