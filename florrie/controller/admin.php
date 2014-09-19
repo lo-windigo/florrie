@@ -100,6 +100,15 @@ class Admin extends Controller {
 	}
 
 
+	// Add some extra administrative data to the render function
+	protected function render($page, $data = array()) {
+
+		$data = array_merge($data, array('user' => $_SESSION['user']));
+
+		parent::render($page, $data);
+	}
+
+
 	// Write configuration values to the config file
 	protected function saveConfig($configArray) {
 
