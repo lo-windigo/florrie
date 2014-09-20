@@ -54,8 +54,9 @@ CREATE TABLE strips
 # Comic strip table creation statement
 CREATE TABLE users
 (
+	id INT NOT NULL AUTO_INCREMENT,
 	user VARCHAR(300) NOT NULL,
 	pass VARCHAR(300),
 	display VARCHAR(300) NOT NULL,
-	PRIMARY KEY(user)
+	PRIMARY KEY(user, id)
 );
