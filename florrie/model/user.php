@@ -97,6 +97,32 @@ Q;
 	}
 
 
+	//----------------------------------------
+	// Update user details
+	//----------------------------------------
+	public function updateUser($userObj) {
+
+		$q = <<<Q
+UPDATE users
+SET
+	user = :user,
+	pass = :pass,
+	display = :display
+WHERE
+	id = :id
+Q;
+
+		$statement = $this->db->prepare($q);
+
+		$statement->bindValue(':user', $userObj->user, PDO::PARAM_STR);
+		$statement->bindValue(':display', $userObj->display, PDO::PARAM_STR);
+		$statement->bindValue(':pass', $userObj->pass, PDO::PARAM_STR);
+		$statement->bindValue(':id', $userObj->id, PDO::PARAM_STR);
+
+		$statement->execute();
+	}
+
+
 
 	//----------------------------------------
 	// Get a user's data for the database
