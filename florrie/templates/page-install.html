@@ -1,4 +1,5 @@
 {% extends "page-base.html" %}
+{% import "macro-forms.html" as form %}
 
 {% block title %}Install Florrie{% endblock %}
 
@@ -13,22 +14,28 @@
 			<fieldset>
 				<legend>Comic Details</legend>
 				<p>
-					<label for="florrie-name">
-						Name of your comic
-						<input type="text" required id="florrie-name" name="florrie-name">
-					</label>
+					{{ nav.textField({
+						id: 'florrie-name',
+						prompt: 'Name of your comic',
+						required: true,
+						value: ''
+					}) }}
 				</p>
 				<p>
-					<label for="florrie-desc">
-						Short description
-						<input type="text" required id="florrie-desc" name="florrie-desc">
-					</label>
+					{{ nav.textField({
+						id: 'florrie-desc',
+						prompt: 'Short description',
+						required: true,
+						value: ''
+					}) }}
 				</p>
 				<p>
-					<label for="florrie-url">
-						Comic URL
-						<input type="url" required id="florrie-url" name="florrie-url">
-					</label>
+					{{ nav.textField({
+						id: 'florrie-url',
+						prompt: 'Comic URL',
+						required: true,
+						value: ''
+					}, 'url') }}
 				</p>
 			</fieldset>
 			<fieldset>
@@ -46,37 +53,47 @@
 			<fieldset>
 				<legend>Database Configuration</legend>
 				<p>
-					<label for="data-server">
-						Server
-						<input type="text" id="data-server" name="data-server"
-						placeholder="localhost">
-					</label>
+					{{ nav.textField({
+						id: 'data-server',
+						prompt: 'Server',
+						required: true,
+						placeholder: 'localhost',
+						value: ''
+					}) }}
 				</p>
 				<p>
-					<label for="data-port">
-						Port
-						<input type="text" id="data-name" name="data-name"
-						placeholder="3307">
-					</label>
+					{{ nav.textField({
+						id: 'data-port',
+						prompt: 'Port',
+						required: true,
+						placeholder: '3307',
+						value: ''
+					}) }}
 				</p>
 				<p>
-					<label for="data-db">
-						Database/Schema Name
-						<input type="text" id="data-db" name="data-db"
-						placeholder="florrie">
-					</label>
+					{{ nav.textField({
+						id: 'data-db',
+						prompt: 'Database/Schema Name',
+						required: true,
+						placeholder: 'florrie',
+						value: ''
+					}) }}
 				</p>
 				<p>
-					<label for="data-user">
-						User
-						<input type="text" required id="data-user" name="data-user">
-					</label>
+					{{ nav.textField({
+						id: 'data-user',
+						prompt: 'User',
+						required: true,
+						value: ''
+					}) }}
 				</p>
 				<p>
-					<label for="data-pass">
-						Password
-						<input type="password" required id="data-pass" name="data-pass">
-					</label>
+					{{ nav.textField({
+						id: 'data-pass',
+						prompt: 'Password',
+						required: true,
+						value: ''
+					}) }}
 				</p>
 			</fieldset>
 			{% if ftp == "true" %}
