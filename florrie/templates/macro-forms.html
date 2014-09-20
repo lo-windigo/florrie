@@ -1,0 +1,18 @@
+{% macro textField(field, type='text') %}
+				<label for="{{ field.id }}">
+					{{ field.prompt }}
+					<input type="{{ type }}" id="{{ field.id }}"
+					{% if field.value is not empty %}
+						value="{{ field.value }}"
+					{% endif %}
+					{% if field.placeholder is not empty %}
+						placeholder="{{ field.placeholder }}"
+					{% endif %}>
+				</label>
+{% endmacro %}
+
+
+{% macro submitButton(submitText) %}
+				<input type="submit" value="{{ submitText }}">
+				<input type="hidden" name="submitted" value="true">
+{% endmacro %}
