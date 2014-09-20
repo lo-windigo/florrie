@@ -34,6 +34,7 @@ class StripModel {
 	//----------------------------------------
 	const DEFAULT_PATH = '/strips/';
 	const MYSQL_DATE   = 'Y-m-d H:i:s';
+	const SLUG_DATE   = 'Y-m-d-his';
 
 
 	//========================================
@@ -54,18 +55,96 @@ class StripModel {
 	//----------------------------------------
 	// Add a strip to the database
 	//----------------------------------------
-	public function addStrip($img, $title = null, $episode = null) {
+	public function addStrip($stripObj) {
 
-		// TODO: Add a strip!
+		// Prepare the strip query
+		// TODO: Better auto-calculate the item order!!!
+		$q = <<<Q
+INSERT INTO strips (
+	display, img, item_order, posted, slug, title
+)
+VALUES (
+	:display, :img, :item_order, :posted, :slug, :title
+)
+Q;
+
+		// Prepare a slug for this strip
+		if(empty($stripObj->title)) {
+
+			// Default to an ugly date slug if needed
+			$stripObj->slug = strtolower(date(self::SLUG_DATE));
+		}
+		else {
+
+			$slug = strtolower($stripObj->title);
+
+			$slug = str_replace(' ', '-', $slug);
+
+			$cleanSlug = '';
+
+			// Filter out any non-alphanumeric characters
+			for($i = 0, $j = strlen($slug); $i < $j; $i++) {
+
+				if(ctype_alnum($slug[$i])) {
+
+					$cleanSlug .= $slug[$i];
+				}
+			}
+
+			// If there's nothing left of the title after cleaning, start over
+			if(empty($cleanSlug)) {
+
+				$stripObj->title = '';
+
+				$this->addStrip($stripObj);
+
+				return;
+			}
+
+			$stripObj-> slug = $cleanSlug;
+		}
+
+
+		// Prepare posted date
+		if(empty($stripObj->posted)) {
+
+			$stripObj->posted = date(self::MYSQL_DATE);
+		}
+		else if($stripObj->posted instanceof DateTime) {
+
+			$stripObj->posted = $stripObj->posted->format(self::MYSQL_DATE);
+		}
+
+
+		// Now that we're pretty certain we can procede, prepare the statement
+		//	and bind data
+		$statement = $this->db->prepare($q);
+
+		foreach(array('display', 'img', 'posted', 'slug', 'title') as $col) {
+
+			$statement->bindValue(':'.$col, $stripObj->$col);
+		}
+
+		$statement->execute();
 	}
 
 
 	//----------------------------------------
 	// Delete a strip
 	//----------------------------------------
-	public function delStrip($id) {
+	public function delStrip($strip) {
 
-		// TODO: Delete a strip!
+		$q = 'DELETE FROM strips WHERE id = :id';
+
+		$statement = $this->db->prepare($q);
+
+		if(is_object($strip) {
+
+			$strip = $strip->id;
+		}
+
+		$statement->bindValue(':id', $strip);
+		$statement->execute();
 	}
 
 
