@@ -23,8 +23,16 @@ the developers know!
 Installing
 --------
 
-To install Florrie, you humvrumvff mruffrmerf, and then bururrrmrmr...
+To install Florrie, you can clone it straight from the source! The following
+command will work if you have shell access to your host:
 
-* **Note:** The developer responsible for writing this document has been kidnapped
-and forced to work on getting Florrie release-ready. Please check back later for
-updates.*
+git clone git:// (TODO - get URL!)
+
+After you have a copy of the source code, make sure your web server can write to
+the following directories:
+
+- config
+- strips
+
+From there, you should be able to continue with the install process by simply
+visiting your web site in your browser.
