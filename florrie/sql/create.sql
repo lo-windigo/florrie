@@ -36,7 +36,7 @@ CREATE TABLE strips
 	img VARCHAR(200) NOT NULL,
 	item_order INT NOT NULL,
 	posted DATETIME NOT NULL,
-	PRIMARY KEY(id)
+	PRIMARY KEY(id, slug)
 );
 
 # Characters table creation statement
