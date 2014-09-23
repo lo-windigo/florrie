@@ -20,6 +20,15 @@
 */
 
 
+function Submitted() {
+
+		$submitted = filter_input(INPUT_POST, 'submitted');
+
+		// Process form data if it has been submitted
+		return ($submitted !== null);
+}
+
+
 function ProcessFormInput(&$formData) {
 
 	// Error state
