@@ -26,6 +26,7 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/controller.php';
 require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/forms.php';
 
 
+
 class Login extends Controller {
 
 	public function __construct($config) {
@@ -42,10 +43,8 @@ class Login extends Controller {
 	// Allow a user to log into the system
 	public function index() {
 
-		$submitted = filter_input(INPUT_POST, 'submitted');
-
 		// Process form data if it has been submitted
-		if($submitted !== null) {
+		if(Submitted()) {
 
 			// Defaults go here
 			$values = array(
