@@ -26,14 +26,16 @@
  *
  */
 
-class StripModel {
+require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/model.php';
+
+
+class StripModel extends BaseModel {
 
 
 	//----------------------------------------
 	// Class Constants
 	//----------------------------------------
 	const DEFAULT_PATH = '/strips/';
-	const MYSQL_DATE   = 'Y-m-d H:i:s';
 	const SLUG_DATE   = 'Y-m-d-his';
 
 
@@ -61,10 +63,11 @@ class StripModel {
 		// TODO: Better auto-calculate the item order!!!
 		$q = <<<Q
 INSERT INTO strips (
-	display, img, item_order, posted, slug, title
+	display, img, posted, slug, title, item_order
 )
 VALUES (
-	:display, :img, :item_order, :posted, :slug, :title
+	:display, :img, :posted, :slug, :title,
+	(SELECT IFNULL(MAX(s.item_order), 0)+1 FROM strips s)
 )
 Q;
 
@@ -106,13 +109,13 @@ Q;
 
 
 		// Prepare posted date
-		if(empty($stripObj->posted)) {
-
-			$stripObj->posted = date(self::MYSQL_DATE);
-		}
-		else if($stripObj->posted instanceof DateTime) {
+		if(!empty($stripObj->posted) && $stripObj->posted instanceof DateTime) {
 
 			$stripObj->posted = $stripObj->posted->format(self::MYSQL_DATE);
+		}
+		else {
+
+			$stripObj->posted = date(self::MYSQL_DATE);
 		}
 
 
