@@ -7,29 +7,28 @@
 		<form method="post">
 			<p>
 				{{ nav.textField({
-					id: 'strip-title',
-					prompt: 'Strip title',
-					value: ''
+					id: "strip-title",
+					prompt: "Strip title",
+					value: ""
 				}) }}
 			</p>
 			<p>
 				{{ nav.dateField({
-					id: 'strip-posted',
-					prompt: 'Post on',
-					value: ''
+					id: "strip-posted",
+					prompt: "Post on",
+					value: ""
 				}) }}
 			</p>
 			<p>
 				{{ nav.textBox({
-					id: 'strip-display',
-					prompt: 'Description',
+					id: "strip-display",
+					prompt: "Description",
 					required: true,
-					value: ''
+					value: ""
 				}) }}
 			</p>
 			<p class="c">
-				<input type="submit" value="Install Florrie">
-				<input type="hidden" name="submitted" value="true">
+				{{ nav.submitButton("Add Strip") }}
 			</p>
 		</form>
 {% endblock %}
