@@ -4,27 +4,34 @@
 {% block admin-title %}Add A Strip{% endblock %}
 
 {% block admin-module %}
-		<form method="post">
+		<form method="post" enctype="multipart/mime">
 			<p>
 				{{ nav.textField({
-					id: "strip-title",
+					id: "title",
 					prompt: "Strip title",
 					value: ""
 				}) }}
 			</p>
 			<p>
 				{{ nav.dateField({
-					id: "strip-posted",
+					id: "posted",
 					prompt: "Post on",
 					value: ""
 				}) }}
 			</p>
 			<p>
 				{{ nav.textBox({
-					id: "strip-display",
+					id: "display",
 					prompt: "Description",
 					required: true,
 					value: ""
+				}) }}
+			</p>
+			<p>
+				{{ nav.fileField({
+					id: "img",
+					prompt: "Strip Image",
+					required: true
 				}) }}
 			</p>
 			<p class="c">

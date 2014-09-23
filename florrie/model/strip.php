@@ -59,6 +59,12 @@ class StripModel extends BaseModel {
 	//----------------------------------------
 	public function addStrip($stripObj) {
 
+		// If we're dealing with an associative array, cast it to an object
+		if(is_array($stripObj)) {
+
+			$stripObj = (object)$stripObj;
+		}
+
 		// Prepare the strip query
 		// TODO: Better auto-calculate the item order!!!
 		$q = <<<Q
@@ -104,7 +110,7 @@ Q;
 				return;
 			}
 
-			$stripObj-> slug = $cleanSlug;
+			$stripObj->slug = $cleanSlug;
 		}
 
 

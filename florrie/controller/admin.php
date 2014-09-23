@@ -23,6 +23,8 @@ session_start();
 
 
 require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/controller.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/forms.php';
+
 
 
 class Admin extends Controller {
@@ -52,6 +54,51 @@ class Admin extends Controller {
 	public function index() {
 
 		$this->render('admin');
+	}
+
+
+	// Add a strip to the comic system
+	public function addstrip() {
+
+		// Process form data if it has been submitted
+		if(Submitted()) {
+
+			// Defaults go here
+			$values = array(
+				'display' => null, 
+				'img' => null, 
+				'posted' => new DateTime(), 
+				'title' => null
+			);
+
+			try {
+
+				ProcessFormInput($values);
+
+				// TODO: Handle strip file upload!
+				//$
+
+				$stripModel = $this->getModel('strip');
+
+				// Add the new strip
+				$stripModel->addStrip($values);
+
+				return;
+			}
+			catch (FormException $e) {
+
+				// TODO: Type the right values, damnit!
+				die('Form Error Handling? Maybe later. Error: '.$e->getMessage());
+
+			}
+			catch (exception $e) {
+
+				// TODO: Actual error handling
+				die('AddStrip Error case: miscellaneous! Error: '.$e->getMessage());
+			}
+		}
+
+		$this->render('addstrip');
 	}
 
 
