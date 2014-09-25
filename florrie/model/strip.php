@@ -141,18 +141,39 @@ Q;
 	//----------------------------------------
 	// Delete a strip
 	//----------------------------------------
-	public function delStrip($strip) {
+	public function delStrip($stripObj) {
 
+		// Make sure we have a strip object to deal with
+		if(is_int($stripObj) || ctype_digit($stripObj)) {
+
+			$stripObj = $this->getStrip($stripObj);
+		}
+		else if(!(is_object($stripObj) && !empty($stripObj->item_order))) {
+
+			// TODO: Really need to throw an exception here?
+			throw new exception('ID does not return a valid strip');
+		}
+
+		// Remove the strip from the database
 		$q = 'DELETE FROM strips WHERE id = :id';
 
 		$statement = $this->db->prepare($q);
 
-		if(is_object($strip) {
+		$statement->bindValue(':id', $stripObj->id);
 
-			$strip = $strip->id;
-		}
+		// TODO: Check for actual deletion?
+		$statement->execute();
 
-		$statement->bindValue(':id', $strip);
+		// Rebuild the order of the Strip table
+		$q =<<<ORDER
+UPDATE strips
+SET item_order = item_order -1
+WHERE item_order > :order
+ORDER;
+
+		$statement = $this->db->prepare($q);
+
+		$statement->bindValue(':order', $stripObj->item_order);
 		$statement->execute();
 	}
 
