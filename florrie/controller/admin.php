@@ -57,7 +57,9 @@ class Admin extends Controller {
 	}
 
 
+	//----------------------------------------
 	// Add a strip to the comic system
+	//----------------------------------------
 	public function addstrip() {
 
 		// Process form data if it has been submitted
@@ -102,7 +104,13 @@ class Admin extends Controller {
 	}
 
 
-	// Get all of the installed/available themes
+	//========================================
+	// Protected (internal) methods
+	//========================================
+
+	//----------------------------------------
+	// Get the installed/available themes
+	//----------------------------------------
 	protected function getThemes() {
 
 		$themes = array();
@@ -115,8 +123,10 @@ class Admin extends Controller {
 	}
 
 
+	//----------------------------------------
 	// Take form input array and convert to multi-dimensional configuration 
 	// array, for use with the config file
+	//----------------------------------------
 	protected function convertToConfigArray($flatConfig) {
 
 		$configArray = array();
@@ -147,7 +157,9 @@ class Admin extends Controller {
 	}
 
 
+	//----------------------------------------
 	// Add some extra administrative data to the render function
+	//----------------------------------------
 	protected function render($page, $data = array()) {
 
 		$data = array_merge($data, array('user' => $_SESSION['user']));
@@ -156,7 +168,9 @@ class Admin extends Controller {
 	}
 
 
+	//----------------------------------------
 	// Write configuration values to the config file
+	//----------------------------------------
 	protected function saveConfig($configArray) {
 
 		$configXML = new DOMDocument();
