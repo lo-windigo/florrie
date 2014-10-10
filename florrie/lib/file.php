@@ -1,6 +1,6 @@
 <?php
 /*
-	Florrie Abstract Filesystem Module
+	File Abstraction Layer
 	By Jacob Hume
 
 	This file is part of Florrie.
@@ -20,40 +20,105 @@
 */
 
 
+//----------------------------------------
+// Constants
+//----------------------------------------
+define('FLORRIE_FS', 'fs');
+define('FLORRIE_FTP', 'ftp');
 
-abstract class Filesystem
-{
-	abstract public function DeleteFile();
-	abstract public function SaveFile();
 
 
+//----------------------------------------
+// Get the preferred filesystem method
+//----------------------------------------
+function fileMethod($config) {
 
-	// GetUploadedFile()
-	//	Processes a file uploaded via a HTML form
-	// Arguments:
-	//	index	 - Index of the POST variable that contains the file upload
-	//	folder	 - Existing folder where the file should be moved
-	//	filename - New name of the file
-	protected function GetUploadedFile($index, $folder, $filename)
-	{
-		// Check to make sure the form's been filled out
-		if(empty($_FILES[$index]) || empty($_FILES[$index]['error']) ||
-			empty($_FILES[$index]['tmp_name'])))
-		{
-			throw new exception('Missing file upload data');
+	// TODO: Parse config, use FTP if present
+	return FLORRIE_FS;
+}
+
+
+//----------------------------------------
+// Add or overwrite a file
+//----------------------------------------
+function writeFile($config, $name, $data) {
+
+	if(fileMethod($config) === FLORRIE_FS) {
+
+		$success = file_put_contents($name, $data);
+
+		if($success === false) {
+
+			$error = 'File write failed: "'.$this->method.'"';
+
+			throw new ServerException($error);
 		}
+	}
+	//else if(fileMethod($config) === FLORRIE_FTP) {
 
-		// If the file uploaded successfully
-		($_FILES[$index]['error'] == UPLOAD_ERR_OK &&
-			is_uploaded_file($_FILES[$index]['tmp_name'])) or
-			throw new exception('File upload failed');
+		// TODO: FTP Support
+	//}
+	else {
 
-		($formFile = fopen($_FILES[$index]['tmp_name'], 'r')) or
-			throw new exception('Cannot access uploaded file');
+		$error = 'Unsupported filesystem protocol: "'.fileMethod($config).'"';
 
-		// Try to save the file to the filesystem
-		$this->SaveFile($formFile, $folder, $filename);
-		
-		return true;
+		throw new ServerException($error);
 	}
 }
+
+
+//----------------------------------------
+// Delete a file
+//----------------------------------------
+function deleteFile($config, $name) {
+
+	if(fileMethod($config) === FLORRIE_FS) {
+
+		// Catch PHP warnings (Boo, PHP. Boo)
+		set_error_handler(function() {
+
+			$error = 'Cannot delete file "'.$name.
+				'" with method "'.fileMethod($config).'"';
+
+			throw new ServerException($error);
+		});
+
+		unlink($name);
+
+		restore_error_handler();
+	}
+	//else if(fileMethod($config) === FLORRIE_FTP) {
+
+		// TODO: FTP Support
+	//}
+	else {
+
+		$error = 'Unsupported filesystem protocol: "'.fileMethod($config).'"';
+
+		throw new ServerException($error);
+	}
+}
+
+
+// TODO: getUploadedFile
+function getUploadedFile($index) {
+
+	// Check to make sure the form's been filled out
+	if(empty($_FILES[$index]) || empty($_FILES[$index]['error']) ||
+		empty($_FILES[$index]['tmp_name'])))
+	{
+		throw new exception('Missing file upload data');
+	}
+
+	// If the file uploaded successfully
+	($_FILES[$index]['error'] == UPLOAD_ERR_OK &&
+		is_uploaded_file($_FILES[$index]['tmp_name'])) or
+		throw new exception('File upload failed');
+
+	($formFile = fopen($_FILES[$index]['tmp_name'], 'r')) or
+		throw new exception('Cannot access uploaded file');
+
+	// Try to save the file to the filesystem
+	$this->SaveFile($formFile, $folder, $filename);
+}
+?>
