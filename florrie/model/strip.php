@@ -35,7 +35,6 @@ class StripModel extends BaseModel {
 	//----------------------------------------
 	// Class Constants
 	//----------------------------------------
-	const DEFAULT_PATH = '/strips/';
 	const SLUG_DATE   = 'Y-m-d-his';
 
 

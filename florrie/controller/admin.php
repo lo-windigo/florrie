@@ -62,13 +62,16 @@ class Admin extends Controller {
 	//----------------------------------------
 	public function addstrip() {
 
+		// This particular view requires file uploading
+		require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/file.php';
+
+
 		// Process form data if it has been submitted
 		if(Submitted()) {
 
 			// Defaults go here
 			$values = array(
 				'display' => null, 
-				'img' => null, 
 				'posted' => new DateTime(), 
 				'title' => null
 			);
@@ -77,8 +80,8 @@ class Admin extends Controller {
 
 				ProcessFormInput($values);
 
-				// TODO: Handle strip file upload!
-				//$
+				// Handle strip file upload
+				ProcessFileUpload();
 
 				$stripModel = $this->getModel('strip');
 

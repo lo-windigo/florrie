@@ -20,47 +20,25 @@
 */
 
 
-//----------------------------------------
-// Constants
-//----------------------------------------
-define('FLORRIE_FS', 'fs');
-define('FLORRIE_FTP', 'ftp');
 
+// TODO: File context
+function fileContext($config) {
 
-
-//----------------------------------------
-// Get the preferred filesystem method
-//----------------------------------------
-function fileMethod($config) {
-
-	// TODO: Parse config, use FTP if present
-	return FLORRIE_FS;
+	return $_SERVER['DOCUMENT_ROOT'].'/';
 }
-
 
 //----------------------------------------
 // Add or overwrite a file
 //----------------------------------------
-function writeFile($config, $name, $data) {
+function writeFile($config, $filePath, $data) {
 
-	if(fileMethod($config) === FLORRIE_FS) {
+	// Assemble the full path
+	$fullPath = fileContext($config).$filePath;
 
-		$success = file_put_contents($name, $data);
+	// Use return value to determine success
+	if(file_put_contents($fullPath, $data) === false) {
 
-		if($success === false) {
-
-			$error = 'File write failed: "'.$this->method.'"';
-
-			throw new ServerException($error);
-		}
-	}
-	//else if(fileMethod($config) === FLORRIE_FTP) {
-
-		// TODO: FTP Support
-	//}
-	else {
-
-		$error = 'Unsupported filesystem protocol: "'.fileMethod($config).'"';
+		$error = 'File write failed: "'.$fullPath.'"';
 
 		throw new ServerException($error);
 	}
@@ -70,37 +48,26 @@ function writeFile($config, $name, $data) {
 //----------------------------------------
 // Delete a file
 //----------------------------------------
-function deleteFile($config, $name) {
+function deleteFile($config, $filePath) {
 
-	if(fileMethod($config) === FLORRIE_FS) {
+	// Assemble the full path
+	$fullPath = fileContext($config).$filePath;
 
-		// Catch PHP warnings (Boo, PHP. Boo)
-		set_error_handler(function() {
+	// Catch PHP warnings thrown by unlink (Boo, PHP. Boo)
+	set_error_handler(function() use ($filePath) {
 
-			$error = 'Cannot delete file "'.$name.
-				'" with method "'.fileMethod($config).'"';
-
-			throw new ServerException($error);
-		});
-
-		unlink($name);
-
-		restore_error_handler();
-	}
-	//else if(fileMethod($config) === FLORRIE_FTP) {
-
-		// TODO: FTP Support
-	//}
-	else {
-
-		$error = 'Unsupported filesystem protocol: "'.fileMethod($config).'"';
+		$error = 'Cannot delete file "'.$filePath.'"';
 
 		throw new ServerException($error);
-	}
+	});
+
+	unlink($fullPath);
+
+	restore_error_handler();
 }
 
 
-// TODO: getUploadedFile
+// Get a file uploaded through a HTML form
 function getUploadedFile($index) {
 
 	// Check to make sure the form's been filled out
