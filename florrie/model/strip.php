@@ -76,42 +76,6 @@ VALUES (
 )
 Q;
 
-		// Prepare a slug for this strip
-		if(empty($stripObj->title)) {
-
-			// Default to an ugly date slug if needed
-			$stripObj->slug = strtolower(date(self::SLUG_DATE));
-		}
-		else {
-
-			$slug = strtolower($stripObj->title);
-
-			$slug = str_replace(' ', '-', $slug);
-
-			$cleanSlug = '';
-
-			// Filter out any non-alphanumeric characters
-			for($i = 0, $j = strlen($slug); $i < $j; $i++) {
-
-				if(ctype_alnum($slug[$i])) {
-
-					$cleanSlug .= $slug[$i];
-				}
-			}
-
-			// If there's nothing left of the title after cleaning, start over
-			if(empty($cleanSlug)) {
-
-				$stripObj->title = '';
-
-				$this->addStrip($stripObj);
-
-				return;
-			}
-
-			$stripObj->slug = $cleanSlug;
-		}
-
 
 		// Prepare posted date
 		if(!empty($stripObj->posted) && $stripObj->posted instanceof DateTime) {
@@ -134,6 +98,43 @@ Q;
 		}
 
 		$statement->execute();
+	}
+
+
+	//----------------------------------------
+	// Create a slug from title text
+	//----------------------------------------
+	static public function createSlug($title = null) {
+
+		// Prepare a slug for this strip
+		if(empty($title)) {
+
+			// Default to an ugly date slug if needed
+			return strtolower(date(self::SLUG_DATE));
+		}
+
+		$slug = strtolower($title);
+
+		$slug = str_replace(' ', '-', $slug);
+
+		$cleanSlug = '';
+
+		// Filter out any non-alphanumeric characters
+		for($i = 0, $j = strlen($slug); $i < $j; $i++) {
+
+			if(ctype_alnum($slug[$i]) || $slug[$i] === '-') {
+
+				$cleanSlug .= $slug[$i];
+			}
+		}
+
+		// If there's nothing left of the title after cleaning, start over
+		if(empty($cleanSlug)) {
+
+			return self::createSlug();
+		}
+
+		return $cleanSlug;
 	}
 
 
