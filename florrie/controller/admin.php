@@ -62,12 +62,8 @@ class Admin extends Controller {
 	//----------------------------------------
 	public function addstrip() {
 
-		// This particular view requires file uploading
-		require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/file.php';
-
-
 		// Process form data if it has been submitted
-		if(Submitted()) {
+		if(submitted()) {
 
 			// Defaults go here
 			$values = array(
@@ -78,10 +74,10 @@ class Admin extends Controller {
 
 			try {
 
-				ProcessFormInput($values);
+				processFormInput($values);
 
 				// Handle strip file upload
-				ProcessFileUpload();
+				$stripModel->img = processFileUpload('strip', Florrie::STRIPS.$slug);
 
 				$stripModel = $this->getModel('strip');
 
@@ -112,55 +108,6 @@ class Admin extends Controller {
 	//========================================
 
 	//----------------------------------------
-	// Get the installed/available themes
-	//----------------------------------------
-	protected function getThemes() {
-
-		$themes = array();
-		$themesDir = $_SERVER['DOCUMENT_ROOT'].Florrie::THEMES;
-
-		// TODO: Actually fetch installed themes
-		$themes['default'] = "Default Theme";
-
-		return $themes;
-	}
-
-
-	//----------------------------------------
-	// Take form input array and convert to multi-dimensional configuration 
-	// array, for use with the config file
-	//----------------------------------------
-	protected function convertToConfigArray($flatConfig) {
-
-		$configArray = array();
-
-		// Recursive function to build multidimensional config arrays
-		$builder = function(&$indexes, $value) use (&$builder) {
-
-			$index = array_shift($indexes);
-
-			if(is_null($index)) {
-
-				return $value;
-			}
-
-			return array($index => $builder($indexes, $value));
-		};
-
-		foreach($flatConfig as $index => $value) {
-
-			$indexes = explode('-', $index);
-
-			$treeValue = $builder($indexes, $value);
-
-			$configArray = array_merge_recursive($configArray, $treeValue);
-		}
-
-		return $configArray;
-	}
-
-
-	//----------------------------------------
 	// Add some extra administrative data to the render function
 	//----------------------------------------
 	protected function render($page, $data = array()) {
@@ -168,53 +115,6 @@ class Admin extends Controller {
 		$data = array_merge($data, array('user' => $_SESSION['user']));
 
 		parent::render($page, $data);
-	}
-
-
-	//----------------------------------------
-	// Write configuration values to the config file
-	//----------------------------------------
-	protected function saveConfig($configArray) {
-
-		$configXML = new DOMDocument();
-		$configXML->formatOutput = true;
-
-		// Recursive function to build config nodes
-		$builder = function($values, &$parent) use (&$builder) {
-
-			// BASE CASE: Set the value of the parent node, and return
-			if(!is_array($values)) {
-
-				$parent->nodeValue = $values;
-				return;
-			}
-
-			// Create nodes for each config value, and add it as a child
-			foreach($values as $index => $value) {
-
-				$thisNode = $parent->ownerDocument->createElement($index);
-
-				$builder($value, $thisNode);
-
-				$parent->appendChild($thisNode);
-			}
-		};
-
-		$configNode = $configXML->createElement('config');
-
-		$configNode->appendChild(
-			new DOMComment('!!! DO NOT MODIFY DIRECTLY: USE ADMIN SECTION !!!')
-		);
-
-		$builder($configArray, $configNode);
-
-		$configXML->appendChild($configNode);
-
-		$configData = $configXML->saveXML();
-
-		// TODO Use file API!
-		return (file_put_contents($_SERVER['DOCUMENT_ROOT'].Florrie::CONFIG,
-			$configData) > 0);
 	}
 }
 ?>

@@ -20,16 +20,11 @@
 */
 
 
-function Submitted() {
 
-		$submitted = filter_input(INPUT_POST, 'submitted');
-
-		// Process form data if it has been submitted
-		return ($submitted !== null);
-}
-
-
-function ProcessFormInput(&$formData) {
+//----------------------------------------
+// Process form data and store the result
+//----------------------------------------
+function processFormInput(&$formData) {
 
 	// Error state
 	$error = false;
@@ -67,4 +62,27 @@ function ProcessFormInput(&$formData) {
 
 		throw $e;
 	}
+}
+
+
+//----------------------------------------
+// Process a file uploaded via HTML form
+//----------------------------------------
+function processFileUpload($formIndex, $filePath) {
+
+	// This particular view requires file uploading
+	require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/file.php';
+
+}
+
+
+//----------------------------------------
+// Check for a form submission
+//----------------------------------------
+function submitted() {
+
+		$submitted = filter_input(INPUT_POST, 'submitted');
+
+		// Process form data if it has been submitted
+		return ($submitted !== null);
 }

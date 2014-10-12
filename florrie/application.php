@@ -96,7 +96,46 @@ class Florrie {
 	}
 
 
+	//----------------------------------------
+	// Test writing files (before install!)
+	//----------------------------------------
+	static public function filesWritable() {
+
+		// TODO: Allow for FTP writing as well
+		$config = $_SERVER['DOCUMENT_ROOT'].self::CONFIG;
+		$strips = $_SERVER['DOCUMENT_ROOT'].'/strips/test';
+
+		// TODO: Fix echos, real error handling would be nice
+		if(!is_writable(dirname($config)) || !is_writable(dirname($strips))) {
+
+			echo 'Not writable!';
+			return false;
+		}
+
+		if(file_put_contents($config, 'test file') <= 0) {
+
+			echo 'Cant Write Config';
+			return false;
+		}
+
+		if(file_put_contents($strips, 'test file') <= 0) {
+
+			echo 'Cant Write strips';
+			unlink($config);
+			return false;
+		}
+
+		// Delete the test files
+		unlink($config);
+		unlink($strips);
+
+		return true;
+	}
+
+
+	//----------------------------------------
 	// Get the appropriate controller object
+	//----------------------------------------
 	public function getController($controller) {
 
 		// Get the controller path
@@ -131,8 +170,9 @@ class Florrie {
 	}
 
 
-	// Get the configuration file, if present, and return the
-	//	configuration array
+	//----------------------------------------
+	// Get any installed plugins
+	//----------------------------------------
 	public function getPlugins()
 	{
 		// TODO: Work Ongoing!
@@ -142,7 +182,9 @@ class Florrie {
 	}
 
 
-	// Check to see if Florrie's installed or not
+	//----------------------------------------
+	// Check to see if Florrie's installed
+	//----------------------------------------
 	public function installed()
 	{
 		try
@@ -152,57 +194,30 @@ class Florrie {
 			$this->getPlugins();
 
 			// If all of these checks occur without issue, then it must be installed!
-			$installed = true;
+			return true;
 		}
 		catch (exception $e)
 		{
-			// Log stuff
-			$installed = false;
+			return false;
 		}
-
-		return $installed;
-	}
-
-
-	// Parse an XML element, recursively, into an array
-	protected function parseConfig($node) {
-
-		// If we have children, we will need to start an array and fill it with 
-		//   the child nodes' values, recursively
-		$values = array();
-
-		foreach($node->childNodes as $child) {
-
-			// Recurse through this child if it's an XML element
-			if($child->nodeType == XML_ELEMENT_NODE) {
-				$values[$child->nodeName] = $this->parseConfig($child);
-			}
-		}
-
-
-		// If there are no child elements on this node, return its value
-		if(empty($values)) {
-			return $node->nodeValue;
-		}
-
-		// Otherwise, return the child node's values
-		return $values;
 	}
 
 
 	// Split the URI into usable chunks
 	protected function parseURI() {
 
-			// Sanitize the URL, and trim the leading/trailing slashes
-			$uri = filter_input(INPUT_GET, 'u', FILTER_SANITIZE_URL);
-			$uri = trim($uri, '/');
+		// Sanitize the URL, and trim the leading/trailing slashes
+		$uri = filter_input(INPUT_GET, 'u', FILTER_SANITIZE_URL);
+		$uri = trim($uri, '/');
 
-			// Burst into an array
-			return explode('/', $uri);
+		// Burst into an array
+		return explode('/', $uri);
 	}
 
 
-	// Read the configuration file, if present, and store for later
+	//----------------------------------------
+	// Read & store the configuration file
+	//----------------------------------------
 	protected function readConfig() {
 
 		// Check to see if the configuration file exists
@@ -229,11 +244,131 @@ class Florrie {
 		// Get the base configuration node
 		$configNode = $configDoc->documentElement;
 
-		// Parse the configuration file into an associative array
-		$config = $this->parseConfig($configNode);
+		// Parse the configuration file into an associative array, recursively,
+		//	using a anonymous function
+		$parse = function($node) use (&$parse) {
+
+			// If we have children, we will need to start an array and fill it with 
+			//   the child nodes' values, recursively
+			$values = array();
+
+			foreach($node->childNodes as $child) {
+
+				// Recurse through this child if it's an XML element
+				if($child->nodeType == XML_ELEMENT_NODE) {
+					$values[$child->nodeName] = $parse($child);
+				}
+			}
+
+			// If there are no child elements on this node, return its value
+			if(empty($values)) {
+				return $node->nodeValue;
+			}
+
+			// Otherwise, return the child node's values
+			return $values;
+		};
+
+		$config = $parse($configNode);
 
 		// Save the configuration values for later
 		$this->config = $config;
+	}
+
+
+	//----------------------------------------
+	// Get the installed/available themes
+	//----------------------------------------
+	static public function getThemes() {
+
+		$themes = array();
+		$themesDir = $_SERVER['DOCUMENT_ROOT'].Florrie::THEMES;
+
+		// TODO: Actually fetch installed themes
+		$themes['default'] = "Default Theme";
+
+		return $themes;
+	}
+
+
+	//----------------------------------------
+	// Take form input array and convert to multi-dimensional configuration 
+	// array, for use with the config file
+	//----------------------------------------
+	static public function convertToConfigArray($flatConfig) {
+
+		$configArray = array();
+
+		// Recursive function to build multidimensional config arrays
+		$builder = function(&$indexes, $value) use (&$builder) {
+
+			$index = array_shift($indexes);
+
+			if(is_null($index)) {
+
+				return $value;
+			}
+
+			return array($index => $builder($indexes, $value));
+		};
+
+		foreach($flatConfig as $index => $value) {
+
+			$indexes = explode('-', $index);
+
+			$treeValue = $builder($indexes, $value);
+
+			$configArray = array_merge_recursive($configArray, $treeValue);
+		}
+
+		return $configArray;
+	}
+
+
+	//----------------------------------------
+	// Write configuration values to the config file
+	//----------------------------------------
+	static public function saveConfig($configArray) {
+
+		$configXML = new DOMDocument();
+		$configXML->formatOutput = true;
+
+		// Recursive function to build config nodes
+		$builder = function($values, &$parent) use (&$builder) {
+
+			// BASE CASE: Set the value of the parent node, and return
+			if(!is_array($values)) {
+
+				$parent->nodeValue = $values;
+				return;
+			}
+
+			// Create nodes for each config value, and add it as a child
+			foreach($values as $index => $value) {
+
+				$thisNode = $parent->ownerDocument->createElement($index);
+
+				$builder($value, $thisNode);
+
+				$parent->appendChild($thisNode);
+			}
+		};
+
+		$configNode = $configXML->createElement('config');
+
+		$configNode->appendChild(
+			new DOMComment('!!! DO NOT MODIFY DIRECTLY: USE ADMIN SECTION !!!')
+		);
+
+		$builder($configArray, $configNode);
+
+		$configXML->appendChild($configNode);
+
+		$configData = $configXML->saveXML();
+
+		// TODO Use file API!
+		return (file_put_contents($_SERVER['DOCUMENT_ROOT'].Florrie::CONFIG,
+			$configData) > 0);
 	}
 }
 ?>

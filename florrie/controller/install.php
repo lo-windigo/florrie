@@ -38,6 +38,9 @@ class Install extends Admin {
 
 		// Use the system-level template directory
 		$this->templateDir = $_SERVER['DOCUMENT_ROOT'].'/florrie/templates/';
+
+		// If you're here, there's no config
+		$this->config = array();
 	}
 
 
@@ -84,7 +87,7 @@ Your numbers will still be random-ish without it, but not what they could be!
 OPENSSL;
 		}
 
-		if(!$this->filesWriteable) {
+		if(!Florrie::filesWritable()) {
 
 			//$missingRecommends[] = <<<WRITE
 			$missingRequirements[] = <<<WRITE
@@ -107,45 +110,11 @@ WRITE;
 	// Internal controller functions
 	//----------------------------------------
 
-	// Test to see if the file locations are writeable
-	protected function filesWritable() {
-
-		$config = $_SERVER['DOCUMENT_ROOT'].Florrie::CONFIG;
-		$strips = $_SERVER['DOCUMENT_ROOT'].'/strips/test';
-
-		if(!is_writable(dirname($config)) || !is_writable(dirname($strips))) {
-
-			echo 'Not writable!';
-			return false;
-		}
-
-		if(file_put_contents($config, 'test file') <= 0) {
-
-			echo 'Cant Write Config';
-			return false;
-		}
-
-		if(file_put_contents($strips, 'test file') <= 0) {
-
-			echo 'Cant Write strips';
-			unlink($config);
-			return false;
-		}
-
-		unlink($config);
-		unlink($strips);
-
-		return true;
-	}
-
-
 	// Handle a Florrie installation via HTML form
 	protected function install($missingRecommends) {
 
-		$submitted = filter_input(INPUT_POST, 'submitted');
-
 		// Process form data if it has been submitted
-		if($submitted !== null) {
+		if(submitted()) {
 
 			// Defaults go here
 			$values = array(
@@ -159,38 +128,10 @@ WRITE;
 				'data-user' => null, 
 				'data-pass' => null 
 			);
-			$error = false;
 
-			// Process all form fields
-			foreach($values as $index => &$value) {
+			try {
 
-				$input = filter_input(INPUT_POST, $index, FILTER_SANITIZE_STRING);
-
-				// If no value was submitted and no default exists, raise an 
-				// error
-				if(($input === null || $input === false) && empty($value)) {
-
-					//$error = true;
-					if($error === false) {
-
-						$error = '';
-					}
-
-					$error .= $index.' ';
-				}
-				else if(!empty($input)) {
-
-					$value = $input;
-				}
-			}
-
-			if($error) {
-
-				// TODO: Type the right values, damnit!
-				die('Form Error Handling? Maybe later. Bad indexes: '.$error);
-
-			}
-			else {
+				processFormInput($values);
 
 				// Compile the db values into a DSN
 				// TODO: Database independent? Let people choose?
@@ -214,6 +155,12 @@ WRITE;
 				header('Location: /');
 				return;
 			}
+			catch(FormException $error) {
+
+				// TODO: Type the right values, damnit!
+				die('Form Error Handling? Maybe later. '.$error->getMessage());
+
+			}
 		}
 
 		$themes = $this->getThemes();
@@ -227,28 +174,5 @@ WRITE;
 
 
 	// Display the requirements for Florrie, if they are not met
-	protected function requirements() {
+	protected function requirements($missingRequirements, $missingRecommends) {
 	}
-
-
-	// Render a page and pass it appropriate variables
-	protected function render($templateName, $data = array()) {
-
-		// Check to make sure the template dir is valid
-		if(realpath($this->templateDir) === false) {
-			
-			throw new ServerException(get_class($this).' Template directory not set');
-		}
-
-		// Set up the template system 
-		$loader = new Twig_Loader_Filesystem($this->templateDir);
-		$twig = new Twig_Environment($loader);
-
-		// Load the template requested, and display it
-		$template = $twig->loadTemplate($this::TEMPLATE_PRE.$templateName.
-			$this::TEMPLATE_EXT);
-
-		$template->display($data);
-	}
-}
-?>
