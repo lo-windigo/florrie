@@ -30,7 +30,7 @@ class Florrie {
 	// Class Constants:
 	//  CONFIG	   - Configuration File
 	//  CONTROLLER - Directory for main controllers
-	const CONFIG     = '/florrie.cfg';
+	const CONFIG     = '/config/florrie.cfg';
 	const CONTROLLER = '/florrie/controller/';
 	const STRIPS     = '/strips/';
 	const THEMES     = '/templates/';

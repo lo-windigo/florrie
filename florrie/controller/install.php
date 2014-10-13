@@ -21,10 +21,11 @@
 
 
 
-require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/controller/admin.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/controller.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/forms.php';
 
 
-class Install extends Admin {
+class Install extends Controller {
 
 	public function __construct() {
 
@@ -50,8 +51,8 @@ class Install extends Admin {
 		// Check for a previous install
 		if(!(empty($this->config) || empty($this->config['florrie']))) {
 
-			$e = 'The install page cannot be accessed if 
-				Florrie has already been installed';
+			$e = 'The install page cannot be accessed if '.
+				'Florrie has already been installed';
 
 			throw new ServerError($e);
 		}
@@ -61,7 +62,7 @@ class Install extends Admin {
 		$missingRequirements = $missingRecommends = array();
 
 		// SHA512 used for hashing passwords securely
-		if(empty(CRYPT_SHA512)) {
+		if(!defined(CRYPT_SHA512) || !CRYPT_SHA512) {
 
 			$missingRequirements[] = <<<SHA
 Your system does not support SHA512 hashing; this prevents Florrie from
@@ -71,6 +72,7 @@ SHA;
 
 		// RIPE used for CSRF
 		if(!(function_exists('hash_algos') && in_array('ripemd320', hash_algos()))) {
+
 			$missingRequirements[] = <<<RIPE
 Your system does not support ripemd320 hashing; this prevents Florrie from
 generating CSRF tokens. However, IT DOESN'T HAVE TO BE THIS WAY! If you
@@ -97,7 +99,7 @@ WRITE;
 
 		if(empty($missingRequirements)) {
 
-			$this->install();
+			$this->install($missingRecommends);
 		}
 		else {
 
@@ -163,11 +165,11 @@ WRITE;
 			}
 		}
 
-		$themes = $this->getThemes();
+		$themes = Florrie::getThemes();
 
 		$this->render('install', array(
 			'scripts' => array('/florrie/templates/js/install.js'),
-			'ftp' => $this->filesWritable()?"false":"true",
+			'ftp' => Florrie::filesWritable()?"false":"true",
 			'themes' => $themes
 		));
 	}
@@ -176,3 +178,4 @@ WRITE;
 	// Display the requirements for Florrie, if they are not met
 	protected function requirements($missingRequirements, $missingRecommends) {
 	}
+}

@@ -26,6 +26,24 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/controller.php';
 
 class Error extends Controller {
 
+	public function __construct($config) {
+
+		//----------------------------------------
+		// Set up the templating system
+		//----------------------------------------
+
+		// Include & initialize the Twig templating library
+		require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/twig/lib/Twig/Autoloader.php';
+		Twig_Autoloader::register();
+
+		// Use the system-level template directory
+		$this->templateDir = $_SERVER['DOCUMENT_ROOT'].'/florrie/templates/';
+
+		// TODO: Maybe there IS a config?
+		$this->config = array();
+	}
+
+
 	// No index - but we're already in the error controller. HOW CONVENIENT!
 	public function index() {
 
