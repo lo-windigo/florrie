@@ -1,0 +1,34 @@
+{% extends "page-admin.html" %}
+{% import "macro-forms.html" as form %}
+
+{% block admin-title %}Add A Strip{% endblock %}
+
+{% block admin-module %}
+		<form method="post">
+			<p>
+				{{ nav.textField({
+					id: "strip-title",
+					prompt: "Strip title",
+					value: ""
+				}) }}
+			</p>
+			<p>
+				{{ nav.dateField({
+					id: "strip-posted",
+					prompt: "Post on",
+					value: ""
+				}) }}
+			</p>
+			<p>
+				{{ nav.textBox({
+					id: "strip-display",
+					prompt: "Description",
+					required: true,
+					value: ""
+				}) }}
+			</p>
+			<p class="c">
+				{{ nav.submitButton("Add Strip") }}
+			</p>
+		</form>
+{% endblock %}
