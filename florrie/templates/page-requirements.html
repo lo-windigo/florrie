@@ -1,0 +1,39 @@
+{% extends "page-base.html" %}
+{% import "macro-forms.html" as form %}
+
+{% block title %}Cannot Install Florrie{% endblock %}
+
+{% block content %}
+		<h1 class="content-title">Cannot Install Florrie</h1>
+		<p>
+			Welcome to Florrie, the comic management system! It looks like this
+			is the first time Florrie has been run, but there are some problems
+			preventing us from installing it for you.
+		</p>
+		<h2>Missing Requirements</h2>
+		<p>
+			These problems are preventing us from installing Florrie:
+		</p>
+		<ul>
+			{% for requirement in requirements %}
+			<li>{{ requirement }}</li>
+			{% endfor %}
+		</ul>
+		{% if recommendations is not empty %}
+		<h2>Missing Recommendations</h2>
+		<p>
+			These items aren't required, but Florrie might work better if you could
+			fix some of these issues:
+		</p>
+		<ul>
+			{% for recommendation in recommendations %}
+			<li>{{ recommendation }}</li>
+			{% endfor %}
+		</ul>
+		{% endif %}
+		<p>
+			For additional help, or to report a problem, check out the <a
+				href="https://gitorious.org/florrie-comic-management-system">Florrie
+				Project Page</a>.
+		</p>
+{% endblock %}

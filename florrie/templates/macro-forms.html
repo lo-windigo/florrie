@@ -1,4 +1,4 @@
-{% macro textField(field, type='text') %}
+{% macro formField(field, type) %}
 				<label for="{{ field.id }}">
 					{{ field.prompt }}
 					<input type="{{ type }}" id="{{ field.id }}" name="{{ field.id }"
@@ -15,6 +15,36 @@
 {% endmacro %}
 
 
+{% macro dateField(field) %}
+	{% import _self as forms %}
+	{{ forms.formField(field, 'date') }}
+{% endmacro %}
+
+
+{% macro numberField(field) %}
+	{% import _self as forms %}
+	{{ forms.formField(field, 'text') }}
+{% endmacro %}
+
+
+{% macro passwordField(field) %}
+	{% import _self as forms %}
+	{{ forms.formField(field, 'password') }}
+{% endmacro %}
+
+
+{% macro textField(field) %}
+	{% import _self as forms %}
+	{{ forms.formField(field, 'text') }}
+{% endmacro %}
+
+
+{% macro urlField(field) %}
+	{% import _self as forms %}
+	{{ forms.formField(field, 'url') }}
+{% endmacro %}
+
+
 {% macro textBox(field) %}
 				<label for="{{ field.id }}">
 					{{ field.prompt }}
@@ -26,19 +56,6 @@
 						{{ field.value }}
 					{% endif %}
 					</textarea>
-				</label>
-{% endmacro %}
-
-
-{% macro dateField(field) %}
-				<!-- TODO -->
-				<label for="{{ field.id }}">
-					{{ field.prompt }}
-					<input type="file" id="{{ field.id }}" name="{{ field.id }"
-					{% if field.required is not empty %}
-						required
-					{% endif %}
-					>
 				</label>
 {% endmacro %}
 

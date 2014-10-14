@@ -124,6 +124,8 @@ WRITE;
 				'florrie-url' => null, 
 				'florrie-desc' => null, 
 				'florrie-theme' => null, 
+				'florrie-maxheight' => null, 
+				'florrie-maxwidth' => null, 
 				'data-db' => 'florrie', 
 				'data-server' => 'localhost', 
 				'data-port' => 3307, 
@@ -165,17 +167,22 @@ WRITE;
 			}
 		}
 
-		$themes = Florrie::getThemes();
-
 		$this->render('install', array(
-			'scripts' => array('/florrie/templates/js/install.js'),
-			'ftp' => Florrie::filesWritable()?"false":"true",
-			'themes' => $themes
+			'data'            => $values,
+			'ftp'             => Florrie::filesWritable()?"false":"true",
+			'recommendations' => $missingRecommends,
+			'scripts'         => array('/florrie/templates/js/install.js'),
+			'themes'          => Florrie::getThemes()
 		));
 	}
 
 
 	// Display the requirements for Florrie, if they are not met
 	protected function requirements($missingRequirements, $missingRecommends) {
+
+		$this->render('requirements', array(
+			'recommendations' => $missingRecommends,
+			'requirements'    => $missingRequirements,
+		));
 	}
 }

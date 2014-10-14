@@ -10,36 +10,76 @@
 			is the first time Florrie has been run, so we're going to ask a
 			couple questions to help us get things set up.
 		</p>
+		{% if recommendations is not empty %}
+		<aside class="install-recommendations">
+			<h1>Missing Recommendations</h1>
+			<p>
+				It looks like we can install Florrie, but you're missing a few things
+				that we recommend:
+			</p>
+			<ul>
+				{% for recommendation in recommendations %}
+				<li>{{ recommendation }}</li>
+				{% endfor %}
+			</ul>
+			<p>
+				Florrie might work better if you could fix some of these issues.
+			</p>
+		</aside>
+		{% endif %}
 		<form method="post">
 			<fieldset>
 				<legend>Comic Details</legend>
 				<p>
-					{{ nav.textField({
+					{{ form.textField({
 						id: 'florrie-name',
 						prompt: 'Name of your comic',
 						required: true,
-						value: ''
+						formData: data
 					}) }}
 				</p>
 				<p>
-					{{ nav.textField({
+					{{ form.textField({
 						id: 'florrie-desc',
 						prompt: 'Short description',
 						required: true,
-						value: ''
+						formData: data
 					}) }}
 				</p>
 				<p>
-					{{ nav.textField({
+					{{ form.urlField({
 						id: 'florrie-url',
 						prompt: 'Comic URL',
 						required: true,
-						value: ''
-					}, 'url') }}
+						formData: data
+					}) }}
+				</p>
+				<p>
+					<strong>Note:</strong> Maximum height and width apply in different
+					ways depending on which image format you will be using!
+				</p>
+				<p>
+					{{ form.numberField({
+						id: 'florrie-maxheight',
+						prompt: 'Maximum height (in pixels)',
+						required: true,
+						placeholder: '1280',
+						formData: data
+					}) }}
+				</p>
+				<p>
+					{{ form.numberField({
+						id: 'florrie-maxwidth',
+						prompt: 'Maximum width (in pixels)',
+						required: true,
+						placeholder: '768',
+						formData: data
+					}) }}
 				</p>
 			</fieldset>
 			<fieldset>
 				<legend>Theme</legend>
+				{# TODO: Maybe these should be fancy-dancy macros as well? #}
 				{% for dir, theme in themes %}
 				<p>
 					<label for="florrie-theme{{ dir }}">
@@ -53,46 +93,47 @@
 			<fieldset>
 				<legend>Database Configuration</legend>
 				<p>
-					{{ nav.textField({
+					{{ form.textField({
 						id: 'data-server',
 						prompt: 'Server',
 						required: true,
 						placeholder: 'localhost',
-						value: ''
+						formData: data
 					}) }}
 				</p>
 				<p>
-					{{ nav.textField({
+					{{ form.numberField({
 						id: 'data-port',
 						prompt: 'Port',
 						required: true,
 						placeholder: '3307',
-						value: ''
+						formData: data
 					}) }}
 				</p>
 				<p>
-					{{ nav.textField({
+					{{ form.textField({
 						id: 'data-db',
 						prompt: 'Database/Schema Name',
 						required: true,
 						placeholder: 'florrie',
-						value: ''
+						formData: data
 					}) }}
 				</p>
 				<p>
-					{{ nav.textField({
+					{{ form.textField({
 						id: 'data-user',
 						prompt: 'User',
 						required: true,
-						value: ''
+						formData: data
 					}) }}
 				</p>
 				<p>
-					{{ nav.textField({
+					<!-- TODO: Verify field? Plain text? DECISIONS! -->
+					{{ form.passwordField({
 						id: 'data-pass',
 						prompt: 'Password',
 						required: true,
-						value: ''
+						formData: data
 					}) }}
 				</p>
 			</fieldset>
@@ -102,7 +143,7 @@
 				<p>
 					Unfortunately, it doesn't look like we can write files to
 					your server. We will need another way to add files; please
-					enter a FTP user.
+					enter some FTP details.
 				</p>
 				<p>
 					<em>TODO: Coming soon! This part doesn't actually work yet.</em>
