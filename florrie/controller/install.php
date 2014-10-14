@@ -62,7 +62,8 @@ class Install extends Controller {
 		$missingRequirements = $missingRecommends = array();
 
 		// SHA512 used for hashing passwords securely
-		if(!defined(CRYPT_SHA512) || !CRYPT_SHA512) {
+		// Can't check if the constant is defined, it lies. PHP 4 EVA!
+		if(/*!defined(CRYPT_SHA512) ||*/ !CRYPT_SHA512) {
 
 			$missingRequirements[] = <<<SHA
 Your system does not support SHA512 hashing; this prevents Florrie from

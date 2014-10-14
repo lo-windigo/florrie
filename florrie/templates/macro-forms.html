@@ -1,7 +1,7 @@
 {% macro formField(field, type) %}
 				<label for="{{ field.id }}">
 					{{ field.prompt }}
-					<input type="{{ type }}" id="{{ field.id }}" name="{{ field.id }"
+					<input type="{{ type }}" id="{{ field.id }}" name="{{ field.id }}"
 					{% if field.value is not empty %}
 						value="{{ field.value }}"
 					{% endif %}
@@ -48,7 +48,7 @@
 {% macro textBox(field) %}
 				<label for="{{ field.id }}">
 					{{ field.prompt }}
-					<textarea id="{{ field.id }}" name="{{ field.id }"
+					<textarea id="{{ field.id }}" name="{{ field.id }}"
 					{% if field.required is not empty %}
 						required
 					{% endif %}>
@@ -63,7 +63,7 @@
 {% macro fileField(field) %}
 				<label for="{{ field.id }}">
 					{{ field.prompt }}
-					<input type="file" id="{{ field.id }}" name="{{ field.id }"
+					<input type="file" id="{{ field.id }}" name="{{ field.id }}"
 					{% if field.required is not empty %}
 						required
 					{% endif %}
