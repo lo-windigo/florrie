@@ -339,7 +339,13 @@ class Florrie {
 			// BASE CASE: Set the value of the parent node, and return
 			if(!is_array($values)) {
 
-				$parent->nodeValue = $values;
+				// This chokes on ampersands. Booo, PHP.
+				//$parent->nodeValue = $values;
+
+				$value = $parent->ownerDocument->createTextNode($values);
+
+				$parent->appendChild($value);
+
 				return;
 			}
 

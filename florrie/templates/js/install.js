@@ -1,7 +1,7 @@
 
 document.addEventListener("DOMContentLoaded", function() {
 
-	var comicUrl = document.getElementById("comic-url");
+	var comicUrl = document.getElementById("florrie-url");
 
 	if(comicUrl && comicUrl.value.length > 0) {
 

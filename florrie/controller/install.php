@@ -150,9 +150,9 @@ WRITE;
 					$values['data-db']
 				);
 
-				$configArray = $this->convertToConfigArray($values);
+				$configArray = Florrie::convertToConfigArray($values);
 
-				$this->saveConfig($configArray);
+				Florrie::saveConfig($configArray);
 
 				// TODO: Install the database. Details, details.
 
