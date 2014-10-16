@@ -43,10 +43,11 @@ class Login extends Controller {
 	// Allow a user to log into the system
 	public function index() {
 
+		$error = null;
+
 		// Process form data if it has been submitted
 		if(Submitted()) {
 
-			// Defaults go here
 			$values = array(
 				'username' => null, 
 				'password' => null
@@ -73,9 +74,14 @@ class Login extends Controller {
 				die('Form Error Handling? Maybe later. Error: '.$e->getMessage());
 
 			}
+			// TODO: Match with exception thrown by user model
+			catch (exception $e) {
+
+				$error = 'Login unsuccessful - please try again. Error: '.$e->getMessage();
+			}
 		}
 
-		$this->render('login', array());
+		$this->render('login', array('error' => $error));
 	}
 
 

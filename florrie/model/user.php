@@ -93,7 +93,7 @@ Q;
 		}
 
 		// TODO: Create a better exception
-		throw new exception('Crap, that didn`t work');	
+		throw new exception('authenticateUser failed!');	
 	}
 
 
