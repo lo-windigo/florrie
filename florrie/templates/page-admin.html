@@ -1,10 +1,10 @@
 {% extends "page-base.html" %}
 
-{% block title %}{% block admin-title %}{% endblock %} - Administration{% endblock %}
+{% block title %}{{ admintitle }} - Administration{% endblock %}
 
 {% block content %}
-<h1 class="content-title">{% block admin-title %}{% endblock %}</h1>
-		{% block admin-module %}
+<h1 class="content-title">{{ admintitle }}</h1>
+		{% block adminmodule %}
 		{% endblock %}
 		<div class="admin-credentials">
 			<p>
