@@ -121,17 +121,20 @@ WRITE;
 
 			// Defaults go here
 			$values = array(
-				'florrie-name' => null, 
-				'florrie-url' => null, 
-				'florrie-desc' => null, 
-				'florrie-theme' => null, 
+				'florrie-name'      => null, 
+				'florrie-url'       => null, 
+				'florrie-desc'      => null, 
+				'florrie-theme'     => null, 
 				'florrie-maxheight' => null, 
-				'florrie-maxwidth' => null, 
-				'data-db' => 'florrie', 
-				'data-server' => 'localhost', 
-				'data-port' => 3307, 
-				'data-user' => null, 
-				'data-pass' => null 
+				'florrie-maxwidth'  => null, 
+				'data-db'           => 'florrie', 
+				'data-server'       => 'localhost', 
+				'data-port'         => 3307, 
+				'data-user'         => null, 
+				'data-pass'         => null,
+				'username'          => null,
+				'password'          => null,
+				'desc'              => null
 			);
 
 			try {
@@ -144,17 +147,36 @@ WRITE;
 					';port='.$values['data-port'].';dbname='.
 					$values['data-db'];
 
+				// Connect to the database, and save connection
+				$options = array(
+					PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,
+					PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION);
+
+				$this->db = new PDO($values['data-dsn'], $values['data-user'],
+					$values['data-pass'], $options);
+
+				// TODO: Install the database tables. Details, details.
+
+				// Add the administrative user to the system
+				$userModel = $this->loadModel('User');
+				$userModel->addUser(
+					$values['username'],
+				   	$values['desc'],
+					$values['password']);
+
+				// Some values need to be removed from the array; they're
+				//  redundant or shouldn't be saved in plain text 
 				unset(
 					$values['data-server'],
 					$values['data-port'],
-					$values['data-db']
-				);
+					$values['data-db'],
+					$values['username'],
+					$values['password'],
+					$values['desc']);
 
+				// Save the configuration
 				$configArray = Florrie::convertToConfigArray($values);
-
 				Florrie::saveConfig($configArray);
-
-				// TODO: Install the database. Details, details.
 
 				// Installation complete; redirect to the homepage
 				header('Location: /');
