@@ -37,9 +37,6 @@ class Install extends Controller {
 		require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/twig/lib/Twig/Autoloader.php';
 		Twig_Autoloader::register();
 
-		// Use the system-level template directory
-		$this->templateDir = $_SERVER['DOCUMENT_ROOT'].'/florrie/templates/';
-
 		// If you're here, there's no config
 		$this->config = array();
 	}

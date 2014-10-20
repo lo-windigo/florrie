@@ -29,11 +29,17 @@ class Florrie {
 
 	// Class Constants:
 	//  CONFIG	   - Configuration File
-	//  CONTROLLER - Directory for main controllers
+	//  CONTROLLER - Main controllers
+	//  MODELS     - System modules
+	//  STRIPS     - Comic strip images
+	//  TEMPLATES  - System templates
+	//  THEMES     - User-installable, customizeable templates
 	const CONFIG     = '/config/florrie.cfg';
 	const CONTROLLER = '/florrie/controller/';
+	const MODELS     = '/florrie/model/';
 	const STRIPS     = '/strips/';
-	const THEMES     = '/templates/';
+	const TEMPLATES  = '/florrie/templates/';
+	const THEMES     = '/themes/';
 
 
 	// Data members:
@@ -51,7 +57,7 @@ class Florrie {
 			$type = array_shift($uri);
 
 			// If Florrie hasn't been installed yet, we should probably address that
-			IF(!$this->installed() && $type != 'install') {
+			if(!$this->installed() && $type != 'install') {
 
 				// Start the Florrie install procedure; redirect to the
 				//	installation page
@@ -77,20 +83,17 @@ class Florrie {
 
 				// Handle a server error
 				$controller->serverError($e->getMessage());
-				//echo '500: '.$e->getMessage();
 			}
 			else if(get_class($e) === 'DBException' ||
-				get_class($e) === 'DBException') {
+				get_class($e) === 'PDOException') {
 
 				// Properly handle DB connection errors
 				$controller->dbError($e->getMessage());
-				//echo 'DB error: '.$e->getMessage();
 			}
 			else {
 
-				// Properly handle DB connection errors
+				// Properly handle unexpected errors
 				$controller->unknownError($e->getMessage());
-				//echo 'DB error: '.$e->getMessage();
 			}
 		}
 	}

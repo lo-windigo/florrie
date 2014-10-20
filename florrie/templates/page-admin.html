@@ -1,9 +1,30 @@
-{% extends "page-base.html" %}
+<!doctype html>
+<html>
 
-{% block title %}{{ admintitle }} - Administration{% endblock %}
+<head>
+	<title>{{ admintitle }} - Florrie Administration</title>
 
-{% block content %}
-<h1 class="content-title">{{ admintitle }}</h1>
+	<meta charset="{{ _charset }}">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0">
+	<link rel="stylesheet" type="text/css" href="/templates/default/css/layout.css">
+	{% for script in scripts %}
+	<script type="text/javascript" src="{{ script }}"></script>
+	{% endfor %}
+</head>
+
+<body>
+	<a class="a11y-link" href="#content">Skip to content</a>
+	<header class="header">
+		<div class="site-title">
+			<a href="/admin/">Florrie</a>
+		</div>
+		<nav>
+			<ul class="main-nav">
+			</ul>
+		</nav>
+	</header>
+	<section class="content">
+		<h1 class="content-title">{{ admintitle }}</h1>
 		{% block adminmodule %}
 		{% endblock %}
 		<div class="admin-credentials">
@@ -11,4 +32,10 @@
 				Logged in as <a href="/admin/user/{{ user.id }}">{{ user.display }}</a>
 			</p>
 		</div>
-{% endblock %}
+	</section>
+	<footer class="footer">
+		© {{ "now"|date('Y') }} {{ florrie.name }}
+	</footer>
+</body>
+
+</html>

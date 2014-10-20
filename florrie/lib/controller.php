@@ -26,13 +26,12 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/error.php';
 
 abstract class Controller {
 
-	const MODEL_PATH = '/florrie/model/';
 	const TEMPLATE_EXT = '.html';
 	const TEMPLATE_PRE = 'page-';
 
 
 
-	public $db, $config, $templateDir;
+	public $db, $config, $themeDir;
 
 
 	public function __construct($config) {
@@ -45,22 +44,22 @@ abstract class Controller {
 		require_once 'twig/lib/Twig/Autoloader.php';
 		Twig_Autoloader::register();
 
-		$this->templateDir = $_SERVER['DOCUMENT_ROOT'].'/templates/';
+		$this->themeDir = $_SERVER['DOCUMENT_ROOT'].Florrie::THEMES;
 		$this->config = $config;
 
 		// If there is a theme present, use that folder.
 		// Use basename to prevent directory traversal.
 		if(empty($config['florrie']) || empty($config['florrie']['theme']) &&
-			file_exists($this->templateDir.basename($config['florrie']['theme']))) {
+			file_exists($this->themeDir.basename($config['florrie']['theme']))) {
 
-			$this->templateDir .= 'default';
+			$this->themeDir .= 'default';
 		}
 		else {
 
-			$this->templateDir .= basename($config['florrie']['theme']);
+			$this->themeDir .= basename($config['florrie']['theme']);
 		}
 
-		$this->templateDir .= '/';
+		$this->themeDir .= '/';
 
 		// Get a database connection
 		$options = array(
@@ -83,7 +82,7 @@ abstract class Controller {
 	// Get a model object
 	protected function loadModel($name) {
 
-		$modulePath = $_SERVER['DOCUMENT_ROOT'].self::MODEL_PATH.
+		$modulePath = $_SERVER['DOCUMENT_ROOT'].Florrie::MODELS.
 			strtolower($name).'.php';
 		$name .= 'Model';
 
@@ -102,14 +101,15 @@ abstract class Controller {
 	// Render a page and pass it appropriate variables
 	protected function render($templateName, $data = array()) {
 
+		// Set up the template system 
+		$loader = new Twig_Loader_Filesystem(Florrie::TEMPLATES);
+
 		// Check to make sure the template dir is valid
-		if(realpath($this->templateDir) === false) {
-			
-			throw new ServerException(get_class($this).' Template directory not set');
+		if(realpath($this->themeDir) !== false) {
+
+			$loader->prependPath($this->themeDir);
 		}
 
-		// Set up the template system 
-		$loader = new Twig_Loader_Filesystem($this->templateDir);
 		$twig = new Twig_Environment($loader);
 // Can be enabled for caching templates
 //			, array(
@@ -117,8 +117,8 @@ abstract class Controller {
 //		)); 
 
 		// Load the template requested, and display it
-		$template = $twig->loadTemplate($this::TEMPLATE_PRE.$templateName.
-			$this::TEMPLATE_EXT);
+		$template = $twig->loadTemplate(self::TEMPLATE_PRE.$templateName.
+			self::TEMPLATE_EXT);
 
 		$template->display(array_merge($this->config, $data));
 	}

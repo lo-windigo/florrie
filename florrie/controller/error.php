@@ -39,8 +39,16 @@ class Error extends Controller {
 		// Use the system-level template directory
 		$this->templateDir = $_SERVER['DOCUMENT_ROOT'].'/florrie/templates/';
 
-		// TODO: Maybe there IS a config?
-		$this->config = array();
+		if(empty($config)) {
+			$config = array();
+		}
+		else if(!empty($config['florrie']['theme'])) {
+
+			$theme = $_SERVER['DOCUMENT_ROOT'].Florrie::THEMES.
+				$config['florrie']['theme'].'/';
+		}
+
+		$this->config = $config;
 	}
 
 

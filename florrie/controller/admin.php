@@ -45,15 +45,12 @@ class Admin extends Controller {
 
 
 		parent::__construct($config);
-
-		// Use the system-level template directory
-		$this->templateDir = $_SERVER['DOCUMENT_ROOT'].'/florrie/templates/';
 	}
 
 
 	public function index() {
 
-		$this->render('admin');
+		$this->render('admin-index');
 	}
 
 
