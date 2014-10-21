@@ -29,16 +29,10 @@ class Install extends Controller {
 
 	public function __construct() {
 
-		//----------------------------------------
-		// Set up the templating system
-		//----------------------------------------
-
-		// Include & initialize the Twig templating library
-		require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/twig/lib/Twig/Autoloader.php';
-		Twig_Autoloader::register();
-
-		// If you're here, there's no config
+		// If you're installing, there's no config
 		$this->config = array();
+
+		$this->initTemplates();
 	}
 
 

@@ -34,9 +34,6 @@ class Login extends Controller {
 		parent::__construct($config);
 
 		$this->model = $this->loadModel('User');
-
-		// Use the system-level template directory
-		$this->templateDir = $_SERVER['DOCUMENT_ROOT'].'/florrie/templates/';
 	}
 
 

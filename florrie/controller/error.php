@@ -26,29 +26,11 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/controller.php';
 
 class Error extends Controller {
 
-	public function __construct($config) {
-
-		//----------------------------------------
-		// Set up the templating system
-		//----------------------------------------
-
-		// Include & initialize the Twig templating library
-		require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/twig/lib/Twig/Autoloader.php';
-		Twig_Autoloader::register();
-
-		// Use the system-level template directory
-		$this->templateDir = $_SERVER['DOCUMENT_ROOT'].'/florrie/templates/';
-
-		if(empty($config)) {
-			$config = array();
-		}
-		else if(!empty($config['florrie']['theme'])) {
-
-			$theme = $_SERVER['DOCUMENT_ROOT'].Florrie::THEMES.
-				$config['florrie']['theme'].'/';
-		}
+	public function __construct($config = array()) {
 
 		$this->config = $config;
+
+		$this->initTemplates();
 	}
 
 

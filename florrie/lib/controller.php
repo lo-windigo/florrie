@@ -34,44 +34,50 @@ abstract class Controller {
 	public $db, $config, $themeDir;
 
 
+	//----------------------------------------
+	// Set up a basic controller
+	//----------------------------------------
 	public function __construct($config) {
 
-		//----------------------------------------
-		// Set up the templating system
-		//----------------------------------------
-
-		// Include & initialize the Twig templating library
-		require_once 'twig/lib/Twig/Autoloader.php';
-		Twig_Autoloader::register();
-
-		$this->themeDir = $_SERVER['DOCUMENT_ROOT'].Florrie::THEMES;
 		$this->config = $config;
 
-		// If there is a theme present, use that folder.
-		// Use basename to prevent directory traversal.
-		if(empty($config['florrie']) || empty($config['florrie']['theme']) &&
-			file_exists($this->themeDir.basename($config['florrie']['theme']))) {
+		$this->initDB();
+		$this->initTemplates();
+	}
 
-			$this->themeDir .= 'default';
+
+	//----------------------------------------
+	// Initialize the database connection
+	//----------------------------------------
+	public function initDB($config = false) {
+
+		// Verify that we have some configuration values
+		if(!$config) {
+
+			if(empty($this->config) {
+
+				throw new ServerException('No configuration provided for database initialization');
+			}
+
+			$config = $this->config;
 		}
-		else {
 
-			$this->themeDir .= basename($config['florrie']['theme']);
-		}
-
-		$this->themeDir .= '/';
-
-		// Get a database connection
-		$options = array(
-			PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,
-			PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION);
-
-		if(empty($config['data']) || empty($config['data']['dsn']) ||
-			empty($config['data']['user']) || empty($config['data']['pass'])) {
+		// Check the configuration values are present
+		if(empty($config['data']) ||
+			empty($config['data']['dsn']) ||
+			empty($config['data']['user']) ||
+		 	empty($config['data']['pass'])) {
 
 			throw new ServerException('Database configuration values not present');
 		}
 		else {
+
+			// Attempt to create a connection
+			// - Fetch results as objects
+			// - Throw exceptions when errors occur
+			$options = array(
+				PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,
+				PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION);
 
 			$this->db = new PDO($config['data']['dsn'], $config['data']['user'],
 				$config['data']['pass'], $options);
@@ -79,7 +85,9 @@ abstract class Controller {
 	}
 
 
+	//----------------------------------------
 	// Get a model object
+	//----------------------------------------
 	protected function loadModel($name) {
 
 		$modulePath = $_SERVER['DOCUMENT_ROOT'].Florrie::MODELS.
@@ -124,7 +132,9 @@ abstract class Controller {
 	}
 
 
+	//----------------------------------------
 	// Route a request to a controller function, based on the URI data
+	//----------------------------------------
 	public function route($uriArray = array()) {
 
 		// If there is no additional URI data, show the main index
@@ -145,6 +155,27 @@ abstract class Controller {
 
 				throw new NotFoundException('Controller does not have a good way to handle this URI');
 			}
+		}
+	}
+
+
+	//----------------------------------------
+	// Set up the templating system
+	//----------------------------------------
+	protected function initTemplates() {
+
+		// Include & initialize the Twig templating library
+		require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/twig/lib/Twig/Autoloader.php';
+		Twig_Autoloader::register();
+
+		$baseDir = $_SERVER['DOCUMENT_ROOT'].Florrie::THEMES;
+
+		// If there is a theme present, use that folder.
+		// Use basename to prevent directory traversal.
+		if(!empty($config['florrie']) && !empty($config['florrie']['theme']) &&
+			is_directory($baseDir.basename($config['florrie']['theme'].'/'))) {
+
+			$this->themeDir = $baseDir.basename($config['florrie']['theme']).'/';
 		}
 	}
 }
