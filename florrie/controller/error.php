@@ -26,7 +26,12 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/controller.php';
 
 class Error extends Controller {
 
-	public function __construct($config = array()) {
+	public function __construct($config = null) {
+
+		if($config === null) {
+
+			$config = array();
+		}
 
 		$this->config = $config;
 

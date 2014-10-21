@@ -27,10 +27,15 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/forms.php';
 
 class Install extends Controller {
 
-	public function __construct() {
+	public function __construct($config = null) {
+
+		if($config === null) {
+
+			$config = array();
+		}
 
 		// If you're installing, there's no config
-		$this->config = array();
+		$this->config = $config;
 
 		$this->initTemplates();
 	}
@@ -107,26 +112,26 @@ WRITE;
 	// Handle a Florrie installation via HTML form
 	protected function install($missingRecommends) {
 
+		// Defaults go here
+		$values = array(
+			'florrie-name'      => null, 
+			'florrie-url'       => null, 
+			'florrie-desc'      => null, 
+			'florrie-theme'     => null, 
+			'florrie-maxheight' => null, 
+			'florrie-maxwidth'  => null, 
+			'data-db'           => 'florrie', 
+			'data-server'       => 'localhost', 
+			'data-port'         => 3307, 
+			'data-user'         => null, 
+			'data-pass'         => null,
+			'username'          => null,
+			'password'          => null,
+			'desc'              => null
+		);
+
 		// Process form data if it has been submitted
 		if(submitted()) {
-
-			// Defaults go here
-			$values = array(
-				'florrie-name'      => null, 
-				'florrie-url'       => null, 
-				'florrie-desc'      => null, 
-				'florrie-theme'     => null, 
-				'florrie-maxheight' => null, 
-				'florrie-maxwidth'  => null, 
-				'data-db'           => 'florrie', 
-				'data-server'       => 'localhost', 
-				'data-port'         => 3307, 
-				'data-user'         => null, 
-				'data-pass'         => null,
-				'username'          => null,
-				'password'          => null,
-				'desc'              => null
-			);
 
 			try {
 

@@ -37,7 +37,12 @@ abstract class Controller {
 	//----------------------------------------
 	// Set up a basic controller
 	//----------------------------------------
-	public function __construct($config) {
+	public function __construct($config = null) {
+
+		if($config === null) {
+
+			$config = array();
+		}
 
 		$this->config = $config;
 
@@ -54,7 +59,7 @@ abstract class Controller {
 		// Verify that we have some configuration values
 		if(!$config) {
 
-			if(empty($this->config) {
+			if(empty($this->config)) {
 
 				throw new ServerException('No configuration provided for database initialization');
 			}
@@ -110,12 +115,13 @@ abstract class Controller {
 	protected function render($templateName, $data = array()) {
 
 		// Set up the template system 
-		$loader = new Twig_Loader_Filesystem(Florrie::TEMPLATES);
+		$loader = new Twig_Loader_Filesystem($_SERVER['DOCUMENT_ROOT'].
+			Florrie::TEMPLATES);
 
 		// Check to make sure the template dir is valid
-		if(realpath($this->themeDir) !== false) {
+		if(!empty($this->themeDir) && realpath($this->themeDir) !== false) {
 
-			$loader->prependPath($this->themeDir);
+			$loader->prependPath(realpath($this->themeDir));
 		}
 
 		$twig = new Twig_Environment($loader);
