@@ -67,25 +67,42 @@ function deleteFile($config, $filePath) {
 }
 
 
+//----------------------------------------
 // Get a file uploaded through a HTML form
-function getUploadedFile($index) {
+//----------------------------------------
+function processFileUpload($config, $index, $filePath) {
 
 	// Check to make sure the form's been filled out
-	if(empty($_FILES[$index]) || empty($_FILES[$index]['error']) ||
-		empty($_FILES[$index]['tmp_name'])))
-	{
-		throw new exception('Missing file upload data');
+	if(empty($_FILES[$index]) ||
+	 	empty($_FILES[$index]['error']) ||
+		empty($_FILES[$index]['tmp_name']))) {
+
+		throw new FormException('Upload field was empty');
 	}
 
-	// If the file uploaded successfully
-	($_FILES[$index]['error'] == UPLOAD_ERR_OK &&
-		is_uploaded_file($_FILES[$index]['tmp_name'])) or
-		throw new exception('File upload failed');
+	// If the file uploaded successfully:
+	// - $_FILES[x]['error'] is set to UPLOAD_ERR_OK if upload was successful,
+	//   otherwise an error constant
+	// - is_uploaded_file() returns TRUE if file has been uploaded via form
+	if($_FILES[$index]['error'] !== UPLOAD_ERR_OK ||
+		!is_uploaded_file($_FILES[$index]['tmp_name'])) {
 
-	($formFile = fopen($_FILES[$index]['tmp_name'], 'r')) or
-		throw new exception('Cannot access uploaded file');
+		throw new FormException('File upload failed - problem uploading');
+	}
 
-	// Try to save the file to the filesystem
-	$this->SaveFile($formFile, $folder, $filename);
+	// Assemble the full path and filename by concatenating the following:
+	// - Base florrie directory & method, via fileContext
+	// - Directory ($fileDir), normalized with dirname, with slash appended
+	// - File name
+	// - The file's original extension [TODO: Get the real extension variable]
+	$fileName = dirname($fileDir).'/'.$fileName.'.'.$_FILES[$index]['xxx'];
+	$fullPath = fileContext($config).$fileName;
+
+	// Move file to it's final location
+	// TODO: Does this work with the FTP wrapper? I friggin' hope so.
+	move_uploaded_file($_FILES[$index]['tmp_name'], $fullPath);
+
+	// Return the final filename/path for use later
+	return $fileName;
 }
 ?>

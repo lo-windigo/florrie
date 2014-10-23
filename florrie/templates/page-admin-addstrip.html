@@ -1,7 +1,7 @@
+{% set admintitle = "Add A Strip" %}
+
 {% extends "page-admin.html" %}
 {% import "macro-forms.html" as form %}
-
-{% block admintitle %}Add A Strip{% endblock %}
 
 {% block admin-module %}
 		<form method="post" enctype="multipart/mime">
@@ -9,14 +9,14 @@
 				{{ nav.textField({
 					id: "title",
 					prompt: "Strip title",
-					value: ""
+					value: values.title
 				}) }}
 			</p>
 			<p>
 				{{ nav.dateField({
 					id: "posted",
 					prompt: "Post on",
-					value: ""
+					value: values.posted
 				}) }}
 			</p>
 			<p>
@@ -24,7 +24,7 @@
 					id: "display",
 					prompt: "Description",
 					required: true,
-					value: ""
+					value: values.display
 				}) }}
 			</p>
 			<p>

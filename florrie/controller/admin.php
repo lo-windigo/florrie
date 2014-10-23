@@ -59,26 +59,25 @@ class Admin extends Controller {
 	//----------------------------------------
 	public function addstrip() {
 
+		// Defaults go here
+		$values = array(
+			'display' => null, 
+			'posted' => new DateTime(), 
+			'title' => null
+		);
+
 		// Process form data if it has been submitted
 		if(submitted()) {
-
-			// Defaults go here
-			$values = array(
-				'display' => null, 
-				'posted' => new DateTime(), 
-				'title' => null
-			);
 
 			try {
 
 				processFormInput($values);
 
 				// Handle strip file upload
-				$stripModel->img = processFileUpload('strip', Florrie::STRIPS.$slug);
-
-				$stripModel = $this->getModel('strip');
+				$values['img'] = processFileUpload($this->config, 'strip', Florrie::STRIPS.$slug);
 
 				// Add the new strip
+				$stripModel = $this->getModel('strip');
 				$stripModel->addStrip($values);
 
 				return;
@@ -96,7 +95,7 @@ class Admin extends Controller {
 			}
 		}
 
-		$this->render('addstrip');
+		$this->render('admin-addstrip', array('values' => $values));
 	}
 
 
