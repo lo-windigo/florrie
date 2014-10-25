@@ -54,7 +54,7 @@ abstract class Controller {
 	//----------------------------------------
 	// Initialize the database connection
 	//----------------------------------------
-	public function initDB($config = false) {
+	protected function initDB($config = false) {
 
 		// Verify that we have some configuration values
 		if(!$config) {
@@ -91,6 +91,28 @@ abstract class Controller {
 
 
 	//----------------------------------------
+	// Set up the templating system
+	//----------------------------------------
+	protected function initTemplates() {
+
+		// Include & initialize the Twig templating library
+		require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/twig/lib/Twig/Autoloader.php';
+		Twig_Autoloader::register();
+
+		$baseDir = $_SERVER['DOCUMENT_ROOT'].Florrie::THEMES;
+		$config = $this->config;
+
+		// If there is a theme present, use that folder.
+		// Use basename to prevent directory traversal.
+		if(!empty($config['florrie']) && !empty($config['florrie']['theme']) &&
+			is_dir($baseDir.basename($config['florrie']['theme'].'/'))) {
+
+			$this->themeDir = $baseDir.basename($config['florrie']['theme']).'/';
+		}
+	}
+
+
+	//----------------------------------------
 	// Get a model object
 	//----------------------------------------
 	protected function loadModel($name) {
@@ -111,7 +133,9 @@ abstract class Controller {
 	}
 
 
+	//----------------------------------------
 	// Render a page and pass it appropriate variables
+	//----------------------------------------
 	protected function render($templateName, $data = array()) {
 
 		// Set up the template system 
@@ -161,27 +185,6 @@ abstract class Controller {
 
 				throw new NotFoundException('Controller does not have a good way to handle this URI');
 			}
-		}
-	}
-
-
-	//----------------------------------------
-	// Set up the templating system
-	//----------------------------------------
-	protected function initTemplates() {
-
-		// Include & initialize the Twig templating library
-		require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/twig/lib/Twig/Autoloader.php';
-		Twig_Autoloader::register();
-
-		$baseDir = $_SERVER['DOCUMENT_ROOT'].Florrie::THEMES;
-
-		// If there is a theme present, use that folder.
-		// Use basename to prevent directory traversal.
-		if(!empty($config['florrie']) && !empty($config['florrie']['theme']) &&
-			is_directory($baseDir.basename($config['florrie']['theme'].'/'))) {
-
-			$this->themeDir = $baseDir.basename($config['florrie']['theme']).'/';
 		}
 	}
 }
