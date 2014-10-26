@@ -3,24 +3,24 @@
 {% extends "page-admin.html" %}
 {% import "macro-forms.html" as form %}
 
-{% block admin-module %}
+{% block adminmodule %}
 		<form method="post" enctype="multipart/mime">
 			<p>
-				{{ nav.textField({
+				{{ form.textField({
 					id: "title",
 					prompt: "Strip title",
 					value: values.title
 				}) }}
 			</p>
 			<p>
-				{{ nav.dateField({
+				{{ form.dateField({
 					id: "posted",
 					prompt: "Post on",
 					value: values.posted
 				}) }}
 			</p>
 			<p>
-				{{ nav.textBox({
+				{{ form.textBox({
 					id: "display",
 					prompt: "Description",
 					required: true,
@@ -28,14 +28,14 @@
 				}) }}
 			</p>
 			<p>
-				{{ nav.fileField({
+				{{ form.fileField({
 					id: "img",
 					prompt: "Strip Image",
 					required: true
 				}) }}
 			</p>
 			<p class="c">
-				{{ nav.submitButton("Add Strip") }}
+				{{ form.submitButton("Add Strip") }}
 			</p>
 		</form>
 {% endblock %}
