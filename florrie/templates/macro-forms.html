@@ -16,8 +16,19 @@
 
 
 {% macro dateField(field) %}
-	{% import _self as forms %}
-	{{ forms.formField(field, 'date') }}
+				<label for="{{ field.id }}">
+					{{ field.prompt }}
+					<input type="date" id="{{ field.id }}" name="{{ field.id }}"
+					{% if field.value is not empty %}
+						value="{{ field.value|date("Y-m-d") }}"
+					{% endif %}
+					{% if field.required is not empty %}
+						required
+					{% endif %}
+					{% if field.placeholder is not empty %}
+						placeholder="{{ field.placeholder }}"
+					{% endif %}>
+				</label>
 {% endmacro %}
 
 
@@ -51,11 +62,10 @@
 					<textarea id="{{ field.id }}" name="{{ field.id }}"
 					{% if field.required is not empty %}
 						required
-					{% endif %}>
-					{% if field.value is not empty %}
-						{{ field.value }}
 					{% endif %}
-					</textarea>
+					>{% if field.value is not empty
+						%}{{ field.value }}{%
+					endif %}</textarea>
 				</label>
 {% endmacro %}
 

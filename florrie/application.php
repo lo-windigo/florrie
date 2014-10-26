@@ -29,12 +29,14 @@ class Florrie {
 
 	// Class Constants:
 	//  CONFIG	   - Configuration File
+	//  DEBUG      - Produce debug output
 	//  CONTROLLER - Main controllers
 	//  MODELS     - System modules
 	//  STRIPS     - Comic strip images
 	//  TEMPLATES  - System templates
 	//  THEMES     - User-installable, customizeable templates
 	const CONFIG     = '/config/florrie.cfg';
+	const DEBUG      = true;
 	const CONTROLLER = '/florrie/controller/';
 	const MODELS     = '/florrie/model/';
 	const STRIPS     = '/strips/';
