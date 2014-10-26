@@ -66,17 +66,6 @@ function processFormInput(&$formData) {
 
 
 //----------------------------------------
-// Process a file uploaded via HTML form
-//----------------------------------------
-function processFileUpload($formIndex, $filePath) {
-
-	// This particular view requires file uploading
-	require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/file.php';
-
-}
-
-
-//----------------------------------------
 // Check for a form submission
 //----------------------------------------
 function submitted() {
