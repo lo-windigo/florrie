@@ -79,7 +79,8 @@ class Error extends Controller {
 
 		$data = array();
 
-		if($msg !== false) {
+		if($msg !== false && Florrie::DEBUG) {
+
 			$data = array('msg' => $msg);
 		}
 

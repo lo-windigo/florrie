@@ -99,15 +99,18 @@ abstract class Controller {
 		require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/twig/lib/Twig/Autoloader.php';
 		Twig_Autoloader::register();
 
-		$baseDir = $_SERVER['DOCUMENT_ROOT'].Florrie::THEMES;
-		$config = $this->config;
-
 		// If there is a theme present, use that folder.
 		// Use basename to prevent directory traversal.
-		if(!empty($config['florrie']) && !empty($config['florrie']['theme']) &&
-			is_dir($baseDir.basename($config['florrie']['theme'].'/'))) {
+		if(!empty($this->config['florrie']) &&
+			!empty($this->config['florrie']['theme'])) {
 
-			$this->themeDir = $baseDir.basename($config['florrie']['theme']).'/';
+			$templateDir = $_SERVER['DOCUMENT_ROOT'].Florrie::THEMES.
+				basename($this->config['florrie']['theme']).'/';
+
+			if(is_dir($templateDir)) {
+
+				$this->themeDir = $templateDir;
+			}
 		}
 	}
 
