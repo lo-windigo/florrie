@@ -344,7 +344,7 @@ Q;
 			}
 
 			if(!empty($strip->img)) {
-				$strip->img = self::DEFAULT_PATH.$strip->img;
+				$strip->img = Florrie::STRIPS.$strip->img;
 			}
 
 			// Get the "previous" and "next" strip IDs

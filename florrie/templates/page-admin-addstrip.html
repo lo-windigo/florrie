@@ -4,7 +4,7 @@
 {% import "macro-forms.html" as form %}
 
 {% block adminmodule %}
-		<form method="post" enctype="multipart/mime">
+		<form method="post" enctype="multipart/form-data">
 			<p>
 				{{ form.textField({
 					id: "title",

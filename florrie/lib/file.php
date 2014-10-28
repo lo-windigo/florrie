@@ -70,12 +70,12 @@ function deleteFile($config, $filePath) {
 //----------------------------------------
 // Get a file uploaded through a HTML form
 //----------------------------------------
-function processFileUpload($config, $index, $filePath) {
+function processFileUpload($config, $index, $fileDir, $fileName, $fileCheck = false) {
 
 	// Check to make sure the form's been filled out
 	if(empty($_FILES[$index]) ||
-	 	empty($_FILES[$index]['error']) ||
-		empty($_FILES[$index]['tmp_name']))) {
+	   empty($_FILES[$index]['tmp_name']) ||
+	   $_FILES[$index]['error'] !== UPLOAD_ERR_OK) {
 
 		throw new FormException('Upload field was empty');
 	}
@@ -84,19 +84,20 @@ function processFileUpload($config, $index, $filePath) {
 	// - $_FILES[x]['error'] is set to UPLOAD_ERR_OK if upload was successful,
 	//   otherwise an error constant
 	// - is_uploaded_file() returns TRUE if file has been uploaded via form
-	if($_FILES[$index]['error'] !== UPLOAD_ERR_OK ||
-		!is_uploaded_file($_FILES[$index]['tmp_name'])) {
+	if(!is_uploaded_file($_FILES[$index]['tmp_name'])) {
 
 		throw new FormException('File upload failed - problem uploading');
 	}
 
-	// Assemble the full path and filename by concatenating the following:
-	// - Base florrie directory & method, via fileContext
-	// - Directory ($fileDir), normalized with dirname, with slash appended
-	// - File name
-	// - The file's original extension [TODO: Get the real extension variable]
-	$fileName = dirname($fileDir).'/'.$fileName.'.'.$_FILES[$index]['xxx'];
-	$fullPath = fileContext($config).$fileName;
+	// Append the original file extension, if it exists
+	$ext = strrchr($_FILES[$index]['name'], '.');
+
+	if($ext) {
+		$fileName .= $ext;
+	}
+
+	// Glue the file path together
+	$fullPath = fileContext($config).$fileDir.'/'.$fileName;
 
 	// Move file to it's final location
 	// TODO: Does this work with the FTP wrapper? I friggin' hope so.

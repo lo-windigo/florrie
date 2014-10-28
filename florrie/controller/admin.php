@@ -23,6 +23,7 @@ session_start();
 
 
 require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/controller.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/file.php';
 require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/forms.php';
 
 
@@ -73,13 +74,18 @@ class Admin extends Controller {
 
 				processFormInput($values);
 
+				// Create a slug for this comic
+				$stripModel = $this->loadModel('strip');
+				$values['slug'] = $stripModel->createSlug($values['title']);
+
 				// Handle strip file upload
-				$values['img'] = processFileUpload($this->config, 'strip', Florrie::STRIPS.$slug);
+				$values['img'] = processFileUpload($this->config, 'img',
+				   Florrie::STRIPS, $values['slug']);
 
 				// Add the new strip
-				$stripModel = $this->getModel('strip');
 				$stripModel->addStrip($values);
 
+				$this->render('admin-stripadded');
 				return;
 			}
 			catch (FormException $e) {

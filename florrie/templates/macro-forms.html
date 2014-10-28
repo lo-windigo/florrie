@@ -72,6 +72,7 @@
 
 {% macro fileField(field) %}
 				<label for="{{ field.id }}">
+					<input type="hidden" name="MAX_FILE_SIZE" value="48000000">
 					{{ field.prompt }}
 					<input type="file" id="{{ field.id }}" name="{{ field.id }}"
 					{% if field.required is not empty %}
