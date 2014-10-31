@@ -5,7 +5,10 @@
 	<title>{% block title %}Florrie Administration{% endblock %}</title>
 	<meta charset="{{ _charset }}">
 	<meta name="viewport" content="width=device-width,initial-scale=1.0">
-	<link rel="stylesheet" type="text/css" href="/templates/default/css/layout.css">
+	{% for style in styles %}
+	<link rel="stylesheet" type="text/css" href="{{ style }}">
+	{% endfor %}
+	<link rel="stylesheet" type="text/css" href="/themes/default/css/layout.css">
 	{% for script in scripts %}
 	<script type="text/javascript" src="{{ script }}"></script>
 	{% endfor %}
@@ -15,7 +18,8 @@
 	<a class="a11y-link" href="#content">Skip to content</a>
 	<header class="header">
 		<div class="site-title">
-			<a href="/admin/">Florrie</a>
+			<a href="/">{% if florrie.name is empty %}{{ florrie.name }}{% else
+				%}Florrie{% endif %}</a>
 		</div>
 		<nav>
 			<ul class="main-nav">
@@ -23,7 +27,9 @@
 			</ul>
 		</nav>
 	</header>
-	<section class="content">{% block content %}{% endblock %}</section>
+	<section class="content">
+		{% block content %}{% endblock %}
+	</section>
 	<footer class="footer">
 		© {{ "now"|date('Y') }} {{ florrie.name }}
 	</footer>
