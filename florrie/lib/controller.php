@@ -104,12 +104,14 @@ abstract class Controller {
 		if(!empty($this->config['florrie']) &&
 			!empty($this->config['florrie']['theme'])) {
 
-			$templateDir = $_SERVER['DOCUMENT_ROOT'].Florrie::THEMES.
-				basename($this->config['florrie']['theme']).'/';
+			$templatePath = Florrie::THEMES.basename($this->config['florrie']['theme']).'/';
+			$templateDir = $_SERVER['DOCUMENT_ROOT'].$templatePath;
+				
 
 			if(is_dir($templateDir)) {
 
 				$this->themeDir = $templateDir;
+				$this->config['florrie']['themedir'] = $templatePath; 
 			}
 		}
 	}
