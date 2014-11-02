@@ -30,27 +30,29 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/forms.php';
 
 class Admin extends Controller {
 
+
 	public function __construct($config) {
 
-		//----------------------------------------
 		// Check for user credentials
-		//----------------------------------------
-		
 		if(empty($_SESSION['user'])) {
+
+			// TODO: Save page user was attempting to visit
 
 			// Users must be logged in!
 			header('Location: /login', true, 307);
 			exit;
 		}
-		//----------------------------------------
-
 
 		parent::__construct($config);
 	}
 
 
+	//----------------------------------------
+	// Index of admin functions
+	//----------------------------------------
 	public function index() {
 
+		// Short 'n sweet
 		$this->render('admin-index');
 	}
 
@@ -62,6 +64,7 @@ class Admin extends Controller {
 
 		// Defaults go here
 		$values = array(
+			'csrf' => null, 
 			'display' => null, 
 			'posted' => new DateTime(), 
 			'title' => null
@@ -85,7 +88,7 @@ class Admin extends Controller {
 				// Add the new strip
 				$stripModel->addStrip($values);
 
-				$this->render('admin-stripadded');
+				header('Location: /admin/stripadded');
 				return;
 			}
 			catch (FormException $e) {
@@ -105,6 +108,62 @@ class Admin extends Controller {
 	}
 
 
+	//----------------------------------------
+	// Remove a strip from the comic system
+	//----------------------------------------
+	public function delstrip($stripId) {
+
+		// If no ID was provided, get out!
+		if(empty($stripId)) {
+
+			throw new ServerException('No strip ID provided to delStrip');
+		}
+
+		// Create a slug for this comic
+		$stripModel = $this->loadModel('strip');
+
+		$strip = $stripModel->getStrip($stripId);
+
+		// Process form data if it has been submitted
+		if(submitted()) {
+
+			// Check the CSRF values
+			$values = array(
+				'csrf' => null
+			);
+
+			processFormInput($values);
+
+			// Remove this strip!
+			$stripModel->delStrip($strip);
+
+			header('Location: /admin/stripdeleted');
+			return;
+		}
+
+		$this->render('admin-delstrip', array('strip' => $strip));
+	}
+
+
+	//----------------------------------------
+	// Success message: add strip
+	//----------------------------------------
+	public function stripadded() {
+
+		$this->render('admin-stripadded');
+	}
+
+
+	//----------------------------------------
+	// Success message: delete strip
+	//----------------------------------------
+	public function stripdeleted() {
+
+		$this->render('admin-stripdeleted');
+	}
+
+
+
 	//========================================
 	// Protected (internal) methods
 	//========================================
@@ -114,7 +173,11 @@ class Admin extends Controller {
 	//----------------------------------------
 	protected function render($page, $data = array()) {
 
-		$data = array_merge($data, array('user' => $_SESSION['user']));
+		$adminData = array(
+			'user' => $_SESSION['user'],
+			'csrf' => $_SESSION['csrf']
+		);
+		$data = array_merge($data, $adminData);
 
 		parent::render($page, $data);
 	}

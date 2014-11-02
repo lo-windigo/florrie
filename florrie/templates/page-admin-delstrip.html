@@ -1,0 +1,24 @@
+{% set admintitle = "Confirm delete" %}
+{% import "macro-forms.html" as form %}
+
+{% extends "page-admin.html" %}
+
+{% block adminmodule %}
+	<p>
+		Are you sure you would like to delete the following comic?	
+	</p>
+	<form method="post">
+		<p class="c">
+			{{ form.csrfField(csrf) }}
+			{{ form.submitButton("Delete") }}
+		</p>
+	</form>
+	<p class="c">
+		<img src="{{ img }}"
+			{% if title is defined %}title="{{ title }}"{% endif %}
+			{% if desc is defined %}alt="{{ desc }}"{% endif %}>
+	</p>
+	<p class="c">
+		Return to the <a href="/admin">Administration Section</a>
+	</p>
+{% endblock %}
