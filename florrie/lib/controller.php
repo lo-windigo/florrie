@@ -170,8 +170,9 @@ abstract class Controller {
 	//----------------------------------------
 	// Route a request to a controller function, based on the URI data
 	//----------------------------------------
-	public function route($uriArray = array()) {
+	public function route($uriArray = false) {
 
+		// TODO: Check $uriArray for variable type, not just emptiness
 		// If there is no additional URI data, show the main index
 		if(empty($uriArray)) {
 
