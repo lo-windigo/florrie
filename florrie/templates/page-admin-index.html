@@ -6,8 +6,14 @@
 		<h1>Strips</h1>
 		<ul>
 			<li><a href="/admin/addstrip">Add a strip</a></li>
-			<li><a href="#">Edit a strip</a></li>
-			<li><a href="#">Delete a strip</a></li>
+		</ul>
+		<h2>Existing Strips</h2>
+		<ul>
+			{% for strip in strips %}
+			<li>
+				<a href="/admin/editstrip/{{ strip.id }}">{{ strip.title }}</a>
+			</li>
+			{% endfor %}
 		</ul>
 	</section>
 	<section class="adminmodule">

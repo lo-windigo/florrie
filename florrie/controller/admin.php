@@ -52,8 +52,12 @@ class Admin extends Controller {
 	//----------------------------------------
 	public function index() {
 
-		// Short 'n sweet
-		$this->render('admin-index');
+		$stripModel = $this->loadModel('strip');
+
+		// TODO: Pagination? Limits? This could get messy.
+		$strips = $stripModel->getStrips();
+
+		$this->render('admin-index', array('strips' => $strips));
 	}
 
 
