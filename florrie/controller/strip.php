@@ -83,22 +83,21 @@ class Strip extends Controller {
 		$this->render('index', array('strip' => $strip));
 	}
 
-
 	// Route a request to a controller function, based on the URI data
 	public function route($uriArray = array()) {
 
-		// Get the first value (if any) of the array
+		// If a strip ID has been sent in, display that
 		$value = current($uriArray);
 
-		// If a strip ID has been sent in, display that
 		if($value !== false && (is_int($value) || ctype_digit($value))) {
 
 			$this->index($value);
 		}
+		else {
 
-
-		// The parent router can handle everything else
-		parent::route($uriArray);
+			// The parent router can handle everything else
+			parent::route($uriArray);
+		}
 	}
 }
 ?>
