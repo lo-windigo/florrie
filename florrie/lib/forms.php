@@ -29,6 +29,18 @@ function processFormInput(&$formData) {
 	// Error state
 	$error = false;
 
+	// Check for CSRF value, if required
+	if(array_key_exists('csrf', $formData) && (
+	   empty($_POST['csrf']) ||
+	   $_POST['csrf'] != $_SESSION['csrf'])) {
+
+		throw new FormException('CSRF value not correct');	
+	}
+	else {
+
+		unset($formData['csrf']);
+	}
+
 	// Process all form fields
 	foreach($formData as $index => &$value) {
 

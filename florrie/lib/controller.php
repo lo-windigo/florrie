@@ -181,10 +181,10 @@ abstract class Controller {
 		//  this action
 		else {
 
-			$value = array_shift($uriArray);
+			$view = array_shift($uriArray);
 
-			if(method_exists($this, $value)) {
-				call_user_func(array($this, $value));
+			if(method_exists($this, $view)) {
+				call_user_func_array(array($this, $view), $uriArray);
 			}
 			else {
 

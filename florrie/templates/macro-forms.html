@@ -15,6 +15,11 @@
 {% endmacro %}
 
 
+{% macro csrfField(value) %}
+				<input type="hidden" name="csrf" value="{{ value }}">
+{% endmacro %}
+
+
 {% macro dateField(field) %}
 				<label for="{{ field.id }}">
 					{{ field.prompt }}
