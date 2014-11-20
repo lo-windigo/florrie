@@ -186,7 +186,7 @@ ORDER;
 		// Get the bulk of the strip data
 		$q = <<<Q
 SELECT
-	id, img, item_order, posted, title
+	display, id, img, item_order, posted, slug, title
 FROM strips
 WHERE posted < NOW()
 ORDER BY item_order
@@ -212,7 +212,7 @@ Q;
 		// Get the bulk of the strip data
 		$q = <<<Q
 SELECT
-	id, img, item_order, posted, title
+	display, id, img, item_order, posted, slug, title
 FROM strips
 WHERE posted < NOW()
 ORDER BY RAND()
@@ -237,7 +237,7 @@ Q;
 
 		$q = <<<Q
 SELECT
-	id, img, item_order, posted, title
+	display, id, img, item_order, posted, slug, title
 FROM strips
 WHERE posted < NOW()
 ORDER BY item_order DESC
@@ -265,7 +265,7 @@ Q;
 
 		$q = <<<Q
 SELECT
-	id, img, item_order, posted, title
+	display, id, img, item_order, posted, slug, title
 FROM strips
 
 WHERE
@@ -290,7 +290,7 @@ Q;
 
 		$q = <<<Q
 SELECT
-	id, img, item_order, posted, title
+	display, id, img, item_order, posted, slug, title
 FROM strips
 WHERE posted < NOW()
 Q;
