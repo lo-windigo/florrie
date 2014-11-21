@@ -89,6 +89,9 @@ function processFileUpload($config, $index, $fileDir, $fileName, $fileCheck = fa
 		throw new FormException('File upload failed - problem uploading');
 	}
 
+	// Prepare the filename; pull out any directory shennanigans first
+	$fileName = basename($fileName);
+
 	// Append the original file extension, if it exists
 	$ext = strrchr($_FILES[$index]['name'], '.');
 

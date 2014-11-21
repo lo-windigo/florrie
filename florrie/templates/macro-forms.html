@@ -37,6 +37,24 @@
 {% endmacro %}
 
 
+{% macro fileField(field) %}
+				<label for="{{ field.id }}">
+					<input type="hidden" name="MAX_FILE_SIZE" value="48000000">
+					{{ field.prompt }}
+					<input type="file" id="{{ field.id }}" name="{{ field.id }}"
+					{% if field.required is not empty %}
+						required
+					{% endif %}
+					>
+				</label>
+{% endmacro %}
+
+
+{% macro hiddenField(field) %}
+					<input type="hidden" name="{{ field.id }}" value="{{ field.value }}">
+{% endmacro %}
+
+
 {% macro numberField(field) %}
 	{% import _self as forms %}
 	{{ forms.formField(field, 'text') }}
@@ -68,22 +86,7 @@
 					{% if field.required is not empty %}
 						required
 					{% endif %}
-					>{% if field.value is not empty
-						%}{{ field.value }}{%
-					endif %}</textarea>
-				</label>
-{% endmacro %}
-
-
-{% macro fileField(field) %}
-				<label for="{{ field.id }}">
-					<input type="hidden" name="MAX_FILE_SIZE" value="48000000">
-					{{ field.prompt }}
-					<input type="file" id="{{ field.id }}" name="{{ field.id }}"
-					{% if field.required is not empty %}
-						required
-					{% endif %}
-					>
+					>{{ field.value }}</textarea>
 				</label>
 {% endmacro %}
 

@@ -1,0 +1,45 @@
+{% set admintitle = "Edit A Strip" %}
+
+{% extends "page-admin.html" %}
+{% import "macro-forms.html" as form %}
+
+{% block adminmodule %}
+		<form method="post" enctype="multipart/form-data">
+			<p>
+				{{ form.textField({
+					id: "title",
+					prompt: "Strip title",
+					value: values.title
+				}) }}
+			</p>
+			<p>
+				{{ form.dateField({
+					id: "posted",
+					prompt: "Post on",
+					value: values.posted,
+				}) }}
+			</p>
+			<p>
+				{{ form.textBox({
+					id: "display",
+					prompt: "Description",
+					required: true,
+					value: values.display
+				}) }}
+			</p>
+			<p>
+				{{ form.fileField({
+					id: "img",
+					prompt: "Replace Strip Image",
+				}) }}
+			</p>
+			<p class="c">
+				{{ form.hiddenField({
+					"id": "strip-id",
+					"value": values.id
+				}) }}
+				{{ form.csrfField(csrf) }}
+				{{ form.submitButton("Save Strip") }}
+			</p>
+		</form>
+{% endblock %}

@@ -113,6 +113,83 @@ class Admin extends Controller {
 
 
 	//----------------------------------------
+	// Edit an existing strip
+	//----------------------------------------
+	public function editstrip($stripId) {
+
+		// If no ID was provided, get out!
+		if(empty($stripId)) {
+
+			throw new ServerException('No strip ID provided to editStrip');
+		}
+
+		// Get the strip in question, and load it up
+		$stripModel = $this->loadModel('strip');
+		$stripObject = $stripModel->getStrip($stripId);
+
+		// Defaults go here
+		$values = array(
+			'csrf'    => null,
+			'display' => $stripObject->display,
+			'title'   => $stripObject->title,
+			'posted'  => $stripObject->posted
+		);
+
+		// Process form data if it has been submitted
+		if(submitted()) {
+
+			try {
+
+				processFormInput($values);
+
+				// Create a slug for this comic
+				$values['slug'] = $stripModel->createSlug($values['title']);
+
+				// Only process a new strip if it's been uploaded
+				if(!empty($_FILES['img']['tmp_name'])) {
+
+					// Handle strip file upload
+					$values['img'] = processFileUpload($this->config, 'img',
+					   Florrie::STRIPS, $values['slug']);
+				}
+
+				// Assign new values to the strip object
+				foreach($values as $member => $value) {
+
+					if(!empty($value)) {
+						$stripObject->$member = $value;
+					}
+				}
+
+				// Save strip details
+				$stripModel->updateStrip($stripObject);
+
+				header('Location: /admin/stripsaved');
+				return;
+			}
+			catch (FormException $e) {
+
+				// TODO: Type the right values, damnit!
+				echo 'Form Error Handling? Maybe later. Error: '.$e->getMessage();
+
+				echo '<br>';
+
+				print_r($e->formData);
+
+				exit;
+			}
+			catch (exception $e) {
+
+				// TODO: Actual error handling
+				die('EditStrip Error case: miscellaneous! Error: '.$e->getMessage());
+			}
+		}
+
+		$this->render('admin-editstrip', array('values' => $values));
+	}
+
+
+	//----------------------------------------
 	// Remove a strip from the comic system
 	//----------------------------------------
 	public function delstrip($stripId) {
@@ -150,11 +227,11 @@ class Admin extends Controller {
 
 
 	//----------------------------------------
-	// Success message: add strip
+	// Success message: strip saved
 	//----------------------------------------
-	public function stripadded() {
+	public function stripsaved() {
 
-		$this->render('admin-stripadded');
+		$this->render('admin-stripsaved');
 	}
 
 
