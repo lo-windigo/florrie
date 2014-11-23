@@ -50,7 +50,7 @@ class Install extends Controller {
 			$e = 'The install page cannot be accessed if '.
 				'Florrie has already been installed';
 
-			throw new ServerError($e);
+			throw new ServerException($e);
 		}
 
 		// Check for requirements: if any of these fail, Florrie cannot be 
