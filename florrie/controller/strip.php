@@ -47,7 +47,8 @@ class Strip extends Controller {
 
 		$strip = $this->model->getFirst();
 
-		$this->render('index', array('strip' => $strip));
+		header('Location: /strip/'.$strip->slug, true, 307);
+		return;
 	}
 
 
@@ -71,7 +72,8 @@ class Strip extends Controller {
 
 		$strip = $this->model->getLatest();
 
-		$this->render('index', array('strip' => $strip));
+		header('Location: /strip/'.$strip->slug, true, 307);
+		return;
 	}
 
 
@@ -80,7 +82,8 @@ class Strip extends Controller {
 
 		$strip = $this->model->getRandom();
 
-		$this->render('index', array('strip' => $strip));
+		header('Location: /strip/'.$strip->slug, true, 307);
+		return;
 	}
 
 	// Route a request to a controller function, based on the URI data
