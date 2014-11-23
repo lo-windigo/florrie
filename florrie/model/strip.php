@@ -256,12 +256,13 @@ Q;
 	//----------------------------------------
 	// Get a specific strip
 	//----------------------------------------
-	public function getStrip($id) {
+	public function getStrip($criteria = false) {
 
-		if(empty($id)) {
+		if($criteria === false) {
 
 			throw new exception('No strip ID specified');
 		}
+
 
 		$q = <<<Q
 SELECT
@@ -269,12 +270,22 @@ SELECT
 FROM strips
 
 WHERE
-	id = :id AND
-	posted < NOW()
 Q;
 
+		// TODO: Figure out how to get around slugs that are only digits!
+		if(is_int($criteria) || ctype_digit($criteria)) {
+
+			$q .= ' id = :criteria';
+		}
+		else {
+
+			$q .= ' slug LIKE :criteria';
+		}
+
+		$q .= ' AND posted < NOW()';
+
 		$statement = $this->db->prepare($q);
-		$statement->bindValue(':id', $id);
+		$statement->bindValue(':criteria', $criteria);
 		$statement->execute();
 
 		$strip = $statement->fetch();
@@ -406,8 +417,8 @@ Q;
 			}
 
 			// Get the "previous" and "next" strip IDs
-			$strip->next = $this->getNextID($strip->item_order);
-			$strip->prev = $this->getPrevID($strip->item_order);
+			$strip->next = $this->getNextSlug($strip->item_order);
+			$strip->prev = $this->getPrevSlug($strip->item_order);
 		}
 
 		return $strip;
@@ -415,12 +426,12 @@ Q;
 
 
 	//----------------------------------------
-	// Get the next strip id
+	// Get the next strip slug
 	//----------------------------------------
-	protected function getNextID($order) {
+	protected function getNextSlug($order) {
 
 		$q = <<<Q
-SELECT id
+SELECT slug
 FROM strips
 WHERE
 	item_order > :order AND
@@ -435,8 +446,8 @@ Q;
 
 		$next = $statement->fetch();
 
-		if(isset($next->id)) {
-			return $next->id;
+		if(isset($next->slug)) {
+			return $next->slug;
 		}
 
 		return null;
@@ -444,12 +455,12 @@ Q;
 
 
 	//----------------------------------------
-	// Get the previous strip id
+	// Get the previous strip slug
 	//----------------------------------------
-	protected function getPrevID($order) {
+	protected function getPrevSlug($order) {
 
 		$q = <<<Q
-SELECT id
+SELECT slug
 FROM strips
 WHERE
 	item_order < :order AND
@@ -464,8 +475,8 @@ Q;
 
 		$prev = $statement->fetch();
 
-		if(isset($prev->id)) {
-			return $prev->id;
+		if(isset($prev->slug)) {
+			return $prev->slug;
 		}
 
 		return null;

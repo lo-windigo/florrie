@@ -52,15 +52,15 @@ class Strip extends Controller {
 
 
 	// Index: Render a single strip
-	public function index($id = false) {
+	public function index($slug = false) {
 
-		if($id === false) {
+		if($slug === false) {
 
 			throw new NotFoundException('Strip ID not provided');
 		}
 
 		// Get the strip and display it
-		$strip = $this->model->getStrip($id);
+		$strip = $this->model->getStrip($slug);
 
 		$this->render('index', array('strip' => $strip));
 	}
@@ -89,7 +89,7 @@ class Strip extends Controller {
 		// If a strip ID has been sent in, display that
 		$value = current($uriArray);
 
-		if($value !== false && (is_int($value) || ctype_digit($value))) {
+		if($value !== false && !method_exists($this, $value)) {
 
 			$this->index($value);
 		}
