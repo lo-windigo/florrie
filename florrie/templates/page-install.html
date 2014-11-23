@@ -79,14 +79,13 @@
 			</fieldset>
 			<fieldset>
 				<legend>Theme</legend>
-				{# TODO: Maybe these should be fancy-dancy macros as well? #}
 				{% for dir, theme in themes %}
 				<p>
-					<label for="florrie-theme{{ dir }}">
-						<input type="radio" name="florrie-theme"
-							id="florrie-theme-{{ dir }}" value="{{ dir }}">
-						{{ theme }}
-					</label>
+					{{ form.radioField({
+						id: 'florrie-theme',
+						value: dir,
+						prompt: theme
+					}) }}
 				</p>
 				{% endfor %}
 			</fieldset>

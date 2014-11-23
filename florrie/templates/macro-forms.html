@@ -67,6 +67,16 @@
 {% endmacro %}
 
 
+{% macro radioField(field) %}
+					<label for="{{ field.id }}-{{ field.value }}">
+						<input type="radio" name="{{ field.id }}"
+							id="{{ field.id }}-{{ field.value }}"
+							value="{{ field.value }}">
+						{{ field.prompt }}
+					</label>
+{% endmacro %}
+
+
 {% macro textField(field) %}
 	{% import _self as forms %}
 	{{ forms.formField(field, 'text') }}
