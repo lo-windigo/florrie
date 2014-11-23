@@ -92,7 +92,7 @@ class Admin extends Controller {
 				// Add the new strip
 				$stripModel->addStrip($values);
 
-				header('Location: /admin/stripadded');
+				header('Location: /admin/stripsaved');
 				return;
 			}
 			catch (FormException $e) {
