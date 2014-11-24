@@ -1,2 +1,4 @@
 florrie.cfg
 strips/*
+themes/*
+!themes/default/*
