@@ -1,7 +1,7 @@
 {% import "macro-nav.html" as nav %}
 
 		<h1 class="content-title">
-			{{ title is not empty ? title : posted|date("l, F jS, Y") }}
+			{{ title ?: posted|date("l, F jS, Y") }}
 		</h1>
 		<ul class="strip-nav">
 		{% if next is empty %}

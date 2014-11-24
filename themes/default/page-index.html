@@ -1,6 +1,6 @@
 {% extends "page-base.html" %}
 
-{% block title %}{{ name }}{% endblock %}
+{% block title %}{{ strip.title ?: strip.posted|date("l, F jS, Y") }}{% endblock %}
 
 {% block content %}
 		{% include 'block-strip.html' with

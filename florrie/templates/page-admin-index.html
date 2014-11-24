@@ -14,7 +14,9 @@
 		<ul>
 			{% for strip in strips %}
 			<li>
-				<a href="/admin/editstrip/{{ strip.id }}">{{ strip.title }}</a>
+				<a href="/admin/editstrip/{{ strip.id }}">
+					{{ strip.title ?: strip.posted|date("l, F jS, Y") }}
+				</a>
 			</li>
 			{% endfor %}
 		</ul>
