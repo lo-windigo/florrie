@@ -28,169 +28,17 @@
 		</aside>
 		{% endif %}
 		<form method="post">
-			<fieldset>
-				<legend>Comic Details</legend>
-				<p>
-					{{ form.textField({
-						id: 'florrie-name',
-						prompt: 'Name of your comic',
-						required: true,
-						formData: data
-					}) }}
-				</p>
-				<p>
-					{{ form.textField({
-						id: 'florrie-desc',
-						prompt: 'Short description',
-						required: true,
-						formData: data
-					}) }}
-				</p>
-				<p>
-					{{ form.urlField({
-						id: 'florrie-url',
-						prompt: 'Comic URL',
-						required: true,
-						formData: data
-					}) }}
-				</p>
-				<p>
-					<strong>Note:</strong> Maximum height and width apply in different
-					ways depending on which image format you will be using!
-				</p>
-				<p>
-					{{ form.numberField({
-						id: 'florrie-maxwidth',
-						prompt: 'Maximum width (in pixels)',
-						required: true,
-						placeholder: '1280',
-						formData: data
-					}) }}
-				</p>
-				<p>
-					{{ form.numberField({
-						id: 'florrie-maxheight',
-						prompt: 'Maximum height (in pixels)',
-						required: true,
-						placeholder: '768',
-						formData: data
-					}) }}
-				</p>
-			</fieldset>
-			<fieldset>
-				<legend>Theme</legend>
-				{% for dir, theme in themes %}
-				<p>
-					{{ form.radioField({
-						id: 'florrie-theme',
-						value: dir,
-						prompt: theme
-					}) }}
-				</p>
-				{% endfor %}
-			</fieldset>
-			<fieldset>
-				<legend>Database Configuration</legend>
-				<p>
-					{{ form.textField({
-						id: 'data-server',
-						prompt: 'Server',
-						required: true,
-						placeholder: 'localhost',
-						formData: data
-					}) }}
-				</p>
-				<p>
-					{{ form.numberField({
-						id: 'data-port',
-						prompt: 'Port',
-						required: true,
-						placeholder: '3307',
-						formData: data
-					}) }}
-				</p>
-				<p>
-					{{ form.textField({
-						id: 'data-db',
-						prompt: 'Database/Schema Name',
-						required: true,
-						placeholder: 'florrie',
-						formData: data
-					}) }}
-				</p>
-				<p>
-					{{ form.textField({
-						id: 'data-user',
-						prompt: 'User',
-						required: true,
-						formData: data
-					}) }}
-				</p>
-				<p>
-					<!-- TODO: Verify field? Plain text? DECISIONS! -->
-					{{ form.passwordField({
-						id: 'data-pass',
-						prompt: 'Password',
-						required: true,
-						formData: data
-					}) }}
-				</p>
-			</fieldset>
-			{% if ftp == "true" %}
-			<fieldset>
-				<legend>FTP Details</legend>
-				<p>
-					Unfortunately, it doesn't look like we can write files to
-					your server. We will need another way to add files; please
-					enter some FTP details.
-				</p>
-				<p>
-					<em>TODO: Coming soon! This part doesn't actually work yet.</em>
-				</p>
-				<p>
-					<label for="florrie-name">
-						Name of your comic
-						<input type="text" id="florrie-name" name="florrie-name">
-					</label>
-				</p>
-				<p>
-					<label for="florrie-desc">
-						Short description
-						<input type="text" id="florrie-name" name="florrie-name">
-					</label>
-				</p>
-				<p>
-					<label for="florrie-url">
-						Comic URL
-						<input type="url" id="florrie-url" name="florrie-url">
-					</label>
-				</p>
-			</fieldset>
-			{% endif %}
+			<h2>Comic Settings</h2>
+				{% include "block-strip.html" with {
+				} %}
 			<fieldset>
 				<legend>Admin User</legend>
 				<p>
 					Keys to the kingdom! Phenomenal cosmic power! Set up your
 					admin user, who will post comics in a single bound!
 				</p>
-				<p>
-					<label for="username">
-						Username
-						<input type="text" required id="username" name="username">
-					</label>
-				</p>
-				<p>
-					<label for="password">
-						Password
-						<input type="password" required id="password" name="password">
-					</label>
-				</p>
-				<p>
-					<label for="desc">
-						Description
-						<input type="text" required id="desc" name="desc">
-					</label>
-				</p>
+				{% include "block-user-form.html" with {
+				} %}
 			</fieldset>
 			<p class="c">
 				<input type="submit" value="Install Florrie">

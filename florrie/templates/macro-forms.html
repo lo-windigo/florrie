@@ -75,7 +75,7 @@
 					<label for="{{ field.id|e('html_attr') }}-{{ field.value|e('html_attr') }}">
 						<input type="radio" name="{{ field.id|e('html_attr') }}"
 							id="{{ field.id|e('html_attr') }}-{{ field.value|e('html_attr') }}"
-							{% if field.checked %}checked{% endif %}
+							{% if field.value == field.match %}checked{% endif %}
 							value="{{ field.value|e('html_attr') }}">
 						{{ field.prompt }}
 					</label>

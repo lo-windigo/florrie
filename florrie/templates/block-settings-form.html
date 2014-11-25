@@ -1,0 +1,138 @@
+{% import "macro-forms.html" as form %}
+			<fieldset>
+				<legend>Comic Details</legend>
+				<p>
+					{{ form.textField({
+						id: "florrie-name",
+						prompt: "Name of your comic",
+						required: true,
+						value: settings["florrie-name"]
+					}) }}
+				</p>
+				<p>
+					{{ form.textField({
+						id: "florrie-desc",
+						prompt: "Short description",
+						required: true,
+						value: settings["florrie-desc"]
+					}) }}
+				</p>
+				<p>
+					{{ form.urlField({
+						id: "florrie-url",
+						prompt: "Comic URL",
+						required: true,
+						value: settings["florrie-url"]
+					}) }}
+				</p>
+				<p>
+					<strong>Note:</strong> Maximum height and width apply in different
+					ways depending on which image format you will be using!
+				</p>
+				<p>
+					{{ form.numberField({
+						id: "florrie-maxwidth",
+						prompt: "Maximum width (in pixels)",
+						required: true,
+						value: settings["florrie-maxwidth"]|default("1280")
+					}) }}
+				</p>
+				<p>
+					{{ form.numberField({
+						id: "florrie-maxheight",
+						prompt: "Maximum height (in pixels)",
+						required: true,
+						value: settings["florrie-maxheight"]|default("768")
+					}) }}
+				</p>
+			</fieldset>
+			<fieldset>
+				<legend>Theme</legend>
+				{% for dir, theme in themes %}
+				<p>
+					{{ form.radioField({
+						id: "florrie-theme",
+						value: dir,
+						prompt: theme,
+						match: settings["florrie-theme"]
+					}) }}
+					{# (settings["florrie-theme"] == theme) #}
+				</p>
+				{% endfor %}
+			</fieldset>
+			<fieldset>
+				<legend>Database Configuration</legend>
+				<p>
+					{{ form.textField({
+						id: "data-server",
+						prompt: "Server",
+						required: true,
+						placeholder: "localhost",
+						value: settings["data-server"]
+					}) }}
+				</p>
+				<p>
+					{{ form.numberField({
+						id: "data-port",
+						prompt: "Port",
+						required: true,
+						placeholder: "3307",
+						value: settings["data-port"]
+					}) }}
+				</p>
+				<p>
+					{{ form.textField({
+						id: "data-db",
+						prompt: "Database/Schema Name",
+						required: true,
+						placeholder: "florrie",
+						value: settings["data-db"]
+					}) }}
+				</p>
+				<p>
+					{{ form.textField({
+						id: "data-user",
+						prompt: "User",
+						required: true,
+						value: settings["data-user"]
+					}) }}
+				</p>
+				<p>
+					{# TODO: Verify field? Plain text? DECISIONS! #}
+					{{ form.passwordField({
+						id: "data-pass",
+						prompt: "Password",
+						required: true,
+						value: settings["data-pass"]
+					}) }}
+				</p>
+			</fieldset>
+			{% if ftp == "true" %}
+			<fieldset>
+				<legend>FTP Details</legend>
+				<p>
+					Unfortunately, it doesn't look like we can write files to
+					your server. We will need another way to add files; please
+					enter some FTP details.
+				</p>
+				{# TODO: Coming soon! This part doesn't actually work yet. #}
+				<p>
+					<label for="florrie-name">
+						Name of your comic
+						<input type="text" id="florrie-name" name="florrie-name">
+					</label>
+				</p>
+				<p>
+					<label for="florrie-desc">
+						Short description
+						<input type="text" id="florrie-name" name="florrie-name">
+					</label>
+				</p>
+				<p>
+					<label for="florrie-url">
+						Comic URL
+						<input type="url" id="florrie-url" name="florrie-url">
+					</label>
+				</p>
+			</fieldset>
+			{% endif %}

@@ -227,11 +227,39 @@ class Admin extends Controller {
 
 
 	//----------------------------------------
-	// Success message: strip saved
+	// General settings administration
 	//----------------------------------------
-	public function stripsaved() {
+	public function settings() {
 
-		$this->render('admin-stripsaved');
+		$settings = Florrie::convertToFlatArray($this->config);
+		$themes = Florrie::getThemes();
+
+		// Process form data if it has been submitted
+		if(submitted()) {
+
+			// Check the CSRF values
+			$values = array(
+				'csrf' => null
+			);
+
+			$values = array_merge($settings, $values);
+
+			processFormInput($values);
+
+			// Save the configuration
+			$configArray = Florrie::convertToConfigArray($values);
+			Florrie::saveConfig($configArray);
+
+			header('Location: /admin/settingssaved');
+			return;
+		}
+
+		// TODO: Sync $values with $settings!
+
+		$this->render('admin-settings', array(
+			'settings' => $settings,
+			'themes' => $themes
+		));
 	}
 
 
@@ -241,6 +269,15 @@ class Admin extends Controller {
 	public function stripdeleted() {
 
 		$this->render('admin-stripdeleted');
+	}
+
+
+	//----------------------------------------
+	// Success message: strip saved
+	//----------------------------------------
+	public function stripsaved() {
+
+		$this->render('admin-stripsaved');
 	}
 
 

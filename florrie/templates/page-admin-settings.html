@@ -1,0 +1,21 @@
+{% set admintitle = "Settings" %}
+{% extends "page-admin.html" %}
+{% import "macro-forms.html" as form %}
+
+{% block adminmodule %}
+	<p>
+		These are the basic settings for the Florrie comic management system.
+		Change them with care!
+	</p>
+	<form method="post">
+		{% include "block-settings-form.html" with
+		{
+			settings: settings,
+			themes: themes
+		} %}
+		<p class="c">
+			{{ form.csrfField(csrf) }}
+			{{ form.submitButton("Save Settings") }}
+		</p>
+	</form>
+{% endblock %}
