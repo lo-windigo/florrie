@@ -1,29 +1,29 @@
 {% macro formField(field, type) %}
-				<label for="{{ field.id }}">
+				<label for="{{ field.id|e('html_attr') }}">
 					{{ field.prompt }}
-					<input type="{{ type }}" id="{{ field.id }}" name="{{ field.id }}"
+					<input type="{{ type|e('html_attr') }}" id="{{ field.id|e('html_attr') }}" name="{{ field.id|e('html_attr') }}"
 					{% if field.value is not empty %}
-						value="{{ field.value }}"
+						value="{{ field.value|e('html_attr') }}"
 					{% endif %}
 					{% if field.required is not empty %}
 						required
 					{% endif %}
 					{% if field.placeholder is not empty %}
-						placeholder="{{ field.placeholder }}"
+						placeholder="{{ field.placeholder|e('html_attr') }}"
 					{% endif %}>
 				</label>
 {% endmacro %}
 
 
 {% macro csrfField(value) %}
-				<input type="hidden" name="csrf" value="{{ value }}">
+				<input type="hidden" name="csrf" value="{{ value|e('html_attr') }}">
 {% endmacro %}
 
 
 {% macro dateField(field) %}
-				<label for="{{ field.id }}">
+				<label for="{{ field.id|e('html_attr') }}">
 					{{ field.prompt }}
-					<input type="date" id="{{ field.id }}" name="{{ field.id }}"
+					<input type="date" id="{{ field.id|e('html_attr') }}" name="{{ field.id|e('html_attr') }}"
 					{% if field.value is not empty %}
 						value="{{ field.value|date("Y-m-d") }}"
 					{% endif %}
@@ -31,17 +31,19 @@
 						required
 					{% endif %}
 					{% if field.placeholder is not empty %}
-						placeholder="{{ field.placeholder }}"
+						placeholder="{{ field.placeholder|e('html_attr') }}"
 					{% endif %}>
 				</label>
 {% endmacro %}
 
 
 {% macro fileField(field) %}
-				<label for="{{ field.id }}">
+				<label for="{{ field.id|e('html_attr') }}">
 					<input type="hidden" name="MAX_FILE_SIZE" value="48000000">
 					{{ field.prompt }}
-					<input type="file" id="{{ field.id }}" name="{{ field.id }}"
+					<input type="file"
+						id="{{ field.id|e('html_attr') }}"
+						name="{{ field.id|e('html_attr') }}"
 					{% if field.required is not empty %}
 						required
 					{% endif %}
@@ -51,7 +53,9 @@
 
 
 {% macro hiddenField(field) %}
-					<input type="hidden" name="{{ field.id }}" value="{{ field.value }}">
+					<input type="hidden"
+						name="{{ field.id|e('html_attr') }}"
+						value="{{ field.value|e('html_attr') }}">
 {% endmacro %}
 
 
@@ -68,10 +72,11 @@
 
 
 {% macro radioField(field) %}
-					<label for="{{ field.id }}-{{ field.value }}">
-						<input type="radio" name="{{ field.id }}"
-							id="{{ field.id }}-{{ field.value }}"
-							value="{{ field.value }}">
+					<label for="{{ field.id|e('html_attr') }}-{{ field.value|e('html_attr') }}">
+						<input type="radio" name="{{ field.id|e('html_attr') }}"
+							id="{{ field.id|e('html_attr') }}-{{ field.value|e('html_attr') }}"
+							{% if field.checked %}checked{% endif %}
+							value="{{ field.value|e('html_attr') }}">
 						{{ field.prompt }}
 					</label>
 {% endmacro %}
@@ -90,9 +95,9 @@
 
 
 {% macro textBox(field) %}
-				<label for="{{ field.id }}">
+				<label for="{{ field.id|e('html_attr') }}">
 					{{ field.prompt }}
-					<textarea id="{{ field.id }}" name="{{ field.id }}"
+					<textarea id="{{ field.id|e('html_attr') }}" name="{{ field.id|e('html_attr') }}"
 					{% if field.required is not empty %}
 						required
 					{% endif %}
@@ -102,6 +107,6 @@
 
 
 {% macro submitButton(submitText) %}
-				<input type="submit" value="{{ submitText }}">
+				<input type="submit" value="{{ submitText|e('html_attr') }}">
 				<input type="hidden" name="submitted" value="true">
 {% endmacro %}
