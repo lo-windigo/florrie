@@ -331,6 +331,47 @@ class Florrie {
 
 
 	//----------------------------------------
+	// Flatten a multidimensional config array
+	//----------------------------------------
+	static public function convertToFlatArray($configArray) {
+
+		$flatConfig = array();
+
+		// Recursive function to flatten multidimensional config arrays
+		$builder = function(&$flatConfig, $configArray, $flatIndex = false)
+			use (&$builder) {
+
+			// Once we get down to the value, add it to the flat array
+			// B-B-BASE CASE!
+			if(!is_array($configArray)) {
+
+				$flatConfig[$flatIndex] = $configArray;
+				return;
+			}
+
+			if($flatIndex) {
+
+				$flatIndex .= '-';
+			}
+			else {
+
+				$flatIndex = '';
+			}
+
+			// Process the config array recursively
+			foreach($configArray as $index => $subArray) {
+
+				$builder($flatConfig, $subArray, $flatIndex.$index);
+			}
+		};
+
+		$builder($flatConfig, $configArray);
+
+		return $flatConfig;
+	}
+
+
+	//----------------------------------------
 	// Write configuration values to the config file
 	//----------------------------------------
 	static public function saveConfig($configArray) {
