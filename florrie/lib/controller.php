@@ -69,13 +69,20 @@ abstract class Controller {
 
 		// Check the configuration values are present
 		if(empty($config['data']) ||
-			empty($config['data']['dsn']) ||
+			empty($config['data']['server']) ||
+			empty($config['data']['port']) ||
+			empty($config['data']['db']) ||
 			empty($config['data']['user']) ||
 		 	empty($config['data']['pass'])) {
 
 			throw new ServerException('Database configuration values not present');
 		}
 		else {
+
+			// Compile the db values into a DSN
+			// TODO: Database independent? Let people choose?
+			$dsn = 'mysql:host='.$config['data']['server'].';port='.
+				$config['data']['port'].';dbname='.$config['data']['db'];
 
 			// Attempt to create a connection
 			// - Fetch results as objects
@@ -84,7 +91,7 @@ abstract class Controller {
 				PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,
 				PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION);
 
-			$this->db = new PDO($config['data']['dsn'], $config['data']['user'],
+			$this->db = new PDO($dsn, $config['data']['user'],
 				$config['data']['pass'], $options);
 		}
 	}

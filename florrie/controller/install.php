@@ -137,12 +137,6 @@ WRITE;
 
 				processFormInput($values);
 
-				// Compile the db values into a DSN
-				// TODO: Database independent? Let people choose?
-				$values['data-dsn'] = 'mysql:host='.$values['data-server'].
-					';port='.$values['data-port'].';dbname='.
-					$values['data-db'];
-
 				// Connect to the database, and save connection
 				$options = array(
 					PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,
@@ -163,9 +157,6 @@ WRITE;
 				// Some values need to be removed from the array; they're
 				//  redundant or shouldn't be saved in plain text 
 				unset(
-					$values['data-server'],
-					$values['data-port'],
-					$values['data-db'],
 					$values['username'],
 					$values['password'],
 					$values['desc']);
