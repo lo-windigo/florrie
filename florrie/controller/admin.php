@@ -99,7 +99,6 @@ class Admin extends Controller {
 
 				// TODO: Type the right values, damnit!
 				die('Form Error Handling? Maybe later. Error: '.$e->getMessage());
-
 			}
 			catch (exception $e) {
 
@@ -208,18 +207,32 @@ class Admin extends Controller {
 		// Process form data if it has been submitted
 		if(submitted()) {
 
-			// Check the CSRF values
-			$values = array(
-				'csrf' => null
-			);
+			try {
 
-			processFormInput($values);
+				// Check the CSRF values
+				$values = array(
+					'csrf' => null
+				);
 
-			// Remove this strip!
-			$stripModel->delStrip($strip);
+				processFormInput($values);
 
-			header('Location: /admin/stripdeleted');
-			return;
+				// Remove this strip!
+				$stripModel->delStrip($strip);
+
+				header('Location: /admin/stripdeleted');
+				return;
+			}
+			catch (FormException $e) {
+
+				// TODO: Type the right values, damnit!
+				die('Form Error Handling? Maybe later. Error: '.$e->getMessage());
+			}
+			catch (exception $e) {
+
+				// TODO: Actual error handling
+				die('DelStrip Error case: miscellaneous! Error: '.$e->getMessage());
+			}
+
 		}
 
 		$this->render('admin-delstrip', array('strip' => $strip));
@@ -237,21 +250,37 @@ class Admin extends Controller {
 		// Process form data if it has been submitted
 		if(submitted()) {
 
-			// Check the CSRF values
-			$values = array(
-				'csrf' => null
-			);
+			try {
 
-			$values = array_merge($settings, $values);
+				// Check the CSRF values
+				$values = array(
+					'csrf' => null
+				);
 
-			processFormInput($values);
+				$values = array_merge($settings, $values);
 
-			// Save the configuration
-			$configArray = Florrie::convertToConfigArray($values);
-			Florrie::saveConfig($configArray);
+				processFormInput($values);
 
-			header('Location: /admin/settingssaved');
-			return;
+				// Save the configuration
+				$configArray = Florrie::convertToConfigArray($values);
+				if(Florrie::saveConfig($configArray)) {
+
+					header('Location: /admin/settingssaved');
+					return;
+				}
+
+				throw new exception('No config file written!');
+			}
+			catch (FormException $e) {
+
+				// TODO: Type the right values, damnit!
+				die('Form Error Handling? Maybe later. Error: '.$e->getMessage());
+			}
+			catch (exception $e) {
+
+				// TODO: Actual error handling
+				die('DelStrip Error case: miscellaneous! Error: '.$e->getMessage());
+			}
 		}
 
 		// TODO: Sync $values with $settings!
@@ -260,6 +289,15 @@ class Admin extends Controller {
 			'settings' => $settings,
 			'themes' => $themes
 		));
+	}
+
+
+	//----------------------------------------
+	// Success message: settings saved
+	//----------------------------------------
+	public function settingssaved() {
+
+		$this->render('admin-settingssaved');
 	}
 
 
