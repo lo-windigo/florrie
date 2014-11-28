@@ -54,6 +54,8 @@ class Login extends Controller {
 
 				ProcessFormInput($values);
 
+				// TODO: If an invalid username is entered, no object is 
+				// returned
 				$user = $this->model->authenticateUser($values['username'], $values['password']);
 
 				$_SESSION['user'] = $user;

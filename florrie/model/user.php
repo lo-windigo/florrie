@@ -83,6 +83,8 @@ Q;
 	//----------------------------------------
 	public function authenticateUser($user, $pass) {
 
+		// TODO: check user before accessing methods
+
 		// First, we're going to need user details
 		$user = $this->getUser($user);
 		$pass = hashPassword($pass, $user->pass);
