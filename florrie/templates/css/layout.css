@@ -27,6 +27,11 @@ body {
 	margin: 0;
 }
 
+fieldset {
+	border: 3px solid #bbb;
+	margin-bottom: 1em;
+}
+
 h1 {
 	font-size: 2.5em;
 	text-shadow: .05em .05em 1px #bbb;
@@ -36,6 +41,11 @@ html {
 	background: #f8f8f8;
 	color: #000;
 	font-family: sans-serif;
+}
+
+legend {
+	font-size: 1.4em;
+	font-weight: bold;
 }
 
 
