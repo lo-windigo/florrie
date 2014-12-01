@@ -56,8 +56,12 @@ class Admin extends Controller {
 
 		// TODO: Pagination? Limits? This could get messy.
 		$strips = $stripModel->getStrips();
+		$strips = array_slice($strips, -5);
 
-		$this->render('admin-index', array('strips' => $strips));
+		$this->render('admin-index', array(
+			'strips' => $strips,
+			'section' => 'strips'
+		));
 	}
 
 
@@ -107,7 +111,11 @@ class Admin extends Controller {
 			}
 		}
 
-		$this->render('admin-addstrip', array('values' => $values));
+		$this->render('admin-addstrip', array(
+			'values' => $values,
+			'section' => 'strips'
+
+		));
 	}
 
 
@@ -184,7 +192,11 @@ class Admin extends Controller {
 			}
 		}
 
-		$this->render('admin-editstrip', array('values' => $values));
+		$this->render('admin-editstrip', array(
+			'values' => $values,
+			'section' => 'strips'
+
+		));
 	}
 
 
@@ -235,7 +247,11 @@ class Admin extends Controller {
 
 		}
 
-		$this->render('admin-delstrip', array('strip' => $strip));
+		$this->render('admin-delstrip', array(
+			'strip' => $strip,
+			'section' => 'strips'
+
+		));
 	}
 
 
@@ -287,7 +303,8 @@ class Admin extends Controller {
 
 		$this->render('admin-settings', array(
 			'settings' => $settings,
-			'themes' => $themes
+			'themes' => $themes,
+			'section' => 'settings'
 		));
 	}
 
@@ -297,7 +314,9 @@ class Admin extends Controller {
 	//----------------------------------------
 	public function settingssaved() {
 
-		$this->render('admin-settingssaved');
+		$this->render('admin-settingssaved', array(
+			'section' => 'settings'
+		));
 	}
 
 
@@ -306,7 +325,9 @@ class Admin extends Controller {
 	//----------------------------------------
 	public function stripdeleted() {
 
-		$this->render('admin-stripdeleted');
+		$this->render('admin-stripdeleted', array(
+			'section' => 'strips'
+		));
 	}
 
 
@@ -315,7 +336,9 @@ class Admin extends Controller {
 	//----------------------------------------
 	public function stripsaved() {
 
-		$this->render('admin-stripsaved');
+		$this->render('admin-stripsaved', array(
+			'section' => 'strips'
+		));
 	}
 
 

@@ -12,14 +12,20 @@
 	{% endfor %}
 </head>
 
-<body>
+<body class="page-admin">
 	<a class="a11y-link" href="#content">Skip to content</a>
 	<header class="header">
 		<div class="site-title">
 			<a href="/admin/">Florrie</a>
 		</div>
 		<nav>
-			<ul class="main-nav">
+			<ul class="admin-nav admin-overlay">
+				<li><a class="admin-nav-item{% if section == "users" %} active{% endif %}"
+					href="/admin/users">Users</a></li>
+				<li><a class="admin-nav-item{% if section == "strips" %} active{% endif %}"
+					href="/admin">Strips</a></li>
+				<li><a class="admin-nav-item{% if section == "settings" %} active{% endif %}"
+					href="/admin/settings">Settings</a></li>
 			</ul>
 		</nav>
 	</header>
@@ -27,10 +33,9 @@
 		<h1 class="content-title">{{ admintitle }}</h1>
 		{% block adminmodule %}
 		{% endblock %}
-		<div class="admin-credentials">
-			<p>
-				Logged in as <a href="/admin/user/{{ user.id }}">{{ user.display }}</a>
-			</p>
+		<div class="admin-credentials admin-overlay">
+			<a href="/admin/user/{{ user.user }}">{{ user.display }}</a> |
+			<a href="/login/logout">Log out</a>
 		</div>
 	</section>
 	<footer class="footer">

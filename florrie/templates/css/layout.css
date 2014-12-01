@@ -4,9 +4,9 @@
 |  `--, |  || .-. ||  .--'|  .--',--.| .-. :
 |  |`   |  |' '-' '|  |   |  |   |  |\   --.
 `--'    `--' `---' `--'   `--'   `--' `----'
-        ---Comic management system---
+        ---Comic management engine---
 
-              Default layout
+              System Template
                by Jacob Hume
 */
 
@@ -41,6 +41,7 @@ html {
 	background: #f8f8f8;
 	color: #000;
 	font-family: sans-serif;
+	height: 100%;
 }
 
 legend {
@@ -55,6 +56,114 @@ legend {
 .a11y-link {
 	position: absolute;
 	top: -5em;
+}
+
+.admin-credentials {
+	border-radius: 0 0 0 .5em;
+	border-width: 0 0 1px 1px;
+	box-shadow: .5em -.5em 1em #000;
+	right: 0;
+	top: 0;
+}
+
+.admin-nav {
+	bottom: 0;
+	border-width: 1px 0 0 0;
+	box-shadow: 0 .5em 1em #000;
+	left: 0;
+	list-style: none;
+	text-align: center;
+	width: 100%;
+	z-index: 100;
+}
+
+.admin-nav li {
+	display: inline-block;
+}
+
+.admin-nav-item {
+	border: 5px solid #999;
+	border-radius: .25em;
+	display: inline-block;
+	font-weight: bold;
+	margin: 0 .5em;
+	padding: .5em;
+}
+
+.admin-nav-item:active,
+.admin-nav-item:hover,
+.admin-nav-item.active {
+	border: 5px solid #f44;
+}
+
+.admin-nav-item:before {
+	content: "[X]";
+	display: inline-block;
+	padding-right: .5em;
+}
+
+.admin-overlay {
+	background: rgba(255,255,255,.8);
+	border-color: #bbb;
+	border-style: solid;
+	margin: 0;
+	padding: .5em;
+	position: fixed;
+}
+
+.admin-overlay a,
+.admin-overlay a:visited {
+	color: #000;
+}
+
+.admin-strip-list {
+	overflow-x: auto;
+	height: 21em;
+	white-space: nowrap;
+}
+
+.admin-strip-list li {
+	display: inline;
+	list-style: none;
+}
+
+.admin-strip-thumb {
+	box-shadow: 0 1em -.5em #000;
+	display: inline-block;
+	margin: 0 .5em;
+	padding: 2em 0;
+	position: relative;
+}
+
+.admin-strip-thumb img {
+	max-height: 16em;
+	max-width: 16em;
+	vertical-align: middle;
+	opacity: .6;
+	transition: all .3s;
+}
+
+.admin-strip-thumb.admin-strip-latest img {
+	margin: 0 1.5em;
+}
+
+.admin-strip-thumb.admin-strip-latest img,
+.admin-strip-thumb img:hover {
+	/*
+	margin: -1em;
+	max-height: 18em;
+	max-width: 18em;
+	*/
+	transform: scale(1.25);
+	opacity: 1;
+	z-index: 50;
+}
+
+.admin-strip-thumb img:hover:after {
+	content: attr(title);
+	position: absolute;
+	top: 0;
+	width: 100%;
 }
 
 .c,
@@ -101,6 +210,10 @@ legend {
 	display: inline-block;
 	margin: 0 .5em;
 	padding: .5em .5em .25em .5em;
+}
+
+.page-admin {
+	padding-bottom: 3em;
 }
 
 .site-title a {

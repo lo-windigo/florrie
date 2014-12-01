@@ -1,38 +1,31 @@
-{% set admintitle = "Main" %}
+{% set admintitle = "Administration" %}
 {% extends "page-admin.html" %}
 
 {% block adminmodule %}
-	<section class="adminmodule">
-		<h1>Strips</h1>
-		<ul>
-			<li><a href="/admin/addstrip">Add a strip</a></li>
-		</ul>
-		<h2>Existing Strips</h2>
-		<p>
-			TODO: Strips set to future dates WILL NOT APPEAR in this list!!!
-		</p>
-		<ul>
-			{% for strip in strips %}
-			<li>
-				<a href="/admin/editstrip/{{ strip.id }}">
-					{{ strip.title ?: strip.posted|date("l, F jS, Y") }}
-				</a>
-			</li>
-			{% endfor %}
-		</ul>
-	</section>
-	<section class="adminmodule">
-		<h1>Users</h1>
-		<ul>
-			<li><a href="#">Add a user</a></li>
-			<li><a href="#">Edit a user</a></li>
-			<li><a href="#">Delete a user</a></li>
-		</ul>
-	</section>
-	<section class="adminmodule">
-		<h1>Settings</h1>
-		<ul>
-			<li><a href="/admin/settings">Change Settings</a></li>
-		</ul>
-	</section>
+	<ul class="admin-strip-list">
+		{% if strips|length > 5 %}
+		<li class="admin-all-thumb"><a href="/admin/allstrips">View all strips</a></li>
+		{% endif %}
+		{% for strip in strips %}
+		<li>
+			<a href="/admin/editstrip/{{ strip.id }}"
+				class="admin-strip-thumb
+				{% if loop.last %}
+				admin-strip-latest
+				{% endif %}">
+				<img src="{{ strip.img }}"
+					title="{{ strip.title ?: strip.posted|date("l, F jS, Y") }}"
+					alt="{{ strip.display }}">
+			</a>
+		</li>
+		{% endfor %}
+		<li class="admin-new-thumb"><a href="/admin/addstrip">Add a strip</a></li>
+		{% for strip in unpublishedStrips %}
+		<li class="admin-unpublished-thumb">
+			<a href="/admin/editstrip/{{ strip.id }}">
+				{{ strip.title ?: strip.posted|date("l, F jS, Y") }}
+			</a>
+		</li>
+		{% endfor %}
+	</ul>
 {% endblock %}
