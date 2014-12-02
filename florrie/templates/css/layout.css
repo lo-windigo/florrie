@@ -127,9 +127,8 @@ legend {
 
 
 .admin-strip-list {
-	height: 21em;
 	overflow-x: auto;
-	padding: 0;
+	padding: 1.5em 0;
 	text-align: center;
 	white-space: nowrap;
 }
@@ -139,9 +138,12 @@ legend {
 	list-style: none;
 }
 
+.admin-strip-latest {
+	transform: scale(1.1);
+}
+
 .admin-strip-thumb {
-	margin: 0 .5em;
-	padding: 2em 0;
+	padding: 1em 0;
 	position: relative;
 }
 
@@ -158,16 +160,18 @@ legend {
 	width: 100%;
 }
 
+/* An item that will appear on the strip timeline */
 .admin-thumb {
 	background: #060;
 	background-image: linear-gradient(#aaa, #ddd);
 	border-radius: 1em;
 	box-shadow:
-		inset -.25em -.5em .5em #000,
-		inset .25em .5em .5em #eee,
-		.25em .5em .25em #888;
+		inset -.25em -.25em .5em #000,
+		inset .25em .25em .5em #eee,
+		.25em .25em .25em #888;
 	display: inline-block;
 	height: 16em;
+	margin: 0 1em;
 	opacity: .7;
 	transition: all .3s;
 	vertical-align: middle;
@@ -175,7 +179,6 @@ legend {
 	width: 16em;
 }
 
-.admin-strip-latest,
 .admin-thumb:hover {
 	opacity: 1;
 	transform: scale(1.1);
