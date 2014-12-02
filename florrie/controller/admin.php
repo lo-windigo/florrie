@@ -56,10 +56,12 @@ class Admin extends Controller {
 
 		// TODO: Pagination? Limits? This could get messy.
 		$strips = $stripModel->getStrips();
+		$futureStrips = $stripModel->getStrips(true);
 		$strips = array_slice($strips, -5);
 
 		$this->render('admin-index', array(
 			'strips' => $strips,
+			'future' => $futureStrips,
 			'section' => 'strips'
 		));
 	}

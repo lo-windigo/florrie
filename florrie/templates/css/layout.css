@@ -160,6 +160,10 @@ legend {
 	width: 100%;
 }
 
+.admin-thumb.admin-unpublished-thumb {
+	opacity: .3;
+}
+
 /* An item that will appear on the strip timeline */
 .admin-thumb {
 	background: #060;

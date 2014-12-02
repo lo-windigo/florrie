@@ -297,14 +297,20 @@ Q;
 	//----------------------------------------
 	// Get all strips
 	//----------------------------------------
-	public function getStrips() {
+	public function getStrips($unpublished = false) {
 
 		$q = <<<Q
 SELECT
 	display, id, img, item_order, posted, slug, title
 FROM strips
-WHERE posted < NOW()
 Q;
+
+		if($unpublished) {
+			$q .= ' WHERE posted > NOW()';
+		}
+		else {
+			$q .= ' WHERE posted < NOW()';
+		}
 
 		$statement = $this->db->prepare($q);
 		$statement->execute();

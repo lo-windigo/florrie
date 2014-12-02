@@ -25,7 +25,7 @@
 			<a class="admin-thumb admin-new-thumb"
 				href="/admin/addstrip">Add a strip</a>
 		</li>
-		{% for strip in unpublishedStrips %}
+		{% for strip in future %}
 		<li>
 			<a class="admin-thumb admin-unpublished-thumb"
 				href="/admin/editstrip/{{ strip.id }}">
