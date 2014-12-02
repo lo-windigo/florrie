@@ -4,12 +4,14 @@
 {% block adminmodule %}
 	<ul class="admin-strip-list">
 		{% if strips|length > 5 %}
-		<li class="admin-all-thumb"><a href="/admin/allstrips">View all strips</a></li>
+		<li class="admin-thumb admin-all-thumb">
+			<a href="/admin/allstrips">View all strips</a>
+		</li>
 		{% endif %}
 		{% for strip in strips %}
 		<li>
 			<a href="/admin/editstrip/{{ strip.id }}"
-				class="admin-strip-thumb
+				class="admin-thumb admin-strip-thumb
 				{% if loop.last %}
 				admin-strip-latest
 				{% endif %}">
@@ -19,10 +21,14 @@
 			</a>
 		</li>
 		{% endfor %}
-		<li class="admin-new-thumb"><a href="/admin/addstrip">Add a strip</a></li>
+		<li>
+			<a class="admin-thumb admin-new-thumb"
+				href="/admin/addstrip">Add a strip</a>
+		</li>
 		{% for strip in unpublishedStrips %}
-		<li class="admin-unpublished-thumb">
-			<a href="/admin/editstrip/{{ strip.id }}">
+		<li>
+			<a class="admin-thumb admin-unpublished-thumb"
+				href="/admin/editstrip/{{ strip.id }}">
 				{{ strip.title ?: strip.posted|date("l, F jS, Y") }}
 			</a>
 		</li>

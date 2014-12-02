@@ -102,6 +102,13 @@ legend {
 	padding-right: .5em;
 }
 
+.admin-new-thumb:before {
+	content: "+";
+	display: inline-block;
+	font-size: 12em;
+	width: 100%;
+}
+
 .admin-overlay {
 	background: rgba(255,255,255,.8);
 	border-color: #bbb;
@@ -112,13 +119,18 @@ legend {
 }
 
 .admin-overlay a,
-.admin-overlay a:visited {
+.admin-overlay a:visited,
+.admin-thumb,
+.admin-thumb:visited {
 	color: #000;
 }
 
+
 .admin-strip-list {
-	overflow-x: auto;
 	height: 21em;
+	overflow-x: auto;
+	padding: 0;
+	text-align: center;
 	white-space: nowrap;
 }
 
@@ -128,35 +140,15 @@ legend {
 }
 
 .admin-strip-thumb {
-	box-shadow: 0 1em -.5em #000;
-	display: inline-block;
 	margin: 0 .5em;
 	padding: 2em 0;
 	position: relative;
 }
 
 .admin-strip-thumb img {
-	max-height: 16em;
-	max-width: 16em;
+	max-height: 14em;
+	max-width: 14em;
 	vertical-align: middle;
-	opacity: .6;
-	transition: all .3s;
-}
-
-.admin-strip-thumb.admin-strip-latest img {
-	margin: 0 1.5em;
-}
-
-.admin-strip-thumb.admin-strip-latest img,
-.admin-strip-thumb img:hover {
-	/*
-	margin: -1em;
-	max-height: 18em;
-	max-width: 18em;
-	*/
-	transform: scale(1.25);
-	opacity: 1;
-	z-index: 50;
 }
 
 .admin-strip-thumb img:hover:after {
@@ -164,6 +156,30 @@ legend {
 	position: absolute;
 	top: 0;
 	width: 100%;
+}
+
+.admin-thumb {
+	background: #060;
+	background-image: linear-gradient(#aaa, #ddd);
+	border-radius: 1em;
+	box-shadow:
+		inset -.25em -.5em .5em #000,
+		inset .25em .5em .5em #eee,
+		.25em .5em .25em #888;
+	display: inline-block;
+	height: 16em;
+	opacity: .7;
+	transition: all .3s;
+	vertical-align: middle;
+	white-space: normal;
+	width: 16em;
+}
+
+.admin-strip-latest,
+.admin-thumb:hover {
+	opacity: 1;
+	transform: scale(1.1);
+	z-index: 50;
 }
 
 .c,
