@@ -52,16 +52,14 @@ class Admin extends Controller {
 	//----------------------------------------
 	public function index() {
 
-		$stripModel = $this->loadModel('strip');
+		$stripModel = $this->getStripModel();
 
 		// TODO: Pagination? Limits? This could get messy.
 		$strips = $stripModel->getStrips();
-		$futureStrips = $stripModel->getStrips(true);
 		$strips = array_slice($strips, -5);
 
 		$this->render('admin-index', array(
 			'strips' => $strips,
-			'future' => $futureStrips,
 			'section' => 'strips'
 		));
 	}
@@ -88,7 +86,7 @@ class Admin extends Controller {
 				processFormInput($values);
 
 				// Create a slug for this comic
-				$stripModel = $this->loadModel('strip');
+				$stripModel = $this->getStripModel();
 				$values['slug'] = $stripModel->createSlug($values['title']);
 
 				// Handle strip file upload
@@ -133,7 +131,7 @@ class Admin extends Controller {
 		}
 
 		// Get the strip in question, and load it up
-		$stripModel = $this->loadModel('strip');
+		$stripModel = $this->getStripModel();
 		$stripObject = $stripModel->getStrip($stripId);
 
 		// Defaults go here
@@ -212,9 +210,6 @@ class Admin extends Controller {
 
 			throw new ServerException('No strip ID provided to delStrip');
 		}
-
-		// Create a slug for this comic
-		$stripModel = $this->loadModel('strip');
 
 		$strip = $stripModel->getStrip($stripId);
 
@@ -348,6 +343,19 @@ class Admin extends Controller {
 	//========================================
 	// Protected (internal) methods
 	//========================================
+
+	//----------------------------------------
+	// Get a strip model with appropriate settings
+	//----------------------------------------
+	protected function getStripModel() {
+
+		// Create a slug for this comic
+		$stripModel = $this->loadModel('strip');
+		$stripModel->unpublished = true;
+
+		return $stripModel;
+	}
+
 
 	//----------------------------------------
 	// Add some extra administrative data to the render function

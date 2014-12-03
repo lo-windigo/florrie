@@ -20,11 +20,6 @@
 */
 
 
-/* TODO
- *
- *	Add a slug field for file naming and URL resolution
- *
- */
 
 require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/model.php';
 
@@ -36,6 +31,12 @@ class StripModel extends BaseModel {
 	// Class Constants
 	//----------------------------------------
 	const SLUG_DATE   = 'Y-m-d-his';
+
+
+	//----------------------------------------
+	// Data members
+	//----------------------------------------
+	public $unpublished;
 
 
 	//========================================
@@ -50,6 +51,7 @@ class StripModel extends BaseModel {
 
 		// Save the database connection for later
 		$this->db = $db;
+		$this->unpublished = false;
 	}
 
 
@@ -188,7 +190,14 @@ ORDER;
 SELECT
 	display, id, img, item_order, posted, slug, title
 FROM strips
-WHERE posted < NOW()
+Q;
+
+		// Include unpublished strips, if specified
+		if(!$this->unpublished) {
+			$q .= ' WHERE posted < NOW() ';
+		}
+
+		$q .= <<<Q
 ORDER BY item_order
 LIMIT 0, 1
 Q;
@@ -214,7 +223,14 @@ Q;
 SELECT
 	display, id, img, item_order, posted, slug, title
 FROM strips
-WHERE posted < NOW()
+Q;
+
+		// Include unpublished strips, if specified
+		if(!$this->unpublished) {
+			$q .= ' WHERE posted < NOW() ';
+		}
+
+		$q .= <<<Q
 ORDER BY RAND()
 LIMIT 0, 1
 Q;
@@ -239,7 +255,14 @@ Q;
 SELECT
 	display, id, img, item_order, posted, slug, title
 FROM strips
-WHERE posted < NOW()
+Q;
+
+		// Include unpublished strips, if specified
+		if(!$this->unpublished) {
+			$q .= ' WHERE posted < NOW() ';
+		}
+
+		$q .= <<<Q
 ORDER BY item_order DESC
 LIMIT 0, 1
 Q;
@@ -282,7 +305,10 @@ Q;
 			$q .= ' slug LIKE :criteria';
 		}
 
-		$q .= ' AND posted < NOW()';
+		// Include unpublished strips, if specified
+		if(!$this->unpublished) {
+			$q .= ' WHERE posted < NOW() ';
+		}
 
 		$statement = $this->db->prepare($q);
 		$statement->bindValue(':criteria', $criteria);
@@ -297,7 +323,7 @@ Q;
 	//----------------------------------------
 	// Get all strips
 	//----------------------------------------
-	public function getStrips($unpublished = false) {
+	public function getStrips() {
 
 		$q = <<<Q
 SELECT
@@ -305,11 +331,9 @@ SELECT
 FROM strips
 Q;
 
-		if($unpublished) {
-			$q .= ' WHERE posted > NOW()';
-		}
-		else {
-			$q .= ' WHERE posted < NOW()';
+		// Include unpublished strips, if specified
+		if(!$this->unpublished) {
+			$q .= ' WHERE posted < NOW() ';
 		}
 
 		$statement = $this->db->prepare($q);
@@ -405,21 +429,21 @@ Q;
 
 			$strip = new stdClass();
 
+			$strip->display = 'It seems as if there has been an error. We apologize.';
 			$strip->id = -1;
 			$strip->item_order = -1;
 			$strip->img = false;
+			$strip->imgPath = false;
 			$strip->posted = new DateTime();
 			$strip->next = $strip->prev = null;
 			$strip->title = 'Uh oh...';
 		}
 		else {
 
-			if(!empty($strip->posted)) {
-				$strip->posted = dateTime::createFromFormat(self::MYSQL_DATE, $strip->posted);
-			}
+			$strip->posted = dateTime::createFromFormat(self::MYSQL_DATE, $strip->posted);
 
 			if(!empty($strip->img)) {
-				$strip->img = Florrie::STRIPS.$strip->img;
+				$strip->imgPath = Florrie::STRIPS.$strip->img;
 			}
 
 			// Get the "previous" and "next" strip IDs

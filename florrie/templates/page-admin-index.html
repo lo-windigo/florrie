@@ -15,7 +15,7 @@
 				{% if loop.last %}
 				admin-strip-latest
 				{% endif %}">
-				<img src="{{ strip.img }}"
+				<img src="{{ strip.imgPath }}"
 					title="{{ strip.title ?: strip.posted|date("l, F jS, Y") }}"
 					alt="{{ strip.display }}">
 			</a>
@@ -25,13 +25,5 @@
 			<a class="admin-thumb admin-new-thumb"
 				href="/admin/addstrip">Add a strip</a>
 		</li>
-		{% for strip in future %}
-		<li>
-			<a class="admin-thumb admin-unpublished-thumb"
-				href="/admin/editstrip/{{ strip.id }}">
-				{{ strip.title ?: strip.posted|date("l, F jS, Y") }}
-			</a>
-		</li>
-		{% endfor %}
 	</ul>
 {% endblock %}
