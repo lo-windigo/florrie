@@ -3,17 +3,20 @@
 
 {% block adminmodule %}
 	<ul class="admin-strip-list">
-		{% if strips|length > 5 %}
-		<li class="admin-thumb admin-all-thumb">
-			<a href="/admin/allstrips">View all strips</a>
+		{% if strips|length >= 3 %}
+		<li>
+			<a href="/admin/allstrips" 
+				class="admin-thumb admin-all-thumb">View all strips</a>
 		</li>
 		{% endif %}
 		{% for strip in strips %}
 		<li>
 			<a href="/admin/editstrip/{{ strip.id }}"
 				class="admin-thumb admin-strip-thumb
-				{% if loop.last %}
-				admin-strip-latest
+				{% if date(strip.posted) > date() %}
+				admin-unpublished-thumb
+				{% elseif loop.last %}
+				admin-latest-thumb
 				{% endif %}">
 				<img src="{{ strip.imgPath }}"
 					title="{{ strip.title ?: strip.posted|date("l, F jS, Y") }}"

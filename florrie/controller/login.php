@@ -37,6 +37,11 @@ class Login extends Controller {
 	}
 
 
+	//========================================
+	// Views
+	//========================================
+
+
 	// Allow a user to log into the system
 	public function index() {
 

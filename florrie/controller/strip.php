@@ -38,7 +38,9 @@ class Strip extends Controller {
 	//========================================
 
 
+	//----------------------------------------
 	// Show an archive of strips
+	//----------------------------------------
 	public function archive() {
 
 		$strips = $this->model->getStrips();
@@ -47,7 +49,9 @@ class Strip extends Controller {
 	}
 
 
+	//----------------------------------------
 	// Show the first strip
+	//----------------------------------------
 	public function first() {
 
 		$strip = $this->model->getFirst();
@@ -57,7 +61,9 @@ class Strip extends Controller {
 	}
 
 
+	//----------------------------------------
 	// Index: Render a single strip
+	//----------------------------------------
 	public function index($slug = false) {
 
 		if($slug === false) {
@@ -72,7 +78,9 @@ class Strip extends Controller {
 	}
 
 
+	//----------------------------------------
 	// Show the latest strip
+	//----------------------------------------
 	public function latest() {
 
 		$strip = $this->model->getLatest();
@@ -82,7 +90,9 @@ class Strip extends Controller {
 	}
 
 
+	//----------------------------------------
 	// Show a random strip
+	//----------------------------------------
 	public function random() {
 
 		$strip = $this->model->getRandom();
@@ -91,7 +101,16 @@ class Strip extends Controller {
 		return;
 	}
 
+
+
+	//========================================
+	// Protected (internal) methods
+	//========================================
+
+
+	//----------------------------------------
 	// Route a request to a controller function, based on the URI data
+	//----------------------------------------
 	public function route($uriArray = array()) {
 
 		// If a strip ID has been sent in, display that

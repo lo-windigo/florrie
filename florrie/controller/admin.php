@@ -61,7 +61,7 @@ class Admin extends Controller {
 
 		// TODO: Pagination? Limits? This could get messy.
 		$strips = $stripModel->getStrips();
-		$strips = array_slice($strips, -5);
+		$strips = array_slice($strips, -3);
 
 		$this->render('admin-index', array(
 			'strips' => $strips,
@@ -348,6 +348,7 @@ class Admin extends Controller {
 	//========================================
 	// Protected (internal) methods
 	//========================================
+
 
 	//----------------------------------------
 	// Get a strip model with appropriate settings

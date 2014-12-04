@@ -58,12 +58,23 @@ legend {
 	top: -5em;
 }
 
+.admin-all-thumb:before {
+	content: "…";
+	display: inline-block;
+	font-size: 10em;
+	width: 100%;
+}
+
 .admin-credentials {
 	border-radius: 0 0 0 .5em;
 	border-width: 0 0 1px 1px;
 	box-shadow: .5em -.5em 1em #000;
 	right: 0;
 	top: 0;
+}
+
+.admin-latest-thumb {
+	transform: scale(1.1);
 }
 
 .admin-nav {
@@ -105,7 +116,7 @@ legend {
 .admin-new-thumb:before {
 	content: "+";
 	display: inline-block;
-	font-size: 12em;
+	font-size: 10em;
 	width: 100%;
 }
 
@@ -137,18 +148,14 @@ legend {
 	list-style: none;
 }
 
-.admin-strip-latest {
-	transform: scale(1.1);
-}
-
 .admin-strip-thumb {
 	padding: 1em 0;
 	position: relative;
 }
 
 .admin-strip-thumb img {
-	max-height: 14em;
-	max-width: 14em;
+	max-height: 12em;
+	max-width: 12em;
 	vertical-align: middle;
 }
 
@@ -173,13 +180,13 @@ legend {
 		inset .25em .25em .5em #eee,
 		.25em .25em .25em #888;
 	display: inline-block;
-	height: 16em;
-	margin: 0 1em;
+	height: 14em;
+	margin: 0 .5em;
 	opacity: .7;
 	transition: all .3s;
 	vertical-align: middle;
 	white-space: normal;
-	width: 16em;
+	width: 14em;
 }
 
 .admin-thumb:hover {
