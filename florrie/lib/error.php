@@ -20,7 +20,10 @@
 */
 
 
-// Database-based exception
+// Authentication exception
+class AuthException extends exception {}
+
+// Database exception
 class DBException extends exception {}
 
 // Form validation errors
@@ -29,6 +32,9 @@ class FormException extends exception {
 	// Contains any and all form data that needs to be passed back
 	public $formData;
 }
+
+// Initialization exception
+class InitException extends exception {}
 
 // HTTP404 - file not found
 class NotFoundException extends exception {}

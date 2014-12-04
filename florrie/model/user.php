@@ -83,10 +83,16 @@ Q;
 	//----------------------------------------
 	public function authenticateUser($user, $pass) {
 
-		// TODO: check user before accessing methods
-
 		// First, we're going to need user details
 		$user = $this->getUser($user);
+
+		// Throw exception if user hasn't been found
+		if(!is_object($user) || empty($user->pass)) {
+
+			throw new AuthException('User does not exist');
+		}
+
+		// Check password hash, and return user if it matches
 		$pass = hashPassword($pass, $user->pass);
 
 		if(hash_equals($user->pass, $pass)) {
@@ -94,8 +100,8 @@ Q;
 			return $user;
 		}
 
-		// TODO: Create a better exception
-		throw new exception('authenticateUser failed!');	
+		// Password doesn't match - throw an error!
+		throw new AuthException('authenticateUser failed!');	
 	}
 
 

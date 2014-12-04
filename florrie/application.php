@@ -1,6 +1,6 @@
 <?php
 /*
-	Main Application - Florrie
+	Main Florrie Application
 	By Jacob Hume
 
 	This file is part of Florrie.
@@ -27,7 +27,9 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/error.php';
 // Main class - kicks things off, starts the party
 class Florrie {
 
-	// Class Constants:
+	//----------------------------------------
+	// Class Constants
+	//
 	//  CONFIG	   - Configuration File
 	//  DEBUG      - Produce debug output
 	//  CONTROLLER - Main controllers
@@ -35,6 +37,7 @@ class Florrie {
 	//  STRIPS     - Comic strip images
 	//  TEMPLATES  - System templates
 	//  THEMES     - User-installable, customizeable templates
+	//----------------------------------------
 	const CONFIG     = '/config/florrie.cfg';
 	const DEBUG      = true;
 	const CONTROLLER = '/florrie/controller/';
@@ -203,6 +206,7 @@ class Florrie {
 		}
 		catch (exception $e)
 		{
+			// TODO: Logging? Error messages? Maybe?
 			return false;
 		}
 	}
@@ -230,7 +234,7 @@ class Florrie {
 
 		if(!file_exists($configFile)) {
 
-			throw new exception('Configuration file not present!');
+			throw new InitException('Configuration file not present!');
 		}
 
 
@@ -243,7 +247,7 @@ class Florrie {
 		// If we failed to get the configuration, throw an exception
 		if($configDoc === false) {
 
-			throw new exception('Unable to parse "'.basename(self::CONFIG).'".');
+			throw new InitException('Unable to parse "'.basename(self::CONFIG).'".');
 		}
 
 		// Get the base configuration node

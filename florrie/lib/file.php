@@ -106,6 +106,9 @@ function processFileUpload($config, $index, $fileDir, $fileName, $fileCheck = fa
 	// TODO: Does this work with the FTP wrapper? I friggin' hope so.
 	move_uploaded_file($_FILES[$index]['tmp_name'], $fullPath);
 
+	// TODO: Hey, you'd better resize this image
+
+
 	// Return the final filename/path for use later
 	return $fileName;
 }
