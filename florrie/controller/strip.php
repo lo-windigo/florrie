@@ -33,6 +33,11 @@ class Strip extends Controller {
 	}
 
 
+	//========================================
+	// Views
+	//========================================
+
+
 	// Show an archive of strips
 	public function archive() {
 

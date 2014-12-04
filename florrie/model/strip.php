@@ -291,7 +291,6 @@ Q;
 SELECT
 	display, id, img, item_order, posted, slug, title
 FROM strips
-
 WHERE
 Q;
 
@@ -307,7 +306,8 @@ Q;
 
 		// Include unpublished strips, if specified
 		if(!$this->unpublished) {
-			$q .= ' WHERE posted < NOW() ';
+
+			$q .= ' AND posted < NOW() ';
 		}
 
 		$statement = $this->db->prepare($q);
