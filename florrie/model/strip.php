@@ -66,20 +66,30 @@ class StripModel extends BaseModel {
 			$stripObj = (object)$stripObj;
 		}
 
-		// Prepare the strip query
-		// TODO: Better auto-calculate the item order!!!
-		$q = <<<Q
+		// Prepare the "bump all future strips" query
+		// (increments the item_order of any strips after this one)
+		$bump = <<<Q
+UPDATE strips
+SET item_order = item_order + 1
+WHERE posted > DATE :posted
+Q;
+		// Prepare the strip insertion query
+		$add = <<<Q
 INSERT INTO strips (
 	display, img, posted, slug, title, item_order
 )
 VALUES (
-	:display, :img, :posted, :slug, :title,
-	(SELECT IFNULL(MAX(s.item_order), 0)+1 FROM strips s)
+	:display, :img, :posted, :slug, :title, (
+		SELECT
+			IFNULL(MAX(s.item_order), 0)+1
+		FROM strips s
+		WHERE s.posted <= DATE :posted
+	)
 )
 Q;
 
 
-		// Prepare posted date
+		// Prepare posted date: default to right now
 		if(!empty($stripObj->posted) && $stripObj->posted instanceof DateTime) {
 
 			$stripObj->posted = $stripObj->posted->format(self::MYSQL_DATE);
@@ -90,9 +100,16 @@ Q;
 		}
 
 
-		// Now that we're pretty certain we can procede, prepare the statement
-		//	and bind data
-		$statement = $this->db->prepare($q);
+		// Prepare the "bump future item order" statement 
+		$statement = $this->db->prepare($bump);
+
+		$statement->bindValue(':posted', $stripObj->posted);
+
+		$statement->execute();
+
+
+		// Prepare the "add strip" statement and bind data
+		$statement = $this->db->prepare($add);
 
 		foreach(array('display', 'img', 'posted', 'slug', 'title') as $col) {
 
@@ -329,6 +346,7 @@ Q;
 SELECT
 	display, id, img, item_order, posted, slug, title
 FROM strips
+ORDER BY item_order
 Q;
 
 		// Include unpublished strips, if specified

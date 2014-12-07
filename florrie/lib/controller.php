@@ -93,6 +93,9 @@ abstract class Controller {
 
 			$this->db = new PDO($dsn, $config['data']['user'],
 				$config['data']['pass'], $options);
+
+			// Quit it with the safety nets! Let me juggle flaming chainsaws!
+			$this->db->exec('SET SQL_SAFE_UPDATES=0');
 		}
 	}
 
