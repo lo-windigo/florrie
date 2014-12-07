@@ -15,7 +15,7 @@
 				class="admin-thumb admin-strip-thumb
 				{% if date(strip.posted) > date() %}
 				admin-unpublished-thumb
-				{% elseif loop.last %}
+				{% elseif strip.next is empty %}
 				admin-latest-thumb
 				{% endif %}">
 				<img src="{{ strip.imgPath }}"
