@@ -385,7 +385,6 @@ Q;
 		}
 
 		// Prepare the strip query
-		// TODO: Better auto-calculate the item order!!!
 		$q = <<<Q
 UPDATE strips
 SET
@@ -393,23 +392,19 @@ SET
 	img = :img,
 	posted = :posted,
 	slug = :slug,
-	title = :title,
-	item_order = :item_order
+	title = :title
 WHERE
 	id = :id
 Q;
-
-		// Catch an empty date
-		if(empty($stripObj->posted)) {
-
-			// TODO: Is this right?!?
-			throw new ServerError('No date in StripObject sent to updateStrip method!');
-		}
 
 		// Prepare posted date
 		if($stripObj->posted instanceof DateTime) {
 
 			$stripObj->posted = $stripObj->posted->format(self::MYSQL_DATE);
+		}
+		else if(empty($stripObj->posted)) {
+
+			$stripObj->posted = date(self::MYSQL_DATE);
 		}
 		else {
 
@@ -420,7 +415,7 @@ Q;
 		// Now that we're pretty certain we can procede, prepare the statement
 		//	and bind data
 		$statement = $this->db->prepare($q);
-		$fields = array('display','img','posted','slug','title','item_order','id');
+		$fields = array('display','img','posted','slug','title','id');
 
 		foreach($fields as $col) {
 
