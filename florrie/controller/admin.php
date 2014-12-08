@@ -98,6 +98,12 @@ class Admin extends Controller {
 				$values['img'] = processFileUpload($this->config, 'img',
 				   Florrie::STRIPS, $values['slug']);
 
+				// Resize the strip image
+				// TODO: Filesystem issues?
+				$sourceImg = ;
+				$sourceX = imagesx($sourceImg);
+				$sourceY = imagesy($sourceImg);
+
 				// Add the new strip
 				$stripModel->addStrip($values);
 

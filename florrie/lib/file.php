@@ -21,27 +21,10 @@
 
 
 
-// TODO: File context
+// TODO: File context!!
 function fileContext($config) {
 
 	return $_SERVER['DOCUMENT_ROOT'].'/';
-}
-
-//----------------------------------------
-// Add or overwrite a file
-//----------------------------------------
-function writeFile($config, $filePath, $data) {
-
-	// Assemble the full path
-	$fullPath = fileContext($config).$filePath;
-
-	// Use return value to determine success
-	if(file_put_contents($fullPath, $data) === false) {
-
-		$error = 'File write failed: "'.$fullPath.'"';
-
-		throw new ServerException($error);
-	}
 }
 
 
@@ -111,5 +94,43 @@ function processFileUpload($config, $index, $fileDir, $fileName, $fileCheck = fa
 
 	// Return the final filename/path for use later
 	return $fileName;
+}
+
+
+//----------------------------------------
+// Resize an image
+//----------------------------------------
+function resizeImage($config, $filePath) {
+
+	// Assemble the full path
+	$fullPath = fileContext($config).$filePath;
+
+	// 
+	if(!file_exists($fullPath)) {
+
+		$error = 'Image resize failed: "'.$fullPath.'"';
+
+		throw new ServerException($error);
+	}
+
+	$sourceImg = imagecreatefromstring(
+}
+
+
+//----------------------------------------
+// Add or overwrite a file
+//----------------------------------------
+function writeFile($config, $filePath, $data) {
+
+	// Assemble the full path
+	$fullPath = fileContext($config).$filePath;
+
+	// Use return value to determine success
+	if(file_put_contents($fullPath, $data) === false) {
+
+		$error = 'File write failed: "'.$fullPath.'"';
+
+		throw new ServerException($error);
+	}
 }
 ?>
