@@ -87,7 +87,6 @@ class Admin extends Controller {
 		if(submitted()) {
 
 			try {
-
 				processFormInput($values);
 
 				// Create a slug for this comic
@@ -99,10 +98,9 @@ class Admin extends Controller {
 				   Florrie::STRIPS, $values['slug']);
 
 				// Resize the strip image
-				// TODO: Filesystem issues?
-				$sourceImg = ;
-				$sourceX = imagesx($sourceImg);
-				$sourceY = imagesy($sourceImg);
+				// TODO: Always saves file as a JPEG! Make sure to assign
+				//	.jpg extension somewhere!
+				resizeImage($this->config, Florrie::STRIPS.$values['img']);
 
 				// Add the new strip
 				$stripModel->addStrip($values);
@@ -169,6 +167,8 @@ class Admin extends Controller {
 					// Handle strip file upload
 					$values['img'] = processFileUpload($this->config, 'img',
 					   Florrie::STRIPS, $values['slug']);
+
+					resizeImage($this->config, Florrie::STRIPS.$values['img']);
 				}
 
 				// Assign new values to the strip object

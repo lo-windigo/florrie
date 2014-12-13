@@ -105,15 +105,48 @@ function resizeImage($config, $filePath) {
 	// Assemble the full path
 	$fullPath = fileContext($config).$filePath;
 
-	// 
-	if(!file_exists($fullPath)) {
+	// Verify that a writeable file exists
+	if(!file_exists($fullPath) || !is_writeable($fullPath)) {
 
-		$error = 'Image resize failed: "'.$fullPath.'"';
-
+		$error = 'Image resize failed: "'.$fullPath.'" cannot be opened.';
 		throw new ServerException($error);
 	}
 
-	$sourceImg = imagecreatefromstring(
+	// Open the image, if possible
+	$sourceImg = imagecreatefromstring(file_get_contents($fullPath));
+
+	// Get the dimensions of the original & the target images
+	// Note: cast to float for more precise calculations
+	$newX = (float)$config['florrie']['maxwidth'];
+	$newY = (float)$config['florrie']['maxheight'];
+	$sourceX = (float)imagesx($sourceImg);
+	$sourceY = (float)imagesy($sourceImg);
+
+	// Don't do anything if the image is already smaller
+	if($sourceX <= $newX && $sourceY <= $newY) {
+		return;
+	}
+
+	// Calculate the new dimensions using the image ratio. And math 'n stuff.
+	$ratio = $sourceX / $sourceY;
+
+	if($ratio > ($newX / $newY)) {
+		$newY = $newX / $ratio;
+	} else {
+		$newX = $newY * $ratio;
+	}
+
+	// Resize the image
+	$newImg = imagecreatetruecolor($newX, $newY);
+	imagecopyresampled($newImg, $sourceImg,
+		0, 0, 0, 0, $newX, $newY, $sourceX, $sourceY);
+
+	// Save the file as a jpeg
+	imagejpeg($newImg, $fullPath, 85);
+
+	// Free memory
+	imagedestroy($newImg);
+	imagedestroy($sourceImg);
 }
 
 
