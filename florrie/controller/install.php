@@ -77,6 +77,16 @@ encounter this error, file a bug and we can fix it with little effort. Yay!
 RIPE;
 		}
 
+		// Check for the GD functions
+		// TODO: Technically only required to resize images. Maybe make it optional?
+		if(!function_exists('imagecreatefromstring')) {
+
+			$missingRecommends[] = <<<GD
+Florrie uses the GD image manipulation libraries to resize images; please make
+sure this library is installed.
+GD;
+		}
+
 		// Use OpenSSL functions to generate salt
 		if(!function_exists('openssl_random_pseudo_bytes')) {
 
