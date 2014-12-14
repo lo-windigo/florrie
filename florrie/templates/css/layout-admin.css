@@ -1,0 +1,151 @@
+/*
+,------.,--.                     ,--.       
+|  .---'|  | ,---. ,--.--.,--.--.`--' ,---. 
+|  `--, |  || .-. ||  .--'|  .--',--.| .-. :
+|  |`   |  |' '-' '|  |   |  |   |  |\   --.
+`--'    `--' `---' `--'   `--'   `--' `----'
+        ---Comic management engine---
+
+          Administration Interface
+               by Jacob Hume
+*/
+
+
+/* ---< Module Styles >--- */
+
+.all-thumb:before {
+	content: "…";
+	display: inline-block;
+	font-size: 10em;
+	width: 100%;
+}
+
+.credentials {
+	border-radius: 0 0 0 .5em;
+	border-width: 0 0 1px 1px;
+	box-shadow: .5em -.5em 1em #000;
+	right: 0;
+	top: 0;
+}
+
+.latest-thumb {
+	transform: scale(1.1);
+}
+
+.nav {
+	bottom: 0;
+	border-width: 1px 0 0 0;
+	box-shadow: 0 .5em 1em #000;
+	left: 0;
+	list-style: none;
+	text-align: center;
+	width: 100%;
+	z-index: 100;
+}
+
+.nav li {
+	display: inline-block;
+}
+
+.nav-item {
+	border: 5px solid #999;
+	border-radius: .25em;
+	display: inline-block;
+	font-weight: bold;
+	margin: 0 .5em;
+	padding: .5em;
+}
+
+.nav-item:active,
+.nav-item:hover,
+.nav-item.active {
+	border: 5px solid #f44;
+}
+
+.nav-item:before {
+	content: "[X]";
+	display: inline-block;
+	padding-right: .5em;
+}
+
+.new-thumb:before {
+	content: "+";
+	display: inline-block;
+	font-size: 10em;
+	width: 100%;
+}
+
+.overlay {
+	background: rgba(255,255,255,.8);
+	border-color: #bbb;
+	border-style: solid;
+	margin: 0;
+	padding: .5em;
+	position: fixed;
+}
+
+.overlay a,
+.overlay a:visited,
+.thumb,
+.thumb:visited {
+	color: #000;
+}
+
+.strip-list {
+	overflow-x: auto;
+	padding: 1.5em 0;
+	text-align: center;
+	white-space: nowrap;
+}
+
+.strip-list li {
+	display: inline;
+	list-style: none;
+}
+
+.strip-thumb {
+	padding: 1em 0;
+	position: relative;
+}
+
+.strip-thumb img {
+	max-height: 12em;
+	max-width: 12em;
+	vertical-align: middle;
+}
+
+.strip-thumb img:hover:after {
+	content: attr(title);
+	position: absolute;
+	top: 0;
+	width: 100%;
+}
+
+.thumb.unpublished-thumb {
+	opacity: .3;
+}
+
+/* An item that will appear on the strip timeline */
+.thumb {
+	background: #060;
+	background-image: linear-gradient(#aaa, #ddd);
+	border-radius: 1em;
+	box-shadow:
+		inset -.25em -.25em .5em #000,
+		inset .25em .25em .5em #eee,
+		.25em .25em .25em #888;
+	display: inline-block;
+	height: 14em;
+	margin: 0 .5em;
+	opacity: .7;
+	transition: all .3s;
+	vertical-align: middle;
+	white-space: normal;
+	width: 14em;
+}
+
+.thumb:hover {
+	opacity: 1;
+	transform: scale(1.1);
+	z-index: 50;
+}

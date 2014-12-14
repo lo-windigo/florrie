@@ -1,14 +1,8 @@
-{% set admintitle = "Administration" %}
+{% set admintitle = "All Strips" %}
 {% extends "page-admin.html" %}
 
 {% block adminmodule %}
 	<ul class="strip-list">
-		{% if strips|length >= 3 %}
-		<li>
-			<a href="/admin/allstrips" 
-				class="thumb all-thumb">View all strips</a>
-		</li>
-		{% endif %}
 		{% for strip in strips %}
 		<li>
 			<a href="/admin/editstrip/{{ strip.id }}"
@@ -24,9 +18,5 @@
 			</a>
 		</li>
 		{% endfor %}
-		<li>
-			<a class="thumb new-thumb"
-				href="/admin/addstrip">Add a strip</a>
-		</li>
 	</ul>
 {% endblock %}
