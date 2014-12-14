@@ -6,15 +6,12 @@
 		{% for strip in strips %}
 		<li>
 			<a href="/admin/editstrip/{{ strip.id }}"
-				class="thumb strip-thumb
-				{% if date(strip.posted) > date() %}
-				unpublished-thumb
+				class="label overlay {% if date(strip.posted) > date() %}
+				unpublished-label
 				{% elseif strip.next is empty %}
-				latest-thumb
+				latest-label
 				{% endif %}">
-				<img src="{{ strip.imgPath }}"
-					title="{{ strip.title ?: strip.posted|date("l, F jS, Y") }}"
-					alt="{{ strip.display }}">
+				{{ strip.title ?: strip.posted|date("l, F jS, Y") }}
 			</a>
 		</li>
 		{% endfor %}

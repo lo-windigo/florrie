@@ -59,11 +59,28 @@ class Admin extends Controller {
 
 		$stripModel = $this->getStripModel();
 
-		// TODO: Pagination? Limits? This could get messy.
 		$strips = $stripModel->getStrips();
 		$strips = array_slice($strips, -3);
 
 		$this->render('admin-index', array(
+			'strips' => $strips,
+			'section' => 'strips'
+		));
+	}
+
+
+	//----------------------------------------
+	// List all available strips
+	//----------------------------------------
+	public function allstrips() {
+
+		$stripModel = $this->getStripModel();
+
+		// TODO: Pagination? Limits? This could get messy.
+		$strips = $stripModel->getStrips();
+		$strips = array_reverse($strips);
+
+		$this->render('admin-allstrips', array(
 			'strips' => $strips,
 			'section' => 'strips'
 		));

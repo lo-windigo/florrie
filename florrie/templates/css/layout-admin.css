@@ -13,14 +13,7 @@
 
 /* ---< Module Styles >--- */
 
-.all-thumb:before {
-	content: "…";
-	display: inline-block;
-	font-size: 10em;
-	width: 100%;
-}
-
-.credentials {
+.admin-credentials {
 	border-radius: 0 0 0 .5em;
 	border-width: 0 0 1px 1px;
 	box-shadow: .5em -.5em 1em #000;
@@ -28,11 +21,7 @@
 	top: 0;
 }
 
-.latest-thumb {
-	transform: scale(1.1);
-}
-
-.nav {
+.admin-nav {
 	bottom: 0;
 	border-width: 1px 0 0 0;
 	box-shadow: 0 .5em 1em #000;
@@ -43,11 +32,11 @@
 	z-index: 100;
 }
 
-.nav li {
+.admin-nav li {
 	display: inline-block;
 }
 
-.nav-item {
+.admin-nav-item {
 	border: 5px solid #999;
 	border-radius: .25em;
 	display: inline-block;
@@ -56,16 +45,50 @@
 	padding: .5em;
 }
 
-.nav-item:active,
-.nav-item:hover,
-.nav-item.active {
+.admin-nav-item:active,
+.admin-nav-item:hover,
+.admin-nav-item.active {
 	border: 5px solid #f44;
 }
 
-.nav-item:before {
+.admin-nav-item:before {
 	content: "[X]";
 	display: inline-block;
 	padding-right: .5em;
+}
+
+.admin-overlay {
+	background: rgba(255,255,255,.8);
+	border-color: #bbb;
+	border-style: solid;
+	margin: 0;
+	padding: .5em;
+	position: fixed;
+}
+
+.admin-overlay a,
+.admin-overlay a:visited,
+.thumb,
+.thumb:visited {
+	color: #000;
+}
+
+.all-thumb:before {
+	content: "…";
+	display: inline-block;
+	font-size: 10em;
+	width: 100%;
+}
+
+/* TODO: This style sucks. make these look better. */
+.label {
+	background: #fff;
+	border: 1px solid #999;
+	padding: .5em;
+}
+
+.latest-thumb {
+	transform: scale(1.1);
 }
 
 .new-thumb:before {
@@ -75,32 +98,22 @@
 	width: 100%;
 }
 
-.overlay {
-	background: rgba(255,255,255,.8);
-	border-color: #bbb;
-	border-style: solid;
-	margin: 0;
-	padding: .5em;
-	position: fixed;
-}
-
-.overlay a,
-.overlay a:visited,
-.thumb,
-.thumb:visited {
-	color: #000;
-}
-
-.strip-list {
+.strip-carousel {
 	overflow-x: auto;
 	padding: 1.5em 0;
 	text-align: center;
 	white-space: nowrap;
 }
 
-.strip-list li {
+.strip-carousel li {
 	display: inline;
 	list-style: none;
+}
+
+.strip-list li {
+	list-style: none;
+	margin: .5em 0;
+	padding: .5em;
 }
 
 .strip-thumb {
@@ -112,13 +125,6 @@
 	max-height: 12em;
 	max-width: 12em;
 	vertical-align: middle;
-}
-
-.strip-thumb img:hover:after {
-	content: attr(title);
-	position: absolute;
-	top: 0;
-	width: 100%;
 }
 
 .thumb.unpublished-thumb {
@@ -142,6 +148,17 @@
 	vertical-align: middle;
 	white-space: normal;
 	width: 14em;
+}
+
+
+
+/* ---< State Styles >--- */
+
+.strip-thumb:hover img:after {
+	content: attr(title);
+	position: absolute;
+	top: 0;
+	width: 100%;
 }
 
 .thumb:hover {
