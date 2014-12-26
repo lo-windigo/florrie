@@ -77,6 +77,7 @@
 	content: "…";
 	display: inline-block;
 	font-size: 10em;
+	vertical-align: bottom;
 	width: 100%;
 }
 
@@ -95,6 +96,7 @@
 	content: "+";
 	display: inline-block;
 	font-size: 10em;
+	vertical-align: bottom;
 	width: 100%;
 }
 
@@ -106,8 +108,12 @@
 }
 
 .strip-carousel li {
-	display: inline;
+	display: inline-block;
+	height: 14em;
 	list-style: none;
+	margin: 0 .5em;
+	vertical-align: top;
+	width: 14em;
 }
 
 .strip-list li {
@@ -124,14 +130,9 @@
 .strip-thumb img {
 	max-height: 12em;
 	max-width: 12em;
-	vertical-align: middle;
 }
 
-.thumb.unpublished-thumb {
-	opacity: .3;
-}
-
-/* An item that will appear on the strip timeline */
+/* An item that will appear on the strip carousel */
 .thumb {
 	background: #060;
 	background-image: linear-gradient(#aaa, #ddd);
@@ -141,13 +142,15 @@
 		inset .25em .25em .5em #eee,
 		.25em .25em .25em #888;
 	display: inline-block;
-	height: 14em;
-	margin: 0 .5em;
+	height: 100%;
 	opacity: .7;
 	transition: all .3s;
-	vertical-align: middle;
 	white-space: normal;
-	width: 14em;
+	width: 100%;
+}
+
+.thumb.unpublished-thumb {
+	opacity: .3;
 }
 
 
