@@ -40,8 +40,10 @@
 					<select name="change-order" id="change-order">
 						<option value="">Keep existing order</option>
 						{% for strip in strips %}
+						{% if strip.id != values.id %}
 						<option value="{{ strip.item_order }}">
 							Before "{{ strip.title }}"</option>
+						{% endif %}
 						{% endfor %}
 						<option value="last">Move to end</option>
 					</select>

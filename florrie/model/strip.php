@@ -375,7 +375,8 @@ Q;
 		}
 
 		// Make sure the target is either false, or an integer
-		if(!isset($target) || (!ctype_digit($target) && !is_int($target))) {
+		if(!isset($target) || (!ctype_digit($target) && !is_int($target) &&
+			$target !== false)) {
 
 			$e = 'orderBefore error: invalid "target" order specified. [target: '.
 				var_dump($target).']';
@@ -389,7 +390,7 @@ Q;
 			$q = <<<Q
 UPDATE strips
 SET item_order = item_order - 1
-WHERE item_order < :order
+WHERE item_order > :order
 Q;
 
 			$statement = $this->db->prepare($q);
@@ -400,17 +401,26 @@ Q;
 		// Change order, case 1: no target, stick at the end
 		if($target === false) {
 
+			// Calculate the "end of the line" order number
+			// NOTE: could be done in one query, but MySQL doesn't like
+			//   you querying a table you're updating. This is easier. :P
+			$q = <<<Q
+SELECT IFNULL(MAX(item_order), 0)+1
+FROM strips
+Q;
+			$statement = $this->db->prepare($q);
+			$statement->execute();
+			$newOrder = $statement->fetchColumn();
+
+			// Set the order of the strip in question
 			$q = <<<Q
 UPDATE strips
-SET item_order = (
-	SELECT
-		IFNULL(MAX(s.item_order), 0)+1
-	FROM strips s
-)
+SET item_order = :new_order
 WHERE id = :id
 Q;
 			$statement = $this->db->prepare($q);
 			$statement->bindValue(':id', $stripObj->id);
+			$statement->bindValue(':new_order', $newOrder);
 			$statement->execute();
 		}
 		// Change order, case 2: there is a target order
@@ -420,7 +430,7 @@ Q;
 			$q = <<<Q
 UPDATE strips
 SET item_order = item_order + 1
-WHERE item_order > :order
+WHERE item_order >= :order
 Q;
 			$statement = $this->db->prepare($q);
 			$statement->bindValue(':order', $target);
@@ -434,7 +444,7 @@ WHERE id = :id
 Q;
 			$statement = $this->db->prepare($q);
 			$statement->bindValue(':id', $stripObj->id);
-			$statement->bindValue(':order', $stripObj->item_order);
+			$statement->bindValue(':order', $target);
 			$statement->execute();
 		}
 	}

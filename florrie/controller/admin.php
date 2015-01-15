@@ -239,11 +239,13 @@ class Admin extends Controller {
 		// Get all strips for the order drop-down
 		$strips = $stripModel->getStrips();
 
+		// Append the strip ID for template logic
+		$values['id'] = $stripObject->id;
+
 		$this->render('admin-editstrip', array(
 			'values' => $values,
 			'strips' => $strips,
 			'section' => 'strips'
-
 		));
 	}
 
