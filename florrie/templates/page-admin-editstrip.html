@@ -33,6 +33,20 @@
 					prompt: "Replace Strip Image",
 				}) }}
 			</p>
+			<p>
+				<label for="change-order">
+					Change strip order
+					{# TODO: No select form macro #}
+					<select name="change-order" id="change-order">
+						<option value="">Keep existing order</option>
+						{% for strip in strips %}
+						<option value="{{ strip.item_order }}">
+							Before "{{ strip.title }}"</option>
+						{% endfor %}
+						<option value="last">Move to end</option>
+					</select>
+				</label>
+			</p>
 			<p class="c">
 				{{ form.hiddenField({
 					"id": "strip-id",

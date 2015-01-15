@@ -162,10 +162,11 @@ class Admin extends Controller {
 
 		// Defaults go here
 		$values = array(
-			'csrf'    => null,
-			'display' => $stripObject->display,
-			'title'   => $stripObject->title,
-			'posted'  => $stripObject->posted
+			'csrf'         => null,
+			'change-order' => null,
+			'display'      => $stripObject->display,
+			'title'        => $stripObject->title,
+			'posted'       => $stripObject->posted
 		);
 
 		// Process form data if it has been submitted
@@ -196,6 +197,21 @@ class Admin extends Controller {
 					}
 				}
 
+				// Handle a change in strip order
+				if($values['change-order'] !== null) {
+
+					if($values['change-order'] === 'last') {
+
+						$target = false;
+					}
+					else {
+
+						$target = $values['change-order'];
+					}
+					
+					$stripModel->orderBefore($stripObject, $target);
+				}
+
 				// Save strip details
 				$stripModel->updateStrip($stripObject);
 
@@ -220,8 +236,12 @@ class Admin extends Controller {
 			}
 		}
 
+		// Get all strips for the order drop-down
+		$strips = $stripModel->getStrips();
+
 		$this->render('admin-editstrip', array(
 			'values' => $values,
+			'strips' => $strips,
 			'section' => 'strips'
 
 		));
