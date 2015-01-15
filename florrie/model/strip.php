@@ -380,7 +380,7 @@ Q;
 			$e = 'orderBefore error: invalid "target" order specified. [target: '.
 				var_dump($target).']';
 
-			throw new ServerError($e);
+			throw new ServerException($e);
 		}
 
 		// Handle existing item order
