@@ -66,17 +66,10 @@ class StripModel extends BaseModel {
 			$stripObj = (object)$stripObj;
 		}
 
-		// Prepare the "bump all future strips" query
-		// (increments the item_order of any strips after this one)
-		$bump = <<<Q
-UPDATE strips
-SET item_order = item_order + 1
-WHERE posted > DATE :posted
-Q;
 		// Prepare the strip insertion query
-		$add = <<<Q
+		$q = <<<Q
 INSERT INTO strips (
-	display, img, posted, slug, title, item_order
+	display, img, posted, slug, title
 )
 VALUES (
 	:display, :img, :posted, :slug, :title, (
@@ -100,16 +93,8 @@ Q;
 		}
 
 
-		// Prepare the "bump future item order" statement 
-		$statement = $this->db->prepare($bump);
-
-		$statement->bindValue(':posted', $stripObj->posted);
-
-		$statement->execute();
-
-
 		// Prepare the "add strip" statement and bind data
-		$statement = $this->db->prepare($add);
+		$statement = $this->db->prepare($q);
 
 		foreach(array('display', 'img', 'posted', 'slug', 'title') as $col) {
 
@@ -117,6 +102,9 @@ Q;
 		}
 
 		$statement->execute();
+
+		// Set the order of this strip to the very last order
+		$this->orderBefore($stripObj);
 	}
 
 
@@ -370,6 +358,85 @@ Q;
 		}, $this);
 
 		return $strips;
+	}
+
+
+	//----------------------------------------
+	// Change the order of a strip
+	//----------------------------------------
+	public function orderBefore($stripObj, $target = false) {
+
+		// Note; $stripObj not really validated. TODO
+
+		// if a strip object was sent in, only use the item order
+		if(is_object($target) && !empty($target->item_order)) {
+
+			$target = $target->item_order;
+		}
+
+		// Make sure the target is either false, or an integer
+		if(!isset($target) || (!ctype_digit($target) && !is_int($target))) {
+
+			$e = 'orderBefore error: invalid "target" order specified. [target: '.
+				var_dump($target).']';
+
+			throw new ServerError($e);
+		}
+
+		// Handle existing item order
+		if(!empty($stripObj->item_order)) {
+
+			$q = <<<Q
+UPDATE strips
+SET item_order = item_order - 1
+WHERE item_order < :order
+Q;
+
+			$statement = $this->db->prepare($q);
+			$statement->bindValue(':order', $stripObj->item_order);
+			$statement->execute();
+		}
+
+		// Change order, case 1: no target, stick at the end
+		if($target === false) {
+
+			$q = <<<Q
+UPDATE strips
+SET item_order = (
+	SELECT
+		IFNULL(MAX(s.item_order), 0)+1
+	FROM strips s
+)
+WHERE id = :id
+Q;
+			$statement = $this->db->prepare($q);
+			$statement->bindValue(':id', $stripObj->id);
+			$statement->execute();
+		}
+		// Change order, case 2: there is a target order
+		else
+		{
+			// Push all other strips up in the order
+			$q = <<<Q
+UPDATE strips
+SET item_order = item_order + 1
+WHERE item_order > :order
+Q;
+			$statement = $this->db->prepare($q);
+			$statement->bindValue(':order', $target);
+			$statement->execute();
+
+			// Set the order of the current strip
+			$q = <<<Q
+UPDATE strips
+SET item_order = :order
+WHERE id = :id
+Q;
+			$statement = $this->db->prepare($q);
+			$statement->bindValue(':id', $stripObj->id);
+			$statement->bindValue(':order', $stripObj->item_order);
+			$statement->execute();
+		}
 	}
 
 
