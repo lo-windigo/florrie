@@ -3,12 +3,6 @@
 
 {% block adminmodule %}
 	<ul class="strip-carousel">
-		{% if strips|length >= 3 %}
-		<li>
-			<a href="/admin/allstrips" 
-				class="thumb all-thumb">View all strips</a>
-		</li>
-		{% endif %}
 		{% for strip in strips %}
 		<li>
 			<a href="/admin/editstrip/{{ strip.id }}"
@@ -24,9 +18,13 @@
 			</a>
 		</li>
 		{% endfor %}
-		<li>
-			<a class="thumb new-thumb"
-				href="/admin/addstrip">Add a strip</a>
-		</li>
 	</ul>
+	{% if strips|length >= 5 %}
+	<div class="button allStrips">
+		<a href="/admin/allstrips">View all strips</a>
+	</div>
+	{% endif %}
+	<div class="button newStrip">
+		<a href="/admin/addstrip">Add a strip</a>
+	</div>
 {% endblock %}

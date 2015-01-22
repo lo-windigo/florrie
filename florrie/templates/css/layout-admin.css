@@ -81,12 +81,19 @@
 	width: 100%;
 }
 
-/* TODO: This style sucks. make these look better. */
+/* Button control */
+.button {
+	background: #fff;
+	display: block;
+	padding: .5em;
+}
+
+/* TODO: This style sucks. make these look better. 
 .label {
 	background: #fff;
 	border: 1px solid #999;
 	padding: .5em;
-}
+}*/
 
 .latest-thumb {
 	transform: scale(1.1);

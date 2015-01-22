@@ -60,7 +60,7 @@ class Admin extends Controller {
 		$stripModel = $this->getStripModel();
 
 		$strips = $stripModel->getStrips();
-		$strips = array_slice($strips, -3);
+		$strips = array_slice($strips, -5);
 
 		$this->render('admin-index', array(
 			'strips' => $strips,
