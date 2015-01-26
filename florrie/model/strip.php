@@ -72,12 +72,7 @@ INSERT INTO strips (
 	display, img, posted, slug, title
 )
 VALUES (
-	:display, :img, :posted, :slug, :title, (
-		SELECT
-			IFNULL(MAX(s.item_order), 0)+1
-		FROM strips s
-		WHERE s.posted <= DATE :posted
-	)
+	:display, :img, :posted, :slug, :title
 )
 Q;
 
