@@ -36,21 +36,7 @@
 	display: inline-block;
 }
 
-.admin-nav-item {
-	border: 5px solid #999;
-	border-radius: .25em;
-	display: inline-block;
-	font-weight: bold;
-	margin: 0 .5em;
-	padding: .5em;
-}
-
-.admin-nav-item:active,
-.admin-nav-item:hover,
-.admin-nav-item.active {
-	border: 5px solid #f44;
-}
-
+/* TODO: Set up icons for particular nav items */
 .admin-nav-item:before {
 	content: "[X]";
 	display: inline-block;
@@ -73,19 +59,25 @@
 	color: #000;
 }
 
-.all-thumb:before {
-	content: "…";
-	display: inline-block;
-	font-size: 10em;
-	vertical-align: bottom;
-	width: 100%;
+.all-strips {
+	float: left;
+	text-align: center;
+	width: 50%;
 }
+
 
 /* Button control */
 .button {
 	background: #fff;
-	display: block;
+	border: .25em solid #999;
+	border-radius: .5em;
+	color: #000;
+	display: inline-block;
+	font-weight: bold;
+	margin: .25em .75em;
 	padding: .5em;
+	/* Transitions are too janky
+	transition: all .25s;*/
 }
 
 /* TODO: This style sucks. make these look better. 
@@ -95,16 +87,18 @@
 	padding: .5em;
 }*/
 
+.footer {
+	clear: both;
+}
+
 .latest-thumb {
 	transform: scale(1.1);
 }
 
-.new-thumb:before {
-	content: "+";
-	display: inline-block;
-	font-size: 10em;
-	vertical-align: bottom;
-	width: 100%;
+.new-strip {
+	float: right;
+	text-align: center;
+	width: 50%;
 }
 
 .strip-carousel {
@@ -163,6 +157,13 @@
 
 
 /* ---< State Styles >--- */
+
+.button:active,
+.button:hover,
+.button.active {
+	border: .5em solid #f44;
+	margin: 0 .5em;
+}
 
 .strip-thumb:hover img:after {
 	content: attr(title);
