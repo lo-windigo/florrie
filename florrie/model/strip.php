@@ -98,6 +98,9 @@ Q;
 
 		$statement->execute();
 
+		// Retrieve the strip object (and new ID)
+		$stripObj = $this->getStrip($stripObj->slug);
+
 		// Set the order of this strip to the very last order
 		$this->orderBefore($stripObj);
 	}
@@ -422,7 +425,6 @@ UPDATE strips
 SET item_order = item_order - 1
 WHERE item_order > :order
 Q;
-
 			$statement = $this->db->prepare($q);
 			$statement->bindValue(':order', $stripObj->item_order);
 			$statement->execute();
