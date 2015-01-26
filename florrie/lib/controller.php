@@ -22,6 +22,7 @@
 
 // Include the exception classes
 require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/error.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/model.php';
 
 
 abstract class Controller {
@@ -81,8 +82,10 @@ abstract class Controller {
 
 			// Compile the db values into a DSN
 			// TODO: Database independent? Let people choose?
-			$dsn = 'mysql:host='.$config['data']['server'].';port='.
-				$config['data']['port'].';dbname='.$config['data']['db'];
+			$dsn = BaseModel::getDSN(
+				$config['data']['db'],
+				$config['data']['server'],
+				$config['data']['port']);
 
 			// Attempt to create a connection
 			// - Fetch results as objects

@@ -23,7 +23,7 @@
 require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/auth.php';
 
 
-class UserModel {
+class UserModel extends BaseModel {
 
 
 	//========================================
