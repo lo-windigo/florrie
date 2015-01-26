@@ -22,5 +22,26 @@
 
 abstract class BaseModel {
 
+	const FORCE_INSTALL = 'yes-i-really-want-to-install';
 	const MYSQL_DATE = 'Y-m-d H:i:s';
+
+	// Remove the database tables for this model
+	abstract public function deleteTables() {}
+
+	// Install the database tables for this model
+	abstract public function installTables($force) {}
+
+	// Check to see if a database tables exist at all
+	public function tableExist($table) {
+
+		$q = 'SHOW TABLES LIKE :table';
+
+		$statement = $this->db->prepare($q);
+
+		$statement->bind(':table', $table);
+
+		$statement->execute();
+
+		return (bool)$statement->fetch();
+	}
 }

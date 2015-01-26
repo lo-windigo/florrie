@@ -106,6 +106,61 @@ Q;
 
 
 	//----------------------------------------
+	// Delete this module's database tables
+	//----------------------------------------
+	public function deleteTables() {
+
+		$q = 'DROP TABLE IF EXISTS users';
+		$statement = $this->db->prepare($q);
+		$statement->execute();
+	}
+
+
+	//----------------------------------------
+	// Install this module's database tables
+	//----------------------------------------
+	public function installTables($force = false) {
+
+		// Make sure tables do not exist (unless forced)
+		if($this->tablesExist()) {
+
+			if($force === self::FORCE_INSTALL) {
+
+				$this->deleteTables();
+			}
+			else {
+
+				$e = 'Error: attempted to install tables, but tables exist';
+				throw new DBException($e);
+			}
+		}
+
+		$q = <<<Q
+CREATE TABLE users
+(
+	id INT NOT NULL AUTO_INCREMENT,
+	user VARCHAR(300) NOT NULL UNIQUE,
+	pass VARCHAR(300),
+	display VARCHAR(300) NOT NULL,
+	PRIMARY KEY(id)
+)
+Q;
+
+		$statement = $this->db->prepare($q);
+		$statement->execute();
+	}
+
+
+	//----------------------------------------
+	// Delete this module's database tables
+	//----------------------------------------
+	public function tablesExist() {
+
+		return $this->tableExists('users');
+	}
+
+
+	//----------------------------------------
 	// Update user details
 	//----------------------------------------
 	public function updateUser($userObj) {
