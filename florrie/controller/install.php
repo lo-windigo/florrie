@@ -152,13 +152,25 @@ WRITE;
 					PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,
 					PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION);
 
-				$this->db = new PDO($values['data-dsn'], $values['data-user'],
+				// Compile the db values into a DSN
+				// TODO: Database independent? Let people choose?
+				$dsn = BaseModel::getDSN(
+					$values['data-db'],
+					$values['data-server'],
+					$values['data-port']);
+
+				$this->db = new PDO($dsn, $values['data-user'],
 					$values['data-pass'], $options);
 
-				// TODO: Install the database tables. Details, details.
+				// Install the database tables
+				// TODO: Dynamically get modules
+				$userModel = $this->loadModel('User');
+				$stripModel = $this->loadModel('Strip');
+				
+				$userModel->installTables();
+				$stripModel->installTables();
 
 				// Add the administrative user to the system
-				$userModel = $this->loadModel('User');
 				$userModel->addUser(
 					$values['username'],
 				   	$values['desc'],
@@ -176,6 +188,8 @@ WRITE;
 				Florrie::saveConfig($configArray);
 
 				// Installation complete; redirect to the homepage
+				// TODO: The homepage SUCKS after install. Maybe send somewhere 
+				//	better?
 				header('Location: /');
 				return;
 			}
@@ -189,7 +203,7 @@ WRITE;
 
 		$this->render('install', array(
 			'data'            => $values,
-			'ftp'             => Florrie::filesWritable()?"false":"true",
+			'ftp'             => Florrie::filesWritable()?'false':'true',
 			'recommendations' => $missingRecommends,
 			'scripts'         => array('/florrie/templates/js/install.js'),
 			'themes'          => Florrie::getThemes()
