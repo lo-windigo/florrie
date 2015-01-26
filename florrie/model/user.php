@@ -108,11 +108,9 @@ Q;
 	//----------------------------------------
 	// Delete this module's database tables
 	//----------------------------------------
-	public function deleteTables() {
+	public function delTables() {
 
-		$q = 'DROP TABLE IF EXISTS users';
-		$statement = $this->db->prepare($q);
-		$statement->execute();
+		parent::delTable('users');
 	}
 
 
@@ -121,19 +119,7 @@ Q;
 	//----------------------------------------
 	public function installTables($force = false) {
 
-		// Make sure tables do not exist (unless forced)
-		if($this->tablesExist()) {
-
-			if($force === self::FORCE_INSTALL) {
-
-				$this->deleteTables();
-			}
-			else {
-
-				$e = 'Error: attempted to install tables, but tables exist';
-				throw new DBException($e);
-			}
-		}
+		parent::installTables($force);
 
 		$q = <<<Q
 CREATE TABLE users

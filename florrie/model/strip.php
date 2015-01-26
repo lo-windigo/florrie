@@ -186,6 +186,15 @@ ORDER;
 
 
 	//----------------------------------------
+	// Delete this module's database tables
+	//----------------------------------------
+	public function delTables() {
+
+		parent::delTable('strips');
+	}
+
+
+	//----------------------------------------
 	// Return the very first strip
 	//----------------------------------------
 	public function getFirst() {
@@ -362,6 +371,32 @@ Q;
 
 
 	//----------------------------------------
+	// Install this module's database tables
+	//----------------------------------------
+	public function installTables($force = false) {
+
+		parent::installTables($force);
+
+		$q = <<<Q
+CREATE TABLE strips
+(
+	id INT NOT NULL AUTO_INCREMENT,
+	title VARCHAR(500),
+	slug VARCHAR(500),
+	display TEXT,
+	img VARCHAR(200) NOT NULL,
+	item_order INT NOT NULL,
+	posted DATETIME NOT NULL,
+	PRIMARY KEY(id, slug)
+)
+Q;
+
+		$statement = $this->db->prepare($q);
+		$statement->execute();
+	}
+
+
+	//----------------------------------------
 	// Change the order of a strip
 	//----------------------------------------
 	public function orderBefore($stripObj, $target = false) {
@@ -447,6 +482,15 @@ Q;
 			$statement->bindValue(':order', $target);
 			$statement->execute();
 		}
+	}
+
+
+	//----------------------------------------
+	// Delete this module's database tables
+	//----------------------------------------
+	public function tablesExist() {
+
+		return $this->tableExists('strips');
 	}
 
 

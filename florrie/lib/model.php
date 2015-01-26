@@ -26,10 +26,43 @@ abstract class BaseModel {
 	const MYSQL_DATE = 'Y-m-d H:i:s';
 
 	// Remove the database tables for this model
-	abstract public function deleteTables() {}
+	public function delTable($table) {
+
+		$q = 'DROP TABLE IF EXISTS :table';
+		$statement = $this->db->prepare($q);
+		$statement->bind(':table', $table);
+		$statement->execute();
+	}
+
+
+	// Remove a collection of tables
+	public function delTables($tables) {
+
+		for($tables as $table) {
+
+			$this->delTable($table);
+		}
+	}
+
 
 	// Install the database tables for this model
-	abstract public function installTables($force) {}
+	public function installTables($force = false) {
+
+		// Make sure tables do not exist (unless forced)
+		if($this->tablesExist()) {
+
+			if($force === self::FORCE_INSTALL) {
+
+				$this->deleteTables();
+			}
+			else {
+
+				$e = 'Error: attempted to install tables, but tables exist';
+				throw new DBException($e);
+			}
+		}
+	}
+
 
 	// Check to see if a database tables exist at all
 	public function tableExist($table) {
