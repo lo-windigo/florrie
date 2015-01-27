@@ -419,7 +419,7 @@ Q;
 			throw new ServerException($e);
 		}
 
-		// Handle existing item order
+		// Remove this strip from the item order
 		if(!empty($stripObj->item_order)) {
 
 			$q = <<<Q
@@ -461,6 +461,13 @@ Q;
 		// Change order, case 2: there is a target order
 		else
 		{
+			// Special case: if the target specified is higher than the current order, 
+			//	we have to compensate for when we removed the current strip from the 
+			//	item order. It has moved the target back by one.
+			if($target > $stripObj->item_order) {
+				$target--;
+			}
+
 			// Push all other strips up in the order
 			$q = <<<Q
 UPDATE strips

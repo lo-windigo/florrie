@@ -197,6 +197,9 @@ class Admin extends Controller {
 					}
 				}
 
+				// Save strip details
+				$stripModel->updateStrip($stripObject);
+
 				// Handle a change in strip order
 				if($values['change-order'] !== null) {
 
@@ -211,9 +214,6 @@ class Admin extends Controller {
 					
 					$stripModel->orderBefore($stripObject, $target);
 				}
-
-				// Save strip details
-				$stripModel->updateStrip($stripObject);
 
 				header('Location: /admin/stripsaved');
 				return;
