@@ -189,22 +189,23 @@ abstract class Controller {
 		// If there is no additional URI data, show the main index
 		if(empty($uriArray)) {
 
-			$this->index();
+			return $this->index();
 		}
-		// Otherwise, check and see if this controller supports
-		//  this action
-		else {
 
-			$view = array_shift($uriArray);
+		// Verify we were sent in a URI array
+		if(!is_array($uriArray)) {
 
-			if(method_exists($this, $view)) {
-				call_user_func_array(array($this, $view), $uriArray);
-			}
-			else {
-
-				throw new NotFoundException('Controller does not have a good way to handle this URI');
-			}
+			throw new ServerException('Controller: Cannot route, URI was not sent in as array');
 		}
+
+		$view = array_shift($uriArray);
+
+		if(!method_exists($this, $view)) {
+
+			throw new NotFoundException('Controller: No route for this URI');
+		}
+
+		call_user_func_array(array($this, $view), $uriArray);
 	}
 }
 ?>
