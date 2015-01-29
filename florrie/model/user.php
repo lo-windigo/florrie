@@ -192,5 +192,29 @@ Q;
 
 		return null;
 	}
+
+
+	//----------------------------------------
+	// Get all user's data for the database
+	//----------------------------------------
+	public function getUsers() {
+
+		$q = <<<Q
+SELECT
+	user,
+	display
+FROM users
+Q;
+
+		$statement = $this->db->prepare($q);
+		$statement->execute();
+
+		if(!($users = $statement->fetchAll())) {
+
+			return array();
+		}
+
+		return $users;
+	}
 }
 ?>
