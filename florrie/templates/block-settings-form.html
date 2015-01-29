@@ -48,12 +48,12 @@
 			</fieldset>
 			<fieldset>
 				<legend>Theme</legend>
-				{% for dir, theme in themes %}
+				{% for theme in themes %}
 				<p>
 					{{ form.radioField({
 						id: "florrie-theme",
-						value: dir,
-						prompt: theme,
+						value: theme.dir,
+						prompt: theme.name,
 						match: settings["florrie-theme"]
 					}) }}
 					{# (settings["florrie-theme"] == theme) #}

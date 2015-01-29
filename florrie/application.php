@@ -291,10 +291,31 @@ class Florrie {
 	static public function getThemes() {
 
 		$themes = array();
-		$themesDir = $_SERVER['DOCUMENT_ROOT'].Florrie::THEMES;
+		$themesPath = $_SERVER['DOCUMENT_ROOT'].Florrie::THEMES;
 
-		// TODO: Actually fetch installed themes
-		$themes['default'] = "Default Theme";
+		// Fetch installed themes
+		$themesDir = dir($themesPath);
+
+		while (false !== ($dir = $themesDir->read())) {
+
+			$themeDir = $themesPath.'/'.$dir;
+			$themeInfoFile = $themeDir.'/theme.ini';
+
+			if(is_dir($themeDir) && file_exists($themeInfoFile)) {
+
+				$theme = parse_ini_file($themeInfoFile);
+
+				if(!empty($theme['name'])) {
+
+					$theme['dir'] = $dir;
+
+					// TODO: Escape values
+					$themes[] = $theme;
+				}
+			}
+		}
+
+		$themesDir->close();
 
 		return $themes;
 	}
