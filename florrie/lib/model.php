@@ -25,7 +25,21 @@ abstract class BaseModel {
 	const FORCE_INSTALL = 'yes-i-really-want-to-install';
 	const MYSQL_DATE = 'Y-m-d H:i:s';
 
+
+
+	//----------------------------------------
+	// Constructor
+	//----------------------------------------
+	public function __construct($db) {
+
+		// Save the database connection for later
+		$this->db = $db;
+	}
+
+
+	//----------------------------------------
 	// Remove the database tables for this model
+	//----------------------------------------
 	public function delTable($table) {
 
 		$q = 'DROP TABLE IF EXISTS :table';
@@ -35,7 +49,9 @@ abstract class BaseModel {
 	}
 
 
+	//----------------------------------------
 	// Remove a collection of tables
+	//----------------------------------------
 	public function delTables($tables) {
 
 		foreach($tables as $table) {
@@ -45,14 +61,19 @@ abstract class BaseModel {
 	}
 
 
+	//----------------------------------------
 	// Get a DSN for a MySQL connection
+	//----------------------------------------
 	static public function getDSN($db = 'florrie',
 	   $server = 'localhost', $port = '3306') {
 
 		return 'mysql:host='.$server.';port='.$port.';dbname='.$db;
 	}
 
+
+	//----------------------------------------
 	// Install the database tables for this model
+	//----------------------------------------
 	public function installTables($force = false) {
 
 		// Make sure tables do not exist (unless forced)
@@ -71,7 +92,9 @@ abstract class BaseModel {
 	}
 
 
+	//----------------------------------------
 	// Check to see if a database tables exist at all
+	//----------------------------------------
 	public function tableExists($table) {
 
 		$q = 'SHOW TABLES LIKE :table';

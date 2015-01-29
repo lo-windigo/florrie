@@ -32,16 +32,6 @@ class UserModel extends BaseModel {
 
 
 	//----------------------------------------
-	// Constructor
-	//----------------------------------------
-	public function __construct($db) {
-
-		// Save the database connection for later
-		$this->db = $db;
-	}
-
-
-	//----------------------------------------
 	// Add a user to the system
 	//----------------------------------------
 	public function addUser($user, $desc, $pass = false) {

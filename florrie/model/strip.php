@@ -49,8 +49,8 @@ class StripModel extends BaseModel {
 	//----------------------------------------
 	public function __construct($db) {
 
-		// Save the database connection for later
-		$this->db = $db;
+		parent::__construct($db);
+
 		$this->unpublished = false;
 	}
 
