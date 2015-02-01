@@ -1,0 +1,17 @@
+{% set admintitle = "Users" %}
+{% extends "page-admin.html" %}
+
+{% block adminmodule %}
+	<ul class="">
+		{% for adminUser in users %}
+		<li>
+			<a href="/admin/edituser/{{ adminUser.user }}">
+				{{ adminUser.display }}
+			</a>
+		</li>
+		{% endfor %}
+	</ul>
+	<div class="new-user">
+		<a class="button" href="/admin/adduser">Add a user</a>
+	</div>
+{% endblock %}

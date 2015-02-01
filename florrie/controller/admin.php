@@ -146,6 +146,54 @@ class Admin extends Controller {
 
 
 	//----------------------------------------
+	// Add an administrative user
+	//----------------------------------------
+	public function adduser() {
+
+		// Defaults go here
+		$values = array(
+			'csrf' => null, 
+			'desc' => null, 
+			'password' => null, 
+			'username' => null
+		);
+
+		// Process form data if it has been submitted
+		if(submitted()) {
+
+			try {
+				processFormInput($values);
+
+				// Create a slug for this comic
+				$userModel = $this->loadModel('user');
+
+				// Add the new strip
+				$userModel->addUser($values);
+
+				header('Location: /admin/usersaved');
+				return;
+			}
+			catch (FormException $e) {
+
+				// TODO: Type the right values, damnit!
+				die('Form Error Handling? Maybe later. Error: '.$e->getMessage());
+			}
+			catch (exception $e) {
+
+				// TODO: Actual error handling
+				die('AddStrip Error case: miscellaneous! Error: '.$e->getMessage());
+			}
+		}
+
+		$this->render('admin-addstrip', array(
+			'values' => $values,
+			'section' => 'strips'
+
+		));
+	}
+
+
+	//----------------------------------------
 	// Edit an existing strip
 	//----------------------------------------
 	public function editstrip($stripId) {
@@ -388,6 +436,32 @@ class Admin extends Controller {
 		));
 	}
 
+
+	//----------------------------------------
+	// Success message: user saved
+	//----------------------------------------
+	public function usersaved() {
+
+		$this->render('admin-usersaved', array(
+			'section' => 'users'
+		));
+	}
+
+
+
+	//----------------------------------------
+	// User administration
+	//----------------------------------------
+	public function users() {
+
+		$userModel = $this->loadModel('user');
+		$users = $userModel->getUsers();
+
+		$this->render('admin-users', array(
+			'users' => $users,
+			'section' => 'users'
+		));
+	}
 
 
 	//========================================

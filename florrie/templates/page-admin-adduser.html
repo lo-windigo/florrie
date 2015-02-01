@@ -1,0 +1,14 @@
+{% set admintitle = "Add A User" %}
+
+{% extends "page-admin.html" %}
+{% import "macro-forms.html" as form %}
+
+{% block adminmodule %}
+		<form method="post">
+			{% include "block-user-form.html" %}
+			<p class="c">
+				{{ form.csrfField(csrf) }}
+				{{ form.submitButton("Add Strip") }}
+			</p>
+		</form>
+{% endblock %}
