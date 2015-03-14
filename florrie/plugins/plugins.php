@@ -1,7 +1,7 @@
 <?php
 /*
 	Florrie Plugins Module
-	By Jacob Hume
+	Copyright © 2015 Jacob Hume
 
 	This file is part of Florrie.
 

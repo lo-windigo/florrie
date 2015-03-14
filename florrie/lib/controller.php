@@ -1,7 +1,7 @@
 <?php
 /*
 	Abstract Controller Class
-	By Jacob Hume
+	Copyright © 2015 Jacob Hume
 
 	This file is part of Florrie.
 
