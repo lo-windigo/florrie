@@ -2,7 +2,7 @@
 Installing Florrie - For Fun and Profit
 ========
 
-Written by [Windigo](http://fragdev.com/), licensed
+Copyright [Jacob Hume (Windigo)](http://fragdev.com/), licensed
 under the AGPL v3.
 
 Make sure to check REQUIREMENTS.md before installing!
@@ -22,4 +22,5 @@ the following directories:
 - strips
 
 From there, you should be able to continue with the install process by simply
-visiting your web site in your browser.
+visiting your web site in your browser. Florrie will walk you through the
+install process from there.
