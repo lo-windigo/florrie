@@ -105,37 +105,53 @@ class Florrie {
 
 
 	//----------------------------------------
-	// Test writing files (before install!)
+	// Test the write permissions
 	//----------------------------------------
 	static public function filesWritable() {
 
 		// TODO: Allow for FTP writing as well
 		$config = $_SERVER['DOCUMENT_ROOT'].self::CONFIG;
 		$strips = $_SERVER['DOCUMENT_ROOT'].'/strips/test';
+		$err = '[filesWriteable] ';
 
-		// TODO: Fix echos, real error handling would be nice
-		if(!is_writable(dirname($config)) || !is_writable(dirname($strips))) {
+		// Check that the configuration directory is writeable
+		if(!is_writable(dirname($config))) {
 
-			echo 'Not writable!';
-			return false;
+			throw new ServerException($err.'Configuration directory ('.
+				dirname($config).') is not writeable');
 		}
 
-		if(file_put_contents($config, 'test file') <= 0) {
+		// Check that the configuration file is writeable, whether present or 
+		//	not
+		if(file_exists($config) && !is_writeable($config)) {
 
-			echo 'Cant Write Config';
-			return false;
+			throw new ServerException($err.'Existing configuration file ('.
+				$config.') is not writeable');
+		}
+		else {
+
+		   	if(file_put_contents($config, 'test file') <= 0) {
+
+				throw new ServerException($err.'Configuration file ('.$config.
+					') is not writeable');
+			}
+			else {
+
+				unlink($config);
+			}
 		}
 
-		if(file_put_contents($strips, 'test file') <= 0) {
+		// Check that the strips directory is writeable
+		if(!is_writable(dirname($strips)) ||
+			file_put_contents($strips, 'test file') <= 0) {
 
-			echo 'Cant Write strips';
-			unlink($config);
-			return false;
+			throw new ServerException($err.'Strip directory ('.
+				dirname($strips)).') is not writeable');
 		}
+		else {
 
-		// Delete the test files
-		unlink($config);
-		unlink($strips);
+			unlink($strips);
+		}
 
 		return true;
 	}
@@ -206,7 +222,6 @@ class Florrie {
 		}
 		catch (exception $e)
 		{
-			// TODO: Logging? Error messages? Maybe?
 			return false;
 		}
 	}
@@ -296,7 +311,7 @@ class Florrie {
 		// Fetch installed themes
 		$themesDir = dir($themesPath);
 
-		while (false !== ($dir = $themesDir->read())) {
+		while(false !== ($dir = $themesDir->read())) {
 
 			$themeDir = $themesPath.'/'.$dir;
 			$themeInfoFile = $themeDir.'/theme.ini';
