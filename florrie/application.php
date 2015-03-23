@@ -146,7 +146,7 @@ class Florrie {
 			file_put_contents($strips, 'test file') <= 0) {
 
 			throw new ServerException($err.'Strip directory ('.
-				dirname($strips)).') is not writeable');
+				dirname($strips).') is not writeable');
 		}
 		else {
 
