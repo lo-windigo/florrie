@@ -51,10 +51,9 @@ class Feed extends Controller {
 	}
 
 
-	// Index page
+	// There is no Index page; 404!
 	public function index() {
 
-		// TODO: Maybe list the available feeds?
 		throw new NotFoundException('No Feed Index');
 	}
 
