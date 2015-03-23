@@ -155,8 +155,7 @@ Q;
 		}
 		else if(!(is_object($stripObj) && !empty($stripObj->item_order))) {
 
-			// TODO: Really need to throw an exception here?
-			throw new exception('ID does not return a valid strip');
+			throw new ServerException('ID does not return a valid strip');
 		}
 
 		// Remove the strip from the database
