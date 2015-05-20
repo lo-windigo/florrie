@@ -1,4 +1,5 @@
 <?php
+
 /*
 	Extra Authentication Functions
 	Copyright © 2015 Jacob Hume

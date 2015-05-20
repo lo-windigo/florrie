@@ -55,7 +55,7 @@ abstract class Controller {
 	//----------------------------------------
 	// Initialize the database connection
 	//----------------------------------------
-	protected function initDB($config = false) {
+	public function initDB($config = false) {
 
 		// Verify that we have some configuration values
 		if(!$config) {
