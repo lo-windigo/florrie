@@ -1,6 +1,6 @@
 <?php
 /*
-	Florrie Initialization File
+	Florrie Web Initialization File
 	Copyright © 2015 Jacob Hume
 
 	This file is part of Florrie.
