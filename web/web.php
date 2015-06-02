@@ -24,30 +24,26 @@
 require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/error.php';
 
 
-// Main class - kicks things off, starts the party
-class Florrie {
+// Handles all of the web interface to Florrie
+class FlorrieWeb extends Florrie {
 
 	//----------------------------------------
 	// Class Constants
 	//
-	//  CONFIG	   - Configuration File
-	//  DEBUG      - Produce debug output
-	//  MODELS     - System modules
-	//  STRIPS     - Comic strip images
+	//  CONTROLLER - Main controllers
+	//  TEMPLATES  - System templates
+	//  THEMES     - User-installable, customizeable templates
 	//----------------------------------------
-	const CONFIG = '/config/florrie.cfg';
-	const DEBUG  = true;
-	const MODELS = '/florrie/model/';
-	const STRIPS = '/strips/';
-
-
-	// Data members:
-	//  config - The configuration for this controller
-	public $config;
+	const CONTROLLER = '/controller/';
+	const TEMPLATES  = '/templates/';
+	const THEMES     = '/themes/';
 
 
 	// Set up all of the basic stuff required to run the comic
 	public function __construct() {
+
+		// Call the parent constructor to set up Florrie
+		parent::__construct();
 
 		try {
 
