@@ -20,7 +20,7 @@
 */
 
 
-// Include the exception classes
+// Include the exception classes & error handling
 require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/error.php';
 
 
@@ -32,19 +32,13 @@ class Florrie {
 	//
 	//  CONFIG	   - Configuration File
 	//  DEBUG      - Produce debug output
-	//  CONTROLLER - Main controllers
 	//  MODELS     - System modules
 	//  STRIPS     - Comic strip images
-	//  TEMPLATES  - System templates
-	//  THEMES     - User-installable, customizeable templates
 	//----------------------------------------
 	const CONFIG     = '/config/florrie.cfg';
 	const DEBUG      = true;
-	const CONTROLLER = '/florrie/controller/';
 	const MODELS     = '/florrie/model/';
 	const STRIPS     = '/strips/';
-	const TEMPLATES  = '/florrie/templates/';
-	const THEMES     = '/themes/';
 
 
 	// Data members:
@@ -55,52 +49,7 @@ class Florrie {
 	// Set up all of the basic stuff required to run the comic
 	public function __construct() {
 
-		try {
-
-			// shift the controller type off of the URI variables
-			$uri = $this->parseURI();
-			$type = array_shift($uri);
-
-			// If Florrie hasn't been installed yet, we should probably address that
-			if(!$this->installed() && $type != 'install') {
-
-				// Start the Florrie install procedure; redirect to the
-				//	installation page
-				header('Location: /install', true, 307);
-				return;
-			}
-
-			// Get controller object, and route the request
-			$controller = $this->getController($type);
-			$controller->route($uri);
-		}
-		// Handle any errors that may have occurred
-		catch (exception $e) {
-
-			$controller = $this->getController('error');
-
-			if(get_class($e) === 'NotFoundException') {
-
-				// Handle a 404
-				$controller->notFound($e->getMessage());
-			}
-			else if(get_class($e) === 'ServerException') {
-
-				// Handle a server error
-				$controller->serverError($e->getMessage());
-			}
-			else if(get_class($e) === 'DBException' ||
-				get_class($e) === 'PDOException') {
-
-				// Properly handle DB connection errors
-				$controller->dbError($e->getMessage());
-			}
-			else {
-
-				// Properly handle unexpected errors
-				$controller->unknownError($e->getMessage());
-			}
-		}
+		// TODO: What should be initialized in the main class?
 	}
 
 
@@ -158,43 +107,6 @@ class Florrie {
 
 
 	//----------------------------------------
-	// Get the appropriate controller object
-	//----------------------------------------
-	public function getController($controller) {
-
-		// Get the controller path
-		$cPath = $_SERVER['DOCUMENT_ROOT'].self::CONTROLLER;
-
-		// If no controller was specified, use the main controller
-		if(empty($controller)) {
-
-			require $cPath.'main.php';
-
-			return new Main($this->config);
-		}
-
-		// Check the standard Florrie controllers
-		if(file_exists($cPath.strtolower($controller).'.php')) {
-
-			require_once $cPath.strtolower($controller).'.php';
-
-			// Return the new controller
-			return new $controller($this->config);
-		}
-
-		// Plugins! TODO
-//		if(file_exists(self::CONTROLLER.$controller.'.php')) {
-//
-//			return include self::CONTROLLER.$controller.'.php';
-//		}
-
-		// Default to 404
-		throw new NotFoundException('Unknown controller/type. Controller: "'.
-			$controller.'"');
-	}
-
-
-	//----------------------------------------
 	// Get any installed plugins
 	//----------------------------------------
 	public function getPlugins()
@@ -224,18 +136,6 @@ class Florrie {
 		{
 			return false;
 		}
-	}
-
-
-	// Split the URI into usable chunks
-	protected function parseURI() {
-
-		// Sanitize the URL, and trim the leading/trailing slashes
-		$uri = filter_input(INPUT_GET, 'u', FILTER_SANITIZE_URL);
-		$uri = trim($uri, '/');
-
-		// Burst into an array
-		return explode('/', $uri);
 	}
 
 
@@ -297,42 +197,6 @@ class Florrie {
 
 		// Save the configuration values for later
 		$this->config = $config;
-	}
-
-
-	//----------------------------------------
-	// Get the installed/available themes
-	//----------------------------------------
-	static public function getThemes() {
-
-		$themes = array();
-		$themesPath = $_SERVER['DOCUMENT_ROOT'].Florrie::THEMES;
-
-		// Fetch installed themes
-		$themesDir = dir($themesPath);
-
-		while(false !== ($dir = $themesDir->read())) {
-
-			$themeDir = $themesPath.'/'.$dir;
-			$themeInfoFile = $themeDir.'/theme.ini';
-
-			if(is_dir($themeDir) && file_exists($themeInfoFile)) {
-
-				$theme = parse_ini_file($themeInfoFile);
-
-				if(!empty($theme['name'])) {
-
-					$theme['dir'] = $dir;
-
-					// TODO: Escape values
-					$themes[] = $theme;
-				}
-			}
-		}
-
-		$themesDir->close();
-
-		return $themes;
 	}
 
 
