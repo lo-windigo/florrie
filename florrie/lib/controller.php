@@ -20,7 +20,7 @@
 */
 
 
-// Include the exception classes
+// Include the exception classes, error handling, and model classes
 require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/error.php';
 require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/model.php';
 

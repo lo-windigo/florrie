@@ -20,6 +20,6 @@
 */
 
 
-require 'florrie/application.php';
-$florrie = new Florrie();
+require 'florrie/web/web.php';
+WebController::initialize();
 ?>
