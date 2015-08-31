@@ -1,6 +1,6 @@
 <?php
 /*
-	Form Functions - Florrie
+	Form Functions
 	Copyright © 2015 Jacob Hume
 
 	This file is part of Florrie.
@@ -19,6 +19,8 @@
 	along with Florrie.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+
+require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/error.php';
 
 
 //----------------------------------------

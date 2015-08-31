@@ -1,6 +1,6 @@
 <?php
 /*
-	Florrie Initialization File
+	Web Controller Initialization 
 	Copyright © 2015 Jacob Hume
 
 	This file is part of Florrie.
@@ -20,6 +20,6 @@
 */
 
 
-require 'florrie/web/web.php';
+require $_SERVER['DOCUMENT_ROOT'].'web/web.php';
 WebController::initialize();
 ?>
