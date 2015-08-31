@@ -1,6 +1,6 @@
 <?php
 /*
-	Core Functionality
+	Web Interface
 	Copyright © 2015 Jacob Hume
 
 	This file is part of Florrie.
@@ -83,14 +83,26 @@ class WebController {
 	//----------------------------------------
 	public static function initialize() {
 
+		require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/florrie.php';
+
+		// shift the controller type off of the URI variables
+		$uri = self::parseURI();
+		$type = array_shift($uri);
+
 		try {
 
-			// shift the controller type off of the URI variables
-			$uri = self::parseURI();
-			$type = array_shift($uri);
+			// Create a new Florrie object
+			$florrie = new Florrie();
+	
+			// Get controller object, and route the request
+			$controller = self::getController($type, $florrie);
+			$controller->route($uri);
+		}
+		// Handle any errors that may have occurred
+		catch (NotInstalledException $e) {
 
 			// If Florrie hasn't been installed yet, we should probably address that
-			if(!$this->installed() && $type != 'install') {
+			if($type != 'install') {
 
 				// Start the Florrie install procedure; redirect to the
 				//	installation page
@@ -98,11 +110,8 @@ class WebController {
 				return;
 			}
 
-			// Get controller object, and route the request
-			$controller = self::getController($type);
-			$controller->route($uri);
+			$controller = self::getController('install');
 		}
-		// Handle any errors that may have occurred
 		catch (exception $e) {
 
 			$controller = self::getController('error');
