@@ -21,7 +21,11 @@
 
 
 // Authentication exception
-class AuthException extends exception {}
+class AuthException extends exception {
+
+	// A loggable message, not to be displayed to the user
+	public $secureMessage;
+}
 
 // Database exception
 class DBException extends exception {}

@@ -37,6 +37,7 @@ class Admin extends Controller {
 		if(empty($_SESSION['user'])) {
 
 			// TODO: Save page user was attempting to visit
+			$_SESSION['page-attempted']] = $_SERVER[''];
 
 			// Users must be logged in!
 			header('Location: /login', true, 307);

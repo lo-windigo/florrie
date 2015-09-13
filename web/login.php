@@ -68,8 +68,15 @@ class Login extends Controller {
 				// Generate CSRF token: https://www.owasp.org/index.php/PHP_CSRF_Guard
 				$_SESSION['csrf'] = hash('ripemd320', mt_rand(0,mt_getrandmax()));
 
-				// Installation complete; redirect to the admin section
-				header('Location: '.$this->config['florrie']['url'].'admin');
+				// Installation complete; redirect to the attempted page
+				if(empty($_SESSION['page-attempted'])) {
+					$page = 'admin';
+				}
+				else {
+					$page = $_SESSION['page-attempted'];
+				}
+
+				header('Location: '.$this->config['florrie']['url'].);
 				return;
 			}
 			catch (FormException $e) {
@@ -78,10 +85,9 @@ class Login extends Controller {
 				die('Form Error Handling? Maybe later. Error: '.$e->getMessage());
 
 			}
-			// TODO: Match with exception thrown by user model
-			catch (exception $e) {
+			catch (AuthException $e) {
 
-				$error = 'Login unsuccessful - please try again. Error: '.$e->getMessage();
+				$error = $e->getMessage();
 			}
 		}
 

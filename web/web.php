@@ -98,7 +98,17 @@ class WebController {
 			$controller = self::getController($type, $florrie);
 			$controller->route($uri);
 		}
-		// Handle any errors that may have occurred
+		// If Florrie is not installed, redirect to the installer
+		catch (AuthException $e) {
+
+			// Create a new Florrie object
+			$florrie = new Florrie();
+	
+			// Get controller object, and route the request
+			$controller = self::getController($type, $florrie);
+			$controller->index();
+		}
+		// If Florrie is not installed, redirect to the installer
 		catch (NotInstalledException $e) {
 
 			// If Florrie hasn't been installed yet, we should probably address that
@@ -112,6 +122,7 @@ class WebController {
 
 			$controller = self::getController('install');
 		}
+		// Handle the generic error cases (404, 500, etc)
 		catch (exception $e) {
 
 			$controller = self::getController('error');
@@ -179,8 +190,8 @@ class WebController {
 
 					$theme['dir'] = $dir;
 
-					// TODO: Escape values
-					$themes[] = $theme;
+					// TODO: Validate escaping
+					$themes[] = htmlentities($theme);
 				}
 			}
 		}

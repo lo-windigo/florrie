@@ -25,6 +25,11 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/auth.php';
 
 class UserModel extends BaseModel {
 
+	//========================================
+	// Class constants
+	//========================================
+	const LOGIN_FAILED = 'Login unsuccessful. Please check your credentials and try again.';
+
 
 	//========================================
 	// Public methods
@@ -79,7 +84,11 @@ Q;
 		// Throw exception if user hasn't been found
 		if(!is_object($user) || empty($user->pass)) {
 
-			throw new AuthException('User does not exist');
+			$e = new AuthException(LOGIN_FAILED);
+
+			$e->secureMessage = 'User does not exist';
+
+			throw $e;
 		}
 
 		// Check password hash, and return user if it matches
@@ -91,7 +100,11 @@ Q;
 		}
 
 		// Password doesn't match - throw an error!
-		throw new AuthException('authenticateUser failed!');	
+		$e = new AuthException(LOGIN_FAILED);
+
+		$e->secureMessage = 'passwords do not match';
+
+		throw $e;
 	}
 
 
