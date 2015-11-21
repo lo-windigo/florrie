@@ -1,0 +1,59 @@
+{% macro first(disable) %}
+			<li class="strip-nav-item strip-first {{ disable }}">
+				{% if disable is empty %}
+				<a href="/strip/first">
+				{% endif %}
+					First
+				{% if disable is empty %}
+				</a>
+				{% endif %}
+			</li>
+{% endmacro %}
+		
+{% macro prev(disable, prev) %}
+			<li class="strip-nav-item strip-prev {{ disable }}">
+				{% if disable is empty %}
+				<a href="/strip/{{ prev }}">
+				{% endif %}
+					Prev
+				{% if disable is empty %}
+				</a>
+				{% endif %}
+			</li>
+{% endmacro %}
+		
+{% macro random(disable) %}
+			<li class="strip-nav-item strip-random {{ disable }}">
+				{% if disable is empty %}
+				<a href="/strip/random">
+				{% endif %}
+					Random
+				{% if disable is empty %}
+				</a>
+				{% endif %}
+			</li>
+{% endmacro %}
+		
+{% macro next(disable, next) %}
+			<li class="strip-nav-item strip-next {{ disable }}">
+				{% if disable is empty %}
+				<a href="/strip/{{ next }}">
+				{% endif %}
+					Next
+				{% if disable is empty %}
+				</a>
+				{% endif %}
+			</li>
+{% endmacro %}
+		
+{% macro latest(disable) %}
+			<li class="strip-nav-item strip-latest {{ disable }}">
+				{% if disable is empty %}
+				<a href="/strip/latest">
+				{% endif %}
+					Latest
+				{% if disable is empty %}
+				</a>
+				{% endif %}
+			</li>
+{% endmacro %}

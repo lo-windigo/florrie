@@ -1,0 +1,150 @@
+/*
+,------.,--.                     ,--.       
+|  .---'|  | ,---. ,--.--.,--.--.`--' ,---. 
+|  `--, |  || .-. ||  .--'|  .--',--.| .-. :
+|  |`   |  |' '-' '|  |   |  |   |  |\   --.
+`--'    `--' `---' `--'   `--'   `--' `----'
+        ---Comic management system---
+
+              Default layout
+               by Jacob Hume
+*/
+
+
+/* ---< Base Styles >--- */
+
+* {
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+a {
+	color: #4c9ed9;
+}
+
+body {
+	margin: 0;
+}
+
+h1 {
+	font-size: 2.5em;
+	text-shadow: .05em .05em 1px #bbb;
+}
+
+html {
+	background: #f8f8f8;
+	color: #000;
+	font-family: sans-serif;
+}
+
+
+
+/* ---< Module Styles >--- */
+
+.a11y-link {
+	position: absolute;
+	top: -5em;
+}
+
+.content>h1,
+.strip,
+.strip-nav {
+	text-align: center;
+}
+
+.content,
+.header {
+	padding: .5em;
+}
+
+.footer {
+	color: #aaa;
+	padding-bottom: 1.5em;
+	text-align: center;
+}
+
+.header {
+	background: #03f;
+	box-shadow: inset 0 -.1em 1em #000;
+	margin: -5% -5% 0 -5%;
+	padding: 6% 6% 1em 6%;
+	position: relative;
+	width: 110%;
+}
+
+/* Main Navigation */
+.main-nav {
+	bottom: 0;
+	right: 5%;
+	position: absolute;
+	list-style: none;
+	margin: 0;
+	padding: 0 1em 0 0;
+}
+
+.main-nav-item {
+	background: #f8f8f8;
+	border-radius: .5em .5em 0 0;
+	box-shadow: .15em -.3em .2em #000;
+	display: inline-block;
+	margin: 0 .5em;
+	padding: .5em .5em .25em .5em;
+}
+
+.site-title a {
+	color: #fff;
+	font-size: 3em;
+	font-weight: bold;
+	text-decoration: none;
+	text-shadow: .05em .05em 1px #000;
+}
+
+.strip-first:before {
+	content: "❬❬ ";
+}
+
+.strip-latest:after {
+	content: " ❭❭";
+}
+
+.strip-nav {
+	list-style: none;
+}
+
+.strip-nav-item {
+	display: inline-block;
+	font-weight: bold;
+	margin: 0 .5em;
+	padding: .5em;
+}
+
+.strip-nav-item.disabled {
+	color: #999;
+	font-weight: normal;
+}
+
+.strip-next:after {
+	content: " ❭";
+}
+
+.strip-prev:before {
+	content: "❬ ";
+}
+
+
+
+/* ---< State Styles >--- */
+
+a:visited {
+	color: #355b77;
+}
+
+.site-title a:focus,
+.site-title a:hover {
+	text-decoration: overline underline;
+}
+
+.site-title a:visited {
+	color: #fff;
+}
