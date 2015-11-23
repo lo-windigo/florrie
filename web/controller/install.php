@@ -21,8 +21,8 @@
 
 
 
-require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/controller.php';
-require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/forms.php';
+require_once 'lib/controller.php';
+require_once 'lib/forms.php';
 
 
 class Install extends Controller {

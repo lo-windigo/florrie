@@ -34,9 +34,9 @@ class FlorrieWeb extends Florrie {
 	//  TEMPLATES  - System templates
 	//  THEMES     - User-installable, customizeable templates
 	//----------------------------------------
-	const CONTROLLER = '/controller/';
-	const TEMPLATES  = '/templates/';
-	const THEMES     = '/themes/';
+	const CONTROLLER = 'controller/';
+	const TEMPLATES  = 'templates/';
+	const THEMES     = 'themes/';
 
 
 	// Set up all of the basic stuff required to run the comic
@@ -152,21 +152,18 @@ class FlorrieWeb extends Florrie {
 	//----------------------------------------
 	public function getController($controller) {
 
-		// Get the controller path
-		$cPath = $_SERVER['DOCUMENT_ROOT'].self::CONTROLLER;
-
 		// If no controller was specified, use the main controller
 		if(empty($controller)) {
 
-			require $cPath.'main.php';
+			require self::CONTROLLER.'main.php';
 
 			return new Main($this->config);
 		}
 
 		// Check the standard Florrie controllers
-		if(file_exists($cPath.strtolower($controller).'.php')) {
+		if(file_exists(self::CONTROLLER.strtolower($controller).'.php')) {
 
-			require_once $cPath.strtolower($controller).'.php';
+			require_once self::CONTROLLER.strtolower($controller).'.php';
 
 			// Return the new controller
 			return new $controller($this->config);
