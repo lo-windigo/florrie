@@ -21,7 +21,7 @@
 
 
 // Include the exception classes
-require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/error.php';
+require_once 'lib/error.php';
 
 
 // Main class - kicks things off, starts the party

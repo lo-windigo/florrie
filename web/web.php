@@ -21,7 +21,7 @@
 
 
 // Include the exception classes
-require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/error.php';
+require_once __DIR__.'/../florrie/florrie.php';
 
 
 // Handles all of the web interface to Florrie
