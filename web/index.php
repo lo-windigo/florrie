@@ -19,7 +19,6 @@
 	along with Florrie.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
-require 'florrie/application.php';
-$florrie = new Florrie();
+require 'web.php';
+$florrie = new FlorrieWeb();
 ?>
