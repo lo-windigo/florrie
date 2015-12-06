@@ -39,6 +39,9 @@ class InitException extends exception {}
 // HTTP404 - file not found
 class NotFoundException extends exception {}
 
+// Florrie install not present/detected
+class NotInstalledException extends exception {}
+
 // An unrecoverable error
 class ServerException extends exception {}
 
