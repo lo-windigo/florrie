@@ -95,59 +95,6 @@ class FlorrieWeb extends Florrie {
 
 
 	//----------------------------------------
-	// Test the write permissions
-	//----------------------------------------
-	static public function filesWritable() {
-
-		// TODO: Allow for FTP writing as well
-		$config = $_SERVER['DOCUMENT_ROOT'].self::CONFIG;
-		$strips = $_SERVER['DOCUMENT_ROOT'].'/strips/test';
-		$err = '[filesWriteable] ';
-
-		// Check that the configuration directory is writeable
-		if(!is_writable(dirname($config))) {
-
-			throw new ServerException($err.'Configuration directory ('.
-				dirname($config).') is not writeable');
-		}
-
-		// Check that the configuration file is writeable, whether present or 
-		//	not
-		if(file_exists($config) && !is_writeable($config)) {
-
-			throw new ServerException($err.'Existing configuration file ('.
-				$config.') is not writeable');
-		}
-		else {
-
-		   	if(file_put_contents($config, 'test file') <= 0) {
-
-				throw new ServerException($err.'Configuration file ('.$config.
-					') is not writeable');
-			}
-			else {
-
-				unlink($config);
-			}
-		}
-
-		// Check that the strips directory is writeable
-		if(!is_writable(dirname($strips)) ||
-			file_put_contents($strips, 'test file') <= 0) {
-
-			throw new ServerException($err.'Strip directory ('.
-				dirname($strips).') is not writeable');
-		}
-		else {
-
-			unlink($strips);
-		}
-
-		return true;
-	}
-
-
-	//----------------------------------------
 	// Get the appropriate controller object
 	//----------------------------------------
 	public function getController($controller) {

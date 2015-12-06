@@ -35,10 +35,10 @@ class Florrie {
 	//  MODELS     - System modules
 	//  STRIPS     - Comic strip images
 	//----------------------------------------
-	const CONFIG = '/config/florrie.cfg';
+	const CONFIG = 'config/florrie.cfg';
 	const DEBUG  = true;
-	const MODELS = '/florrie/model/';
-	const STRIPS = '/strips/';
+	const MODELS = 'florrie/model/';
+	const STRIPS = 'strips/';
 
 
 	// Data members:
@@ -49,52 +49,6 @@ class Florrie {
 	// Set up all of the basic stuff required to run the comic
 	public function __construct() {
 
-		try {
-
-			// shift the controller type off of the URI variables
-			$uri = $this->parseURI();
-			$type = array_shift($uri);
-
-			// If Florrie hasn't been installed yet, we should probably address that
-			if(!$this->installed() && $type != 'install') {
-
-				// Start the Florrie install procedure; redirect to the
-				//	installation page
-				header('Location: /install', true, 307);
-				return;
-			}
-
-			// Get controller object, and route the request
-			$controller = $this->getController($type);
-			$controller->route($uri);
-		}
-		// Handle any errors that may have occurred
-		catch (exception $e) {
-
-			$controller = $this->getController('error');
-
-			if(get_class($e) === 'NotFoundException') {
-
-				// Handle a 404
-				$controller->notFound($e->getMessage());
-			}
-			else if(get_class($e) === 'ServerException') {
-
-				// Handle a server error
-				$controller->serverError($e->getMessage());
-			}
-			else if(get_class($e) === 'DBException' ||
-				get_class($e) === 'PDOException') {
-
-				// Properly handle DB connection errors
-				$controller->dbError($e->getMessage());
-			}
-			else {
-
-				// Properly handle unexpected errors
-				$controller->unknownError($e->getMessage());
-			}
-		}
 	}
 
 
@@ -104,8 +58,8 @@ class Florrie {
 	static public function filesWritable() {
 
 		// TODO: Allow for FTP writing as well
-		$config = $_SERVER['DOCUMENT_ROOT'].self::CONFIG;
-		$strips = $_SERVER['DOCUMENT_ROOT'].'/strips/test';
+		$config = __DIR__.'/../'.self::CONFIG;
+		$strips = __DIR__.'/../'.self::CONFIG.'test';
 		$err = '[filesWriteable] ';
 
 		// Check that the configuration directory is writeable
