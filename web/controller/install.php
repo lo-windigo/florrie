@@ -1,6 +1,6 @@
 <?php
 /*
-	Admin Controller
+	New Installation Controller
 	Copyright © 2015 Jacob Hume
 
 	This file is part of Florrie.
@@ -21,8 +21,8 @@
 
 
 
-require_once 'lib/controller.php';
-require_once 'lib/forms.php';
+require_once __DIR__.'/../lib/controller.php';
+require_once __DIR__.'/../lib/forms.php';
 
 
 class Install extends Controller {
@@ -206,7 +206,7 @@ WRITE;
 			'ftp'             => Florrie::filesWritable()?'false':'true',
 			'recommendations' => $missingRecommends,
 			'scripts'         => array('/florrie/templates/js/install.js'),
-			'themes'          => Florrie::getThemes()
+			'themes'          => FlorrieWeb::getThemes()
 		));
 	}
 
