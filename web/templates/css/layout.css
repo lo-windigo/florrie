@@ -23,6 +23,16 @@ a {
 	color: #4c9ed9;
 }
 
+aside {
+	background: #ddd;
+	padding: 1px 1em;
+	margin: 1em 2em;
+}
+
+aside h1 {
+	font-size: 1.1em;
+}
+
 body {
 	margin: 0;
 }

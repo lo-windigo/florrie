@@ -240,7 +240,7 @@ class FlorrieWeb extends Florrie {
 	static public function getThemes() {
 
 		$themes = array();
-		$themesPath = $_SERVER['DOCUMENT_ROOT'].Florrie::THEMES;
+		$themesPath = self::THEMES;
 
 		// Fetch installed themes
 		$themesDir = dir($themesPath);
