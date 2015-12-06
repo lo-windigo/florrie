@@ -77,6 +77,17 @@ encounter this error, file a bug and we can fix it with little effort. Yay!
 RIPE;
 		}
 
+		// Check for MySQL PDO support
+		// TODO: Other database drivers
+		if(!(class_exists('PDO') && in_array('mysql', PDO::getAvailableDrivers()))) {
+
+			$missingRequirements[] = <<<MYSQL
+Your system does not support PDO, and more specifically, the MySQL PDO driver.
+Please make sure this is installed. On Debian/Ubuntu, you can install the
+'php5-mysql' package.
+MYSQL;
+		}
+
 		// Check for the GD functions
 		// TODO: Technically only required to resize images. Maybe make it optional?
 		if(!function_exists('imagecreatefromstring')) {
