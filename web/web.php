@@ -129,108 +129,16 @@ class FlorrieWeb extends Florrie {
 
 
 	//----------------------------------------
-	// Get any installed plugins
-	//----------------------------------------
-	public function getPlugins()
-	{
-		// TODO: Work Ongoing!
-		//	Love,
-		//	- Windigo
-		return;
-	}
-
-
-	//----------------------------------------
-	// Check to see if Florrie's installed
-	//----------------------------------------
-	public function installed()
-	{
-		try
-		{
-			// Attempt to get required components, like configuration files
-			$this->readConfig();
-			$this->getPlugins();
-
-			// If all of these checks occur without issue, then it must be installed!
-			return true;
-		}
-		catch (exception $e)
-		{
-			return false;
-		}
-	}
-
-
 	// Split the URI into usable chunks
+	//----------------------------------------
 	protected function parseURI() {
 
 		// Sanitize the URL, and trim the leading/trailing slashes
-		$uri = filter_input(INPUT_GET, 'u', FILTER_SANITIZE_URL);
+		$uri = filter_input(INPUT_GET, 'p', FILTER_SANITIZE_URL);
 		$uri = trim($uri, '/');
 
 		// Burst into an array
 		return explode('/', $uri);
-	}
-
-
-	//----------------------------------------
-	// Read & store the configuration file
-	//----------------------------------------
-	protected function readConfig() {
-
-		// Check to see if the configuration file exists
-		$configFile = $_SERVER['DOCUMENT_ROOT'].self::CONFIG;
-
-		if(!file_exists($configFile)) {
-
-			throw new InitException('Configuration file not present!');
-		}
-
-
-		// If this is the first time getting the config, try to parse the
-		//	configuration file. The second argument returns a multidimensional
-		//	array based on sections
-		$configDoc = new DOMDocument();
-		$configDoc->load($configFile);
-
-		// If we failed to get the configuration, throw an exception
-		if($configDoc === false) {
-
-			throw new InitException('Unable to parse "'.basename(self::CONFIG).'".');
-		}
-
-		// Get the base configuration node
-		$configNode = $configDoc->documentElement;
-
-		// Parse the configuration file into an associative array, recursively,
-		//	using a anonymous function
-		$parse = function($node) use (&$parse) {
-
-			// If we have children, we will need to start an array and fill it with 
-			//   the child nodes' values, recursively
-			$values = array();
-
-			foreach($node->childNodes as $child) {
-
-				// Recurse through this child if it's an XML element
-				if($child->nodeType == XML_ELEMENT_NODE) {
-					$values[$child->nodeName] = $parse($child);
-				}
-			}
-
-			// If there are no child elements on this node, return its value
-			if(empty($values)) {
-				return $node->nodeValue;
-			}
-
-			// Otherwise, return the child node's values
-			return $values;
-		};
-
-		$config = $parse($configNode);
-
-		// Save the configuration values for later
-		$this->config = $config;
 	}
 
 
@@ -240,7 +148,7 @@ class FlorrieWeb extends Florrie {
 	static public function getThemes() {
 
 		$themes = array();
-		$themesPath = self::THEMES;
+		$themesPath = __DIR__.'/'.self::THEMES;
 
 		// Fetch installed themes
 		$themesDir = dir($themesPath);
