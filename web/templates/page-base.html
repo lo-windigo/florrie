@@ -8,7 +8,7 @@
 	{% for style in styles %}
 	<link rel="stylesheet" type="text/css" href="{{ style }}">
 	{% endfor %}
-	<link rel="stylesheet" type="text/css" href="/florrie/templates/css/layout.css">
+	<link rel="stylesheet" type="text/css" href="/templates/css/layout.css">
 	{% for script in scripts %}
 	<script type="text/javascript" src="{{ script }}"></script>
 	{% endfor %}
@@ -18,8 +18,8 @@
 	<a class="a11y-link" href="#content">Skip to content</a>
 	<header class="header">
 		<div class="site-title">
-			<a href="/">{% if florrie.name is empty %}{{ florrie.name }}{% else
-				%}Florrie{% endif %}</a>
+			<a href="/">{% if florrie.name is empty %}Florrie{% else
+				%}{{ florrie.name }}{% endif %}</a>
 		</div>
 		<nav>
 			<ul class="main-nav">
