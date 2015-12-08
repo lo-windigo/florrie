@@ -136,7 +136,7 @@ abstract class Controller {
 	//----------------------------------------
 	protected function loadModel($name) {
 
-		$modulePath = __DIR__.'/../../florrie/'.Florrie::MODELS.
+		$modulePath = __DIR__.'/../../'.Florrie::MODELS.
 			strtolower($name).'.php';
 		$name .= 'Model';
 
