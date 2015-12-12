@@ -150,7 +150,6 @@ class Florrie {
 		// TODO: Work Ongoing!
 		//	Love,
 		//	- Windigo
-		return;
 	}
 
 

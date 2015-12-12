@@ -20,7 +20,7 @@
 */
 
 
-require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/auth.php';
+require_once __DIR__.'/../lib/auth.php';
 
 
 class UserModel extends BaseModel {
@@ -98,7 +98,7 @@ Q;
 	//----------------------------------------
 	// Delete this module's database tables
 	//----------------------------------------
-	public function delTables() {
+	public function uninstallTables() {
 
 		parent::delTable('users');
 	}

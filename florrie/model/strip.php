@@ -183,9 +183,9 @@ ORDER;
 
 
 	//----------------------------------------
-	// Delete this module's database tables
+	// Remove this module's database tables
 	//----------------------------------------
-	public function delTables() {
+	public function removeTables() {
 
 		parent::delTable('strips');
 	}
