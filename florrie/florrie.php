@@ -143,6 +143,65 @@ class Florrie {
 
 
 	//----------------------------------------
+	// Get a database connection
+	//----------------------------------------
+	static public function getDB() {
+
+		// Check for an existing connection
+		if(isset(self::$db)) {
+
+			// TODO: check for config values!!!
+			// TODO: Also, plug in correct config values!
+			// If not connected, connect & save connection object
+			self::$db = self::connectDB();
+		}
+
+		return self::$db;
+	}
+
+
+	//----------------------------------------
+	// Manually connect to the database
+	//----------------------------------------
+	static public function connectDB($user, $pass, $db, $server, $port) {
+
+		// Compile the db values into a DSN
+		// TODO: Database independent? Let people choose?
+		$dsn = BaseModel::getDSN($db, $server, $port)
+
+		return new PDO($dsn, $user, $pass,
+			// Establish the options for the DB conneciton:
+			// - FETCH_OBJ: return a PHP object from queries
+			// - ERRMODE_EXCEPTION: Throw exceptions on DB errors
+			array(
+				PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,
+				PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
+			);
+	}
+
+
+	//----------------------------------------
+	// Get a model object
+	//----------------------------------------
+	static public function loadModel($name) {
+
+		$modulePath = __DIR__.'/'.self::MODELS.
+			strtolower($name).'.php';
+		$name .= 'Model';
+
+		if(!file_exists($modulePath)) {
+			
+			throw new ServerException('Module does not exist: '.$name);
+		}
+
+		// Create a new module object, and return it
+		require_once $modulePath;
+
+		return new $name($this->db);
+	}
+
+
+	//----------------------------------------
 	// Get any installed plugins
 	//----------------------------------------
 	public function getPlugins()
@@ -171,6 +230,42 @@ class Florrie {
 		{
 			return false;
 		}
+	}
+
+
+	//----------------------------------------
+	// Install Florrie
+	//----------------------------------------
+	static public function install($configs)
+	{
+		// Install the database tables
+		// TODO: Dynamically get modules
+		$models = array();
+
+		$models[] = $userModel = self::loadModel('User');
+		$models[] = $stripModel = self::loadModel('Strip');
+
+		// Install each module's tables
+		foreach($models as $model) {
+			$model->installTables();
+		}
+
+		// Add the administrative user to the system
+		$userModel->addUser(
+			$configs['username'],
+			$configs['desc'],
+			$configs['password']);
+
+		// Some values need to be removed from the array; they're
+		//  redundant or shouldn't be saved in plain text 
+		unset(
+			$configs['username'],
+			$configs['password'],
+			$configs['desc']);
+
+		// Save the configuration
+		$configArray = self::convertToConfigArray($configs);
+		self::saveConfig($configArray);
 	}
 
 
@@ -370,7 +465,7 @@ class Florrie {
 		$configData = $configXML->saveXML();
 
 		// TODO Use file API!
-		return (file_put_contents($_SERVER['DOCUMENT_ROOT'].Florrie::CONFIG,
+		return (file_put_contents($_SERVER['DOCUMENT_ROOT'].self::CONFIG,
 			$configData) > 0);
 	}
 }

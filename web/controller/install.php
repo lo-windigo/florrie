@@ -156,52 +156,14 @@ WRITE;
 
 			try {
 
+				// Process the form submission
 				processFormInput($values);
 
-				// Connect to the database, and save connection
-				$options = array(
-					PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,
-					PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION);
-
-				// Compile the db values into a DSN
-				// TODO: Database independent? Let people choose?
-				$dsn = BaseModel::getDSN(
-					$values['data-db'],
-					$values['data-server'],
-					$values['data-port']);
-
-				$this->db = new PDO($dsn, $values['data-user'],
-					$values['data-pass'], $options);
-
-				// Install the database tables
-				// TODO: Dynamically get modules
-				$userModel = $this->loadModel('User');
-				$stripModel = $this->loadModel('Strip');
-				
-				$userModel->installTables();
-				$stripModel->installTables();
-
-				// Add the administrative user to the system
-				$userModel->addUser(
-					$values['username'],
-				   	$values['desc'],
-					$values['password']);
-
-				// Some values need to be removed from the array; they're
-				//  redundant or shouldn't be saved in plain text 
-				unset(
-					$values['username'],
-					$values['password'],
-					$values['desc']);
-
-				// Save the configuration
-				$configArray = Florrie::convertToConfigArray($values);
-				Florrie::saveConfig($configArray);
+				// Attempt to install Florrie
+				Florrie::install($values);
 
 				// Installation complete; redirect to the homepage
-				// TODO: The homepage SUCKS after install. Maybe send somewhere 
-				//	better?
-				header('Location: /');
+				header('Location: /admin');
 				return;
 			}
 			catch(FormException $error) {
@@ -209,6 +171,12 @@ WRITE;
 				// TODO: Type the right values, damnit!
 				die('Form Error Handling? Maybe later. '.$error->getMessage());
 
+			}
+			// Generic error
+			catch(exception $error) {
+
+				// TODO: actual error message, perhaps
+				die('Generic install error: '.$error->getMessage());
 			}
 		}
 

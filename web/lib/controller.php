@@ -136,6 +136,8 @@ abstract class Controller {
 	//----------------------------------------
 	protected function loadModel($name) {
 
+		echo 'DEPRECATED: Don\'t call loadModel from controller!';
+
 		$modulePath = __DIR__.'/../../'.Florrie::MODELS.
 			strtolower($name).'.php';
 		$name .= 'Model';
