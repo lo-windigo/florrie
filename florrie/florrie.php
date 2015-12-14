@@ -43,7 +43,8 @@ class Florrie {
 
 	// Data members:
 	//  config - The configuration for this controller
-	public $config;
+	//	db     - Stored database connection
+	public $config, $db;
 
 
 	// Set up all of the basic stuff required to run the comic
@@ -106,43 +107,6 @@ class Florrie {
 
 
 	//----------------------------------------
-	// Get the appropriate controller object
-	//----------------------------------------
-	public function getController($controller) {
-
-		// Get the controller path
-		$cPath = $_SERVER['DOCUMENT_ROOT'].self::CONTROLLER;
-
-		// If no controller was specified, use the main controller
-		if(empty($controller)) {
-
-			require $cPath.'main.php';
-
-			return new Main($this->config);
-		}
-
-		// Check the standard Florrie controllers
-		if(file_exists($cPath.strtolower($controller).'.php')) {
-
-			require_once $cPath.strtolower($controller).'.php';
-
-			// Return the new controller
-			return new $controller($this->config);
-		}
-
-		// Plugins! TODO
-//		if(file_exists(self::CONTROLLER.$controller.'.php')) {
-//
-//			return include self::CONTROLLER.$controller.'.php';
-//		}
-
-		// Default to 404
-		throw new NotFoundException('Unknown controller/type. Controller: "'.
-			$controller.'"');
-	}
-
-
-	//----------------------------------------
 	// Get a database connection
 	//----------------------------------------
 	static public function getDB() {
@@ -151,10 +115,13 @@ class Florrie {
 		if(isset(self::$db)) {
 
 			// TODO: check for config values!!!
+			if(empty()) {
+			}
 			// TODO: Also, plug in correct config values!
 			// If not connected, connect & save connection object
 			self::$db = self::connectDB();
 		}
+
 
 		return self::$db;
 	}
