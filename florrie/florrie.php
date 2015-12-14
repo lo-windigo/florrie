@@ -47,12 +47,6 @@ class Florrie {
 	public $config, $db;
 
 
-	// Set up all of the basic stuff required to run the comic
-	public function __construct() {
-
-	}
-
-
 	//----------------------------------------
 	// Test the write permissions
 	//----------------------------------------
@@ -164,14 +158,14 @@ class Florrie {
 		// Create a new module object, and return it
 		require_once $modulePath;
 
-		return new $name($this->db);
+		return new $name(self::getDB());
 	}
 
 
 	//----------------------------------------
 	// Get any installed plugins
 	//----------------------------------------
-	public function getPlugins()
+	static public function getPlugins()
 	{
 		// TODO: Work Ongoing!
 		//	Love,
@@ -182,13 +176,13 @@ class Florrie {
 	//----------------------------------------
 	// Check to see if Florrie's installed
 	//----------------------------------------
-	public function installed()
+	static public function installed()
 	{
 		try
 		{
 			// Attempt to get required components, like configuration files
-			$this->readConfig();
-			$this->getPlugins();
+			self::readConfig();
+			self::getPlugins();
 
 			// If all of these checks occur without issue, then it must be installed!
 			return true;
@@ -206,9 +200,9 @@ class Florrie {
 	static public function install($configs)
 	{
 		// Install the database tables
-		// TODO: Dynamically get modules
 		$models = array();
 
+		// TODO: Dynamically get modules
 		$models[] = $userModel = self::loadModel('User');
 		$models[] = $stripModel = self::loadModel('Strip');
 
@@ -233,18 +227,6 @@ class Florrie {
 		// Save the configuration
 		$configArray = self::convertToConfigArray($configs);
 		self::saveConfig($configArray);
-	}
-
-
-	// Split the URI into usable chunks
-	protected function parseURI() {
-
-		// Sanitize the URL, and trim the leading/trailing slashes
-		$uri = filter_input(INPUT_GET, 'u', FILTER_SANITIZE_URL);
-		$uri = trim($uri, '/');
-
-		// Burst into an array
-		return explode('/', $uri);
 	}
 
 
