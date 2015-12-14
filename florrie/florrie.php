@@ -233,7 +233,7 @@ class Florrie {
 	//----------------------------------------
 	// Read & store the configuration file
 	//----------------------------------------
-	protected function readConfig() {
+	static protected function readConfig() {
 
 		// Check to see if the configuration file exists
 		$configFile = $_SERVER['DOCUMENT_ROOT'].self::CONFIG;
