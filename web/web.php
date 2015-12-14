@@ -42,9 +42,6 @@ class FlorrieWeb extends Florrie {
 	// Set up all of the basic stuff required to run the comic
 	public function __construct() {
 
-		// Call the parent constructor to set up Florrie
-		parent::__construct();
-
 		try {
 
 			// shift the controller type off of the URI variables
