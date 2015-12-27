@@ -19,7 +19,7 @@
 	along with Florrie.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/controller.php';
+require_once __DIR__.'/../lib/controller.php';
 
 class Main extends Controller {
 

@@ -22,8 +22,8 @@
 session_start();
 
 
-require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/controller.php';
-require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/forms.php';
+require_once __DIR__.'/../lib/controller.php';
+require_once __DIR__.'/../lib/forms.php';
 
 
 
