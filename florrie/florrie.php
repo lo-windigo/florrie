@@ -53,47 +53,47 @@ class Florrie {
 	static public function filesWritable() {
 
 		// TODO: Allow for FTP writing as well
-		$config = __DIR__.'/../'.self::CONFIG;
-		$strips = __DIR__.'/../'.self::CONFIG.'test';
+		$configFile = __DIR__.'/../'.self::CONFIG;
+		$stripsFile = __DIR__.'/../'.self::CONFIG.'test';
 		$err = '[filesWriteable] ';
 
 		// Check that the configuration directory is writeable
-		if(!is_writable(dirname($config))) {
+		if(!is_writable(dirname($configFile))) {
 
 			throw new ServerException($err.'Configuration directory ('.
-				dirname($config).') is not writeable');
+				dirname($configFile).') is not writeable');
 		}
 
 		// Check that the configuration file is writeable, whether present or 
 		//	not
-		if(file_exists($config) && !is_writeable($config)) {
+		if(file_exists($configFile) && !is_writeable($configFile)) {
 
 			throw new ServerException($err.'Existing configuration file ('.
-				$config.') is not writeable');
+				$configFile.') is not writeable');
 		}
 		else {
 
-		   	if(file_put_contents($config, 'test file') <= 0) {
+		   	if(file_put_contents($configFile, 'test file') <= 0) {
 
-				throw new ServerException($err.'Configuration file ('.$config.
+				throw new ServerException($err.'Configuration file ('.$configFile.
 					') is not writeable');
 			}
 			else {
 
-				unlink($config);
+				unlink($configFile);
 			}
 		}
 
 		// Check that the strips directory is writeable
-		if(!is_writable(dirname($strips)) ||
-			file_put_contents($strips, 'test file') <= 0) {
+		if(!is_writable(dirname($stripsFile)) ||
+			file_put_contents($stripsFile, 'test file') <= 0) {
 
 			throw new ServerException($err.'Strip directory ('.
-				dirname($strips).') is not writeable');
+				dirname($stripsFile).') is not writeable');
 		}
 		else {
 
-			unlink($strips);
+			unlink($stripsFile);
 		}
 
 		return true;
@@ -236,7 +236,7 @@ class Florrie {
 	static protected function readConfig() {
 
 		// Check to see if the configuration file exists
-		$configFile = $_SERVER['DOCUMENT_ROOT'].self::CONFIG;
+		$configFile = __DIR__.'/../'.self::CONFIG;
 
 		if(!file_exists($configFile)) {
 
@@ -414,8 +414,9 @@ class Florrie {
 		$configData = $configXML->saveXML();
 
 		// TODO Use file API!
-		return (file_put_contents($_SERVER['DOCUMENT_ROOT'].self::CONFIG,
-			$configData) > 0);
+		$configFile = __DIR__.'/../'.self::CONFIG;
+
+		return (file_put_contents($configFile, $configData) > 0);
 	}
 }
 ?>
