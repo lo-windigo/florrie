@@ -1,6 +1,6 @@
 <?php
 /*
-	Controller - Florrie Base Module
+	Error Raising/Logging
 	Copyright © 2015 Jacob Hume
 
 	This file is part of Florrie.
@@ -20,33 +20,111 @@
 */
 
 
+//----------------------------------------
+// Base exception
+// TODO: Log someplace, please
+//----------------------------------------
+
+class FlorrieException extends exception {
+
+	// Class members:
+	// - priority: Numerical priority
+	public $priority;
+
+	// Set up the exception
+	public function __construct($msg, $code=0, $exception=NULL) {
+
+		parent::__construct($msg, $code, $exception);
+
+		// Set a default priority
+		$this->setPriority();
+	}
+
+
+	// Get the priority for this exception
+	public getPriority() {
+		return $this->priority;
+	}
+
+
+	// Set the priority for this exception
+	public setPriority($priority=E_USER_NOTICE) {
+
+		if(is_int($priority)) {
+			$this->priority = $priority;
+		}
+	}
+}
+
+
+//----------------------------------------
+// Custom exceptions
+//----------------------------------------
+
 // Authentication exception
-class AuthException extends exception {
+class AuthException extends FlorrieException {
 
 	// A loggable message, not to be displayed to the user
 	public $secureMessage;
 }
 
 // Database exception
-class DBException extends exception {}
+class DBException extends FlorrieException {
+
+	// Set up the exception
+	public function __construct($msg, $code=0, $exception=NULL) {
+
+		parent::__construct($msg, $code, $exception);
+
+		// Set a default priority
+		$this->setPriority(E_USER_WARNING);
+	}
+
+
+}
+
 
 // Form validation errors
-class FormException extends exception {
+class FormException extends FlorrieException {
 
 	// Contains any and all form data that needs to be passed back
 	public $formData;
 }
 
 // Initialization exception
-class InitException extends exception {}
+class InitException extends FlorrieException {
+
+	// Set up the exception
+	public function __construct($msg, $code=0, $exception=NULL) {
+
+		parent::__construct($msg, $code, $exception);
+
+		// Set a default priority
+		$this->setPriority(E_USER_ERROR);
+	}
+
+
+}
 
 // HTTP404 - file not found
-class NotFoundException extends exception {}
+class NotFoundException extends FlorrieException {}
 
 // Florrie install not present/detected
-class NotInstalledException extends exception {}
+class NotInstalledException extends FlorrieException {}
 
 // An unrecoverable error
-class ServerException extends exception {}
+class ServerException extends FlorrieException {
+
+	// Set up the exception
+	public function __construct($msg, $code=0, $exception=NULL) {
+
+		parent::__construct($msg, $code, $exception);
+
+		// Set a default priority
+		$this->setPriority(E_USER_ERROR);
+	}
+
+
+}
 
 ?>
