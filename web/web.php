@@ -40,16 +40,16 @@ class FlorrieWeb extends Florrie {
 
 
 	// Set up all of the basic stuff required to run the comic
-	public function __construct() {
+	static public function init() {
 
 		try {
 
 			// shift the controller type off of the URI variables
-			$uri = $this->parseURI();
+			$uri = self::parseURI();
 			$type = array_shift($uri);
 
 			// If Florrie hasn't been installed yet, we should probably address that
-			if(!$this->installed() && $type != 'install') {
+			if(!self::installed() && $type != 'install') {
 
 				// Start the Florrie install procedure; redirect to the
 				//	installation page
@@ -58,13 +58,13 @@ class FlorrieWeb extends Florrie {
 			}
 
 			// Get controller object, and route the request
-			$controller = $this->getController($type);
+			$controller = self::getController($type);
 			$controller->route($uri);
 		}
 		// Handle any errors that may have occurred
 		catch (exception $e) {
 
-			$controller = $this->getController('error');
+			$controller = self::getController('error');
 
 			if(get_class($e) === 'NotFoundException') {
 
@@ -99,7 +99,7 @@ class FlorrieWeb extends Florrie {
 		// If no controller was specified, use the main controller
 		if(empty($controller)) {
 
-			require self::CONTROLLER.'main.php';
+			require_once self::CONTROLLER.'main.php';
 
 			return new Main($this->config);
 		}
@@ -130,8 +130,10 @@ class FlorrieWeb extends Florrie {
 	//----------------------------------------
 	protected function parseURI() {
 
-		// Sanitize the URL, and trim the leading/trailing slashes
+		// Sanitize the URL
 		$uri = filter_input(INPUT_GET, 'p', FILTER_SANITIZE_URL);
+
+		// trim the leading/trailing slashes
 		$uri = trim($uri, '/');
 
 		// Burst into an array

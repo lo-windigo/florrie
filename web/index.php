@@ -20,5 +20,5 @@
 */
 
 require 'web.php';
-$florrie = new FlorrieWeb();
+FlorrieWeb::init();
 ?>
