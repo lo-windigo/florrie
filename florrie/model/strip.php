@@ -21,7 +21,7 @@
 
 
 
-require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/model.php';
+require_once __DIR__.'/../lib/model.php';
 
 
 class StripModel extends BaseModel {
@@ -183,9 +183,9 @@ ORDER;
 
 
 	//----------------------------------------
-	// Delete this module's database tables
+	// Remove this module's database tables
 	//----------------------------------------
-	public function delTables() {
+	public function removeTables() {
 
 		parent::delTable('strips');
 	}

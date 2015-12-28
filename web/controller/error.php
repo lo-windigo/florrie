@@ -21,7 +21,7 @@
 
 
 
-require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/controller.php';
+require_once __DIR__.'/../lib/controller.php';
 
 
 class Error extends Controller {
@@ -79,7 +79,7 @@ class Error extends Controller {
 
 		$data = array();
 
-		if($msg !== false && Florrie::DEBUG) {
+		if($msg !== false && FlorrieWeb::DEBUG) {
 
 			$data = array('msg' => $msg);
 		}

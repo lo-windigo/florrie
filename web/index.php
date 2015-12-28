@@ -1,6 +1,6 @@
 <?php
 /*
-	Main Controller
+	Florrie Web Initialization File
 	Copyright © 2015 Jacob Hume
 
 	This file is part of Florrie.
@@ -19,17 +19,6 @@
 	along with Florrie.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/controller.php';
-
-class Main extends Controller {
-
-	// Index page
-	public function index() {
-		
-		$strip = $this->loadModel('Strip');
-		$latest = $strip->getLatest();
-
-		$this->render('index', array('strip' => $latest));
-	}
-}
+require 'web.php';
+FlorrieWeb::init();
 ?>

@@ -20,9 +20,8 @@
 */
 
 
-// Include the exception classes, error handling, and model classes
-require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/error.php';
-require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/model.php';
+// Include the exception classes
+require_once __DIR__.'/../../florrie/lib/model.php';
 
 
 abstract class Controller {
@@ -109,7 +108,7 @@ abstract class Controller {
 	protected function initTemplates() {
 
 		// Include & initialize the Twig templating library
-		require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/twig/lib/Twig/Autoloader.php';
+		require_once 'twig/lib/Twig/Autoloader.php';
 		Twig_Autoloader::register();
 
 		// If there is a theme present, use that folder.
@@ -117,8 +116,10 @@ abstract class Controller {
 		if(!empty($this->config['florrie']) &&
 			!empty($this->config['florrie']['theme'])) {
 
-			$templatePath = Florrie::THEMES.basename($this->config['florrie']['theme']).'/';
-			$templateDir = $_SERVER['DOCUMENT_ROOT'].$templatePath;
+			# TODO This might need to be refactored due to the move
+			$templatePath = FlorrieWeb::THEMES.
+				basename($this->config['florrie']['theme']).'/';
+			$templateDir = __DIR__.'/../'.$templatePath;
 				
 
 			if(is_dir($templateDir)) {
@@ -135,7 +136,9 @@ abstract class Controller {
 	//----------------------------------------
 	protected function loadModel($name) {
 
-		$modulePath = $_SERVER['DOCUMENT_ROOT'].Florrie::MODELS.
+		echo 'DEPRECATED: Don\'t call loadModel from controller!';
+
+		$modulePath = __DIR__.'/../../'.Florrie::MODELS.
 			strtolower($name).'.php';
 		$name .= 'Model';
 
@@ -157,8 +160,7 @@ abstract class Controller {
 	protected function render($templateName, $data = array()) {
 
 		// Set up the template system 
-		$loader = new Twig_Loader_Filesystem($_SERVER['DOCUMENT_ROOT'].
-			Florrie::TEMPLATES);
+		$loader = new Twig_Loader_Filesystem(__DIR__.'/../'.FlorrieWeb::TEMPLATES);
 
 		// Check to make sure the template dir is valid
 		if(!empty($this->themeDir) && realpath($this->themeDir) !== false) {

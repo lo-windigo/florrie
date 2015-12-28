@@ -20,7 +20,7 @@
 */
 
 
-require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/controller.php';
+require_once __DIR__.'/../lib/controller.php';
 
 
 class Strip extends Controller {

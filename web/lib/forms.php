@@ -20,7 +20,7 @@
 */
 
 
-require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/error.php';
+require_once __DIR__.'/../../lib/error.php';
 
 
 //----------------------------------------

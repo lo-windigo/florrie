@@ -20,8 +20,8 @@
 */
 
 
-// Include the exception classes & error handling
-require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/error.php';
+// Include the exception classes
+require_once 'lib/error.php';
 
 
 // Main class - kicks things off, starts the party
@@ -35,22 +35,16 @@ class Florrie {
 	//  MODELS     - System modules
 	//  STRIPS     - Comic strip images
 	//----------------------------------------
-	const CONFIG     = '/config/florrie.cfg';
-	const DEBUG      = true;
-	const MODELS     = '/florrie/model/';
-	const STRIPS     = '/strips/';
+	const CONFIG = 'config/florrie.cfg';
+	const DEBUG  = true;
+	const MODELS = 'florrie/model/';
+	const STRIPS = 'strips/';
 
 
 	// Data members:
 	//  config - The configuration for this controller
-	public $config;
-
-
-	// Set up all of the basic stuff required to run the comic
-	public function __construct() {
-
-		// TODO: What should be initialized in the main class?
-	}
+	//	db     - Stored database connection
+	public $config, $db;
 
 
 	//----------------------------------------
@@ -59,47 +53,47 @@ class Florrie {
 	static public function filesWritable() {
 
 		// TODO: Allow for FTP writing as well
-		$config = $_SERVER['DOCUMENT_ROOT'].self::CONFIG;
-		$strips = $_SERVER['DOCUMENT_ROOT'].'/strips/test';
+		$configFile = __DIR__.'/../'.self::CONFIG;
+		$stripsFile = __DIR__.'/../'.self::CONFIG.'test';
 		$err = '[filesWriteable] ';
 
 		// Check that the configuration directory is writeable
-		if(!is_writable(dirname($config))) {
+		if(!is_writable(dirname($configFile))) {
 
 			throw new ServerException($err.'Configuration directory ('.
-				dirname($config).') is not writeable');
+				dirname($configFile).') is not writeable');
 		}
 
 		// Check that the configuration file is writeable, whether present or 
 		//	not
-		if(file_exists($config) && !is_writeable($config)) {
+		if(file_exists($configFile) && !is_writeable($configFile)) {
 
 			throw new ServerException($err.'Existing configuration file ('.
-				$config.') is not writeable');
+				$configFile.') is not writeable');
 		}
 		else {
 
-		   	if(file_put_contents($config, 'test file') <= 0) {
+		   	if(file_put_contents($configFile, 'test file') <= 0) {
 
-				throw new ServerException($err.'Configuration file ('.$config.
+				throw new ServerException($err.'Configuration file ('.$configFile.
 					') is not writeable');
 			}
 			else {
 
-				unlink($config);
+				unlink($configFile);
 			}
 		}
 
 		// Check that the strips directory is writeable
-		if(!is_writable(dirname($strips)) ||
-			file_put_contents($strips, 'test file') <= 0) {
+		if(!is_writable(dirname($stripsFile)) ||
+			file_put_contents($stripsFile, 'test file') <= 0) {
 
 			throw new ServerException($err.'Strip directory ('.
-				dirname($strips).') is not writeable');
+				dirname($stripsFile).') is not writeable');
 		}
 		else {
 
-			unlink($strips);
+			unlink($stripsFile);
 		}
 
 		return true;
@@ -107,27 +101,88 @@ class Florrie {
 
 
 	//----------------------------------------
+	// Get a database connection
+	//----------------------------------------
+	static public function getDB() {
+
+		// Check for an existing connection
+		if(isset(self::$db)) {
+
+			// TODO: check for config values!!!
+			if(empty()) {
+			}
+			// TODO: Also, plug in correct config values!
+			// If not connected, connect & save connection object
+			self::$db = self::connectDB();
+		}
+
+
+		return self::$db;
+	}
+
+
+	//----------------------------------------
+	// Manually connect to the database
+	//----------------------------------------
+	static public function connectDB($user, $pass, $db, $server, $port) {
+
+		// Compile the db values into a DSN
+		// TODO: Database independent? Let people choose?
+		$dsn = BaseModel::getDSN($db, $server, $port)
+
+		return new PDO($dsn, $user, $pass,
+			// Establish the options for the DB conneciton:
+			// - FETCH_OBJ: return a PHP object from queries
+			// - ERRMODE_EXCEPTION: Throw exceptions on DB errors
+			array(
+				PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,
+				PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
+			);
+	}
+
+
+	//----------------------------------------
+	// Get a model object
+	//----------------------------------------
+	static public function loadModel($name) {
+
+		$modulePath = __DIR__.'/'.self::MODELS.
+			strtolower($name).'.php';
+		$name .= 'Model';
+
+		if(!file_exists($modulePath)) {
+			
+			throw new ServerException('Module does not exist: '.$name);
+		}
+
+		// Create a new module object, and return it
+		require_once $modulePath;
+
+		return new $name(self::getDB());
+	}
+
+
+	//----------------------------------------
 	// Get any installed plugins
 	//----------------------------------------
-	public function getPlugins()
+	static public function getPlugins()
 	{
 		// TODO: Work Ongoing!
 		//	Love,
 		//	- Windigo
-		return;
 	}
 
 
 	//----------------------------------------
 	// Check to see if Florrie's installed
 	//----------------------------------------
-	public function installed()
+	static public function installed()
 	{
 		try
 		{
 			// Attempt to get required components, like configuration files
-			$this->readConfig();
-			$this->getPlugins();
+			self::readConfig();
+			self::getPlugins();
 
 			// If all of these checks occur without issue, then it must be installed!
 			return true;
@@ -140,12 +195,48 @@ class Florrie {
 
 
 	//----------------------------------------
+	// Install Florrie
+	//----------------------------------------
+	static public function install($configs)
+	{
+		// Install the database tables
+		$models = array();
+
+		// TODO: Dynamically get modules
+		$models[] = $userModel = self::loadModel('User');
+		$models[] = $stripModel = self::loadModel('Strip');
+
+		// Install each module's tables
+		foreach($models as $model) {
+			$model->installTables();
+		}
+
+		// Add the administrative user to the system
+		$userModel->addUser(
+			$configs['username'],
+			$configs['desc'],
+			$configs['password']);
+
+		// Some values need to be removed from the array; they're
+		//  redundant or shouldn't be saved in plain text 
+		unset(
+			$configs['username'],
+			$configs['password'],
+			$configs['desc']);
+
+		// Save the configuration
+		$configArray = self::convertToConfigArray($configs);
+		self::saveConfig($configArray);
+	}
+
+
+	//----------------------------------------
 	// Read & store the configuration file
 	//----------------------------------------
-	protected function readConfig() {
+	static protected function readConfig() {
 
 		// Check to see if the configuration file exists
-		$configFile = $_SERVER['DOCUMENT_ROOT'].self::CONFIG;
+		$configFile = __DIR__.'/../'.self::CONFIG;
 
 		if(!file_exists($configFile)) {
 
@@ -323,8 +414,9 @@ class Florrie {
 		$configData = $configXML->saveXML();
 
 		// TODO Use file API!
-		return (file_put_contents($_SERVER['DOCUMENT_ROOT'].Florrie::CONFIG,
-			$configData) > 0);
+		$configFile = __DIR__.'/../'.self::CONFIG;
+
+		return (file_put_contents($configFile, $configData) > 0);
 	}
 }
 ?>

@@ -1,6 +1,6 @@
 <?php
 /*
-	Web Controller Initialization 
+	Main Controller
 	Copyright © 2015 Jacob Hume
 
 	This file is part of Florrie.
@@ -19,7 +19,17 @@
 	along with Florrie.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+require_once __DIR__.'/../lib/controller.php';
 
-require $_SERVER['DOCUMENT_ROOT'].'web/web.php';
-WebController::initialize();
+class Main extends Controller {
+
+	// Index page
+	public function index() {
+		
+		$strip = $this->loadModel('Strip');
+		$latest = $strip->getLatest();
+
+		$this->render('index', array('strip' => $latest));
+	}
+}
 ?>

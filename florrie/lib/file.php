@@ -24,7 +24,7 @@
 // TODO: File context!!
 function fileContext($config) {
 
-	return $_SERVER['DOCUMENT_ROOT'].'/';
+	return realpath(__DIR__.'/../../');
 }
 
 

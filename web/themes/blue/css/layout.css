@@ -4,9 +4,9 @@
 |  `--, |  || .-. ||  .--'|  .--',--.| .-. :
 |  |`   |  |' '-' '|  |   |  |   |  |\   --.
 `--'    `--' `---' `--'   `--'   `--' `----'
-        ---Comic management engine---
+        ---Comic management system---
 
-              System Template
+              Default layout
                by Jacob Hume
 */
 
@@ -23,23 +23,8 @@ a {
 	color: #4c9ed9;
 }
 
-aside {
-	background: #ddd;
-	padding: 1px 1em;
-	margin: 1em 2em;
-}
-
-aside h1 {
-	font-size: 1.1em;
-}
-
 body {
 	margin: 0;
-}
-
-fieldset {
-	border: 3px solid #bbb;
-	margin-bottom: 1em;
 }
 
 h1 {
@@ -51,12 +36,6 @@ html {
 	background: #f8f8f8;
 	color: #000;
 	font-family: sans-serif;
-	height: 100%;
-}
-
-legend {
-	font-size: 1.4em;
-	font-weight: bold;
 }
 
 
@@ -68,7 +47,6 @@ legend {
 	top: -5em;
 }
 
-.c,
 .content>h1,
 .strip,
 .strip-nav {
@@ -87,7 +65,7 @@ legend {
 }
 
 .header {
-	background: #233;
+	background: #03f;
 	box-shadow: inset 0 -.1em 1em #000;
 	margin: -5% -5% 0 -5%;
 	padding: 6% 6% 1em 6%;
@@ -112,10 +90,6 @@ legend {
 	display: inline-block;
 	margin: 0 .5em;
 	padding: .5em .5em .25em .5em;
-}
-
-.page-admin {
-	padding-bottom: 3em;
 }
 
 .site-title a {

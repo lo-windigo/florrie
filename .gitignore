@@ -1,4 +1,4 @@
 florrie.cfg
 strips/*
-themes/*
+web/themes/*
 web/lib/twig/*

@@ -1,6 +1,6 @@
 <?php
 /*
-	Admin Controller
+	New Installation Controller
 	Copyright © 2015 Jacob Hume
 
 	This file is part of Florrie.
@@ -21,8 +21,8 @@
 
 
 
-require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/controller.php';
-require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/forms.php';
+require_once __DIR__.'/../lib/controller.php';
+require_once __DIR__.'/../lib/forms.php';
 
 
 class Install extends Controller {
@@ -75,6 +75,17 @@ Your system does not support ripemd320 hashing; this prevents Florrie from
 generating CSRF tokens. However, IT DOESN'T HAVE TO BE THIS WAY! If you
 encounter this error, file a bug and we can fix it with little effort. Yay!
 RIPE;
+		}
+
+		// Check for MySQL PDO support
+		// TODO: Other database drivers
+		if(!(class_exists('PDO') && in_array('mysql', PDO::getAvailableDrivers()))) {
+
+			$missingRequirements[] = <<<MYSQL
+Your system does not support PDO, and more specifically, the MySQL PDO driver.
+Please make sure this is installed. On Debian/Ubuntu, you can install the
+'php5-mysql' package.
+MYSQL;
 		}
 
 		// Check for the GD functions
@@ -145,52 +156,14 @@ WRITE;
 
 			try {
 
+				// Process the form submission
 				processFormInput($values);
 
-				// Connect to the database, and save connection
-				$options = array(
-					PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,
-					PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION);
-
-				// Compile the db values into a DSN
-				// TODO: Database independent? Let people choose?
-				$dsn = BaseModel::getDSN(
-					$values['data-db'],
-					$values['data-server'],
-					$values['data-port']);
-
-				$this->db = new PDO($dsn, $values['data-user'],
-					$values['data-pass'], $options);
-
-				// Install the database tables
-				// TODO: Dynamically get modules
-				$userModel = $this->loadModel('User');
-				$stripModel = $this->loadModel('Strip');
-				
-				$userModel->installTables();
-				$stripModel->installTables();
-
-				// Add the administrative user to the system
-				$userModel->addUser(
-					$values['username'],
-				   	$values['desc'],
-					$values['password']);
-
-				// Some values need to be removed from the array; they're
-				//  redundant or shouldn't be saved in plain text 
-				unset(
-					$values['username'],
-					$values['password'],
-					$values['desc']);
-
-				// Save the configuration
-				$configArray = Florrie::convertToConfigArray($values);
-				Florrie::saveConfig($configArray);
+				// Attempt to install Florrie
+				Florrie::install($values);
 
 				// Installation complete; redirect to the homepage
-				// TODO: The homepage SUCKS after install. Maybe send somewhere 
-				//	better?
-				header('Location: /');
+				header('Location: /admin');
 				return;
 			}
 			catch(FormException $error) {
@@ -199,6 +172,12 @@ WRITE;
 				die('Form Error Handling? Maybe later. '.$error->getMessage());
 
 			}
+			// Generic error
+			catch(exception $error) {
+
+				// TODO: actual error message, perhaps
+				die('Generic install error: '.$error->getMessage());
+			}
 		}
 
 		$this->render('install', array(
@@ -206,7 +185,7 @@ WRITE;
 			'ftp'             => Florrie::filesWritable()?'false':'true',
 			'recommendations' => $missingRecommends,
 			'scripts'         => array('/florrie/templates/js/install.js'),
-			'themes'          => Florrie::getThemes()
+			'themes'          => FlorrieWeb::getThemes()
 		));
 	}
 
