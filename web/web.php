@@ -38,7 +38,7 @@ class WebController {
 	//----------------------------------------
 	const CONTROLLER = '/controller/';
 	const TEMPLATES  = '/templates/';
-	const THEMES     = '/../themes/';
+	const THEMES     = '/themes/';
 
 
 	//----------------------------------------
