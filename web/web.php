@@ -21,7 +21,7 @@
 
 
 // Include the exception classes & error handling
-require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/lib/error.php';
+require_once __DIR__.'/../florrie/lib/error.php';
 
 
 //----------------------------------------
@@ -36,9 +36,9 @@ class WebController {
 	//  TEMPLATES  - System templates
 	//  THEMES     - User-installable, customizeable templates
 	//----------------------------------------
-	const CONTROLLER = '/florrie/web/';
-	const TEMPLATES  = '/florrie/web/templates/';
-	const THEMES     = '/themes/';
+	const CONTROLLER = '/controller/';
+	const TEMPLATES  = '/templates/';
+	const THEMES     = '/../themes/';
 
 
 	//----------------------------------------
@@ -47,14 +47,14 @@ class WebController {
 	public static function getController($controller) {
 
 		// Get the controller path
-		$cPath = $_SERVER['DOCUMENT_ROOT'].self::CONTROLLER;
+		$cPath = __DIR__.self::CONTROLLER;
 
 		// If no controller was specified, use the main controller
 		if(empty($controller)) {
 
 			require $cPath.'main.php';
 
-			return new Main($this->config);
+			return new Main();
 		}
 
 		// Check the standard Florrie controllers
@@ -63,7 +63,7 @@ class WebController {
 			require_once $cPath.strtolower($controller).'.php';
 
 			// Return the new controller
-			return new $controller($this->config);
+			return new $controller();
 		}
 
 		// Plugins! TODO
@@ -83,7 +83,7 @@ class WebController {
 	//----------------------------------------
 	public static function initialize() {
 
-		require_once $_SERVER['DOCUMENT_ROOT'].'/florrie/florrie.php';
+		require_once __DIR__.'/../florrie/florrie.php';
 
 		// shift the controller type off of the URI variables
 		$uri = self::parseURI();
@@ -91,21 +91,16 @@ class WebController {
 
 		try {
 
-			// Create a new Florrie object
-			$florrie = new Florrie();
-	
 			// Get controller object, and route the request
-			$controller = self::getController($type, $florrie);
+			$controller = self::getController($type);
 			$controller->route($uri);
 		}
 		// If Florrie is not installed, redirect to the installer
 		catch (AuthException $e) {
 
-			// Create a new Florrie object
-			$florrie = new Florrie();
-	
+			// TODO: This is wrong.
 			// Get controller object, and route the request
-			$controller = self::getController($type, $florrie);
+			$controller = self::getController($type);
 			$controller->index();
 		}
 		// If Florrie is not installed, redirect to the installer
@@ -130,23 +125,23 @@ class WebController {
 			if(get_class($e) === 'NotFoundException') {
 
 				// Handle a 404
-				$controller->notFound($e->getMessage());
+				$controller->notFound($e);
 			}
 			else if(get_class($e) === 'ServerException') {
 
 				// Handle a server error
-				$controller->serverError($e->getMessage());
+				$controller->serverError($e);
 			}
 			else if(get_class($e) === 'DBException' ||
 				get_class($e) === 'PDOException') {
 
 				// Properly handle DB connection errors
-				$controller->dbError($e->getMessage());
+				$controller->dbError($e);
 			}
 			else {
 
 				// Properly handle unexpected errors
-				$controller->unknownError($e->getMessage());
+				$controller->unknownError($e);
 			}
 		}
 	}
@@ -158,7 +153,7 @@ class WebController {
 	protected static function parseURI() {
 
 		// Sanitize the URL, and trim the leading/trailing slashes
-		$uri = filter_input(INPUT_GET, 'u', FILTER_SANITIZE_URL);
+		$uri = filter_input(INPUT_GET, 'p', FILTER_SANITIZE_URL);
 		$uri = trim($uri, '/');
 
 		// Burst into an array
@@ -172,7 +167,7 @@ class WebController {
 	static public function getThemes() {
 
 		$themes = array();
-		$themesPath = $_SERVER['DOCUMENT_ROOT'].Florrie::THEMES;
+		$themesPath = __DIR__.self::THEMES;
 
 		// Fetch installed themes
 		$themesDir = dir($themesPath);

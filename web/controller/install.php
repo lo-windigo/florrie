@@ -27,14 +27,17 @@ require_once __DIR__.'/../lib/forms.php';
 
 class Install extends Controller {
 
-	public function __construct($config = null) {
+	public function __construct() {
 
-		if($config === null) {
+		try {
+
+			$config = Florrie::getConfig();
+		}
+		catch(exception $e) {
 
 			$config = array();
 		}
 
-		// If you're installing, there's no config
 		$this->config = $config;
 
 		$this->initTemplates();
@@ -185,7 +188,7 @@ WRITE;
 			'ftp'             => Florrie::filesWritable()?'false':'true',
 			'recommendations' => $missingRecommends,
 			'scripts'         => array('/florrie/templates/js/install.js'),
-			'themes'          => FlorrieWeb::getThemes()
+			'themes'          => WebController::getThemes()
 		));
 	}
 

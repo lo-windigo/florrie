@@ -30,75 +30,17 @@ abstract class Controller {
 	const TEMPLATE_PRE = 'page-';
 
 
-
 	public $db, $config, $themeDir;
 
 
 	//----------------------------------------
 	// Set up a basic controller
 	//----------------------------------------
-	public function __construct($config = null) {
+	public function __construct() {
 
-		if($config === null) {
-
-			$config = array();
-		}
-
-		$this->config = $config;
-
-		$this->initDB();
+		$this->config = Florrie::getConfig();
+		$this->db = Florrie::getDB();
 		$this->initTemplates();
-	}
-
-
-	//----------------------------------------
-	// Initialize the database connection
-	//----------------------------------------
-	public function initDB($config = false) {
-
-		// Verify that we have some configuration values
-		if(!$config) {
-
-			if(empty($this->config)) {
-
-				throw new ServerException('No configuration provided for database initialization');
-			}
-
-			$config = $this->config;
-		}
-
-		// Check the configuration values are present
-		if(empty($config['data']) ||
-			empty($config['data']['server']) ||
-			empty($config['data']['port']) ||
-			empty($config['data']['db']) ||
-			empty($config['data']['user']) ||
-		 	empty($config['data']['pass'])) {
-
-			throw new ServerException('Database configuration values not present');
-		}
-		else {
-
-			// Compile the db values into a DSN
-			// TODO: Database independent? Let people choose?
-			$dsn = BaseModel::getDSN(
-				$config['data']['db'],
-				$config['data']['server'],
-				$config['data']['port']);
-
-			// Attempt to create a connection
-			// - Fetch results as objects
-			// - Throw exceptions when errors occur
-			$options = array(
-				PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,
-				PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION);
-
-			$this->db = new PDO($dsn, $config['data']['user'],
-				$config['data']['pass'], $options);
-
-			// Quit it with the safety nets! Let me juggle flaming chainsaws!
-			$this->db->exec('SET SQL_SAFE_UPDATES=0');
-		}
 	}
 
 
@@ -117,7 +59,7 @@ abstract class Controller {
 			!empty($this->config['florrie']['theme'])) {
 
 			# TODO This might need to be refactored due to the move
-			$templatePath = FlorrieWeb::THEMES.
+			$templatePath = WebController::THEMES.
 				basename($this->config['florrie']['theme']).'/';
 			$templateDir = __DIR__.'/../'.$templatePath;
 				
@@ -132,35 +74,12 @@ abstract class Controller {
 
 
 	//----------------------------------------
-	// Get a model object
-	//----------------------------------------
-	protected function loadModel($name) {
-
-		echo 'DEPRECATED: Don\'t call loadModel from controller!';
-
-		$modulePath = __DIR__.'/../../'.Florrie::MODELS.
-			strtolower($name).'.php';
-		$name .= 'Model';
-
-		if(!file_exists($modulePath)) {
-			
-			throw new ServerException('Module does not exist: '.$name);
-		}
-
-		// Create a new module object, and return it
-		require_once $modulePath;
-
-		return new $name($this->db);
-	}
-
-
-	//----------------------------------------
 	// Render a page and pass it appropriate variables
 	//----------------------------------------
 	protected function render($templateName, $data = array()) {
 
 		// Set up the template system 
-		$loader = new Twig_Loader_Filesystem(__DIR__.'/../'.FlorrieWeb::TEMPLATES);
+		$loader = new Twig_Loader_Filesystem(__DIR__.'/../'.WebController::TEMPLATES);
 
 		// Check to make sure the template dir is valid
 		if(!empty($this->themeDir) && realpath($this->themeDir) !== false) {
@@ -169,10 +88,10 @@ abstract class Controller {
 		}
 
 		$twig = new Twig_Environment($loader);
-// Can be enabled for caching templates
-//			, array(
-//			'cache' => '/path/to/compilation_cache',
-//		)); 
+		// Can be enabled for caching templates
+		//	, array(
+		//	'cache' => '/path/to/compilation_cache',
+		//)); 
 
 		// Load the template requested, and display it
 		$template = $twig->loadTemplate(self::TEMPLATE_PRE.$templateName.

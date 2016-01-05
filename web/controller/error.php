@@ -26,9 +26,13 @@ require_once __DIR__.'/../lib/controller.php';
 
 class Error extends Controller {
 
-	public function __construct($config = null) {
+	public function __construct() {
 
-		if($config === null) {
+		try {
+
+			$config = Florrie::getConfig();
+		}
+		catch(exception $e) {
 
 			$config = array();
 		}
@@ -79,7 +83,7 @@ class Error extends Controller {
 
 		$data = array();
 
-		if($msg !== false && FlorrieWeb::DEBUG) {
+		if($msg !== false && Florrie::DEBUG) {
 
 			$data = array('msg' => $msg);
 		}

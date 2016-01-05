@@ -30,10 +30,10 @@ abstract class BaseModel {
 	//----------------------------------------
 	// Constructor
 	//----------------------------------------
-	public function __construct($db) {
+	public function __construct() {
 
 		// Save the database connection for later
-		$this->db = $db;
+		$this->db = Florrie::getDB();
 	}
 
 

@@ -37,14 +37,32 @@ class Florrie {
 	//----------------------------------------
 	const CONFIG = 'config/florrie.cfg';
 	const DEBUG  = true;
-	const MODELS = 'florrie/model/';
+	const MODELS = '/florrie/model/';
 	const STRIPS = 'strips/';
 
 
 	// Data members:
 	//  config - The configuration for this controller
 	//	db     - Stored database connection
-	public $config, $db;
+	public static $config, $db;
+
+
+	//----------------------------------------
+	// Initialize Florrie
+	//----------------------------------------
+	static public function initialize() {
+
+		try {
+			// Attempt to get required components, like configuration files
+			self::readConfig();
+			self::getPlugins();
+		}
+		// Florrie is missing a core component; it must not be installed
+		catch (exception $e) {
+			throw new NotInstalledException('Florrie initialization failed',
+				null, $e);
+		}
+	}
 
 
 	//----------------------------------------
@@ -106,16 +124,30 @@ class Florrie {
 	static public function getDB() {
 
 		// Check for an existing connection
-		if(isset(self::$db)) {
+		if(!isset(self::$db)) {
 
-			// TODO: check for config values!!!
-			if(empty()) {
+			// Check the configuration values are present
+			$config = self::getConfig();
+
+			if(empty($config['data']) ||
+				empty($config['data']['server']) ||
+				empty($config['data']['port']) ||
+				empty($config['data']['db']) ||
+				empty($config['data']['user']) ||
+				empty($config['data']['pass'])) {
+
+				throw new DBException('Database configuration values not present');
 			}
+
 			// TODO: Also, plug in correct config values!
 			// If not connected, connect & save connection object
-			self::$db = self::connectDB();
+			self::$db = self::connectDB(
+				$config['data']['user'],
+				$config['data']['pass'],
+				$config['data']['db'],
+				$config['data']['server'],
+				$config['data']['port']);
 		}
-
 
 		return self::$db;
 	}
@@ -128,9 +160,10 @@ class Florrie {
 
 		// Compile the db values into a DSN
 		// TODO: Database independent? Let people choose?
-		$dsn = BaseModel::getDSN($db, $server, $port)
+		$dsn = BaseModel::getDSN($db, $server, $port);
 
-		return new PDO($dsn, $user, $pass,
+		// Attempt to connect to the database
+		$db = new PDO($dsn, $user, $pass,
 			// Establish the options for the DB conneciton:
 			// - FETCH_OBJ: return a PHP object from queries
 			// - ERRMODE_EXCEPTION: Throw exceptions on DB errors
@@ -138,6 +171,12 @@ class Florrie {
 				PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,
 				PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
 			);
+
+		// Quit it with the safety nets! Let me juggle flaming chainsaws!
+		// Allows mass updates/deletes with questionably-specific criteria
+		$db->exec('SET SQL_SAFE_UPDATES=0');
+
+		return $db;
 	}
 
 
@@ -146,8 +185,7 @@ class Florrie {
 	//----------------------------------------
 	static public function loadModel($name) {
 
-		$modulePath = __DIR__.'/'.self::MODELS.
-			strtolower($name).'.php';
+		$modulePath = __DIR__.self::MODELS.strtolower($name).'.php';
 		$name .= 'Model';
 
 		if(!file_exists($modulePath)) {
@@ -158,7 +196,7 @@ class Florrie {
 		// Create a new module object, and return it
 		require_once $modulePath;
 
-		return new $name(self::getDB());
+		return new $name();
 	}
 
 
@@ -170,27 +208,6 @@ class Florrie {
 		// TODO: Work Ongoing!
 		//	Love,
 		//	- Windigo
-	}
-
-
-	//----------------------------------------
-	// Check to see if Florrie's installed
-	//----------------------------------------
-	static public function installed()
-	{
-		try
-		{
-			// Attempt to get required components, like configuration files
-			self::readConfig();
-			self::getPlugins();
-
-			// If all of these checks occur without issue, then it must be installed!
-			return true;
-		}
-		catch (exception $e)
-		{
-			return false;
-		}
 	}
 
 
@@ -227,6 +244,20 @@ class Florrie {
 		// Save the configuration
 		$configArray = self::convertToConfigArray($configs);
 		self::saveConfig($configArray);
+	}
+
+
+	//----------------------------------------
+	// Return the configuration array
+	//----------------------------------------
+	static public function getConfig() {
+
+		if(empty(self::$config)) {
+			// Save the configuration values for later
+			self::$config = self::readConfig();
+		}
+
+		return self::$config;
 	}
 
 
@@ -285,9 +316,6 @@ class Florrie {
 		};
 
 		$config = $parse($configNode);
-
-		// Save the configuration values for later
-		$this->config = $config;
 	}
 
 
