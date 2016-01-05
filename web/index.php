@@ -20,5 +20,5 @@
 */
 
 require 'web.php';
-FlorrieWeb::init();
+WebController::init();
 ?>
