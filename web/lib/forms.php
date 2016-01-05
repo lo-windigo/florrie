@@ -19,8 +19,7 @@
 	along with Florrie.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
-require_once __DIR__.'/../../lib/error.php';
+require_once __DIR__.'/../../florrie/lib/error.php';
 
 
 //----------------------------------------
