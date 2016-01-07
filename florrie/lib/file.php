@@ -102,6 +102,11 @@ function processFileUpload($config, $index, $fileDir, $fileName, $fileCheck = fa
 //----------------------------------------
 function resizeImage($config, $filePath) {
 
+	// If gd library isn't installed, don't attempt to resize
+	if(!function_exists('imagecreatefromstring')) {
+		return;
+	}
+
 	// Assemble the full path
 	$fullPath = fileContext($config).$filePath;
 
