@@ -357,7 +357,7 @@ class Admin extends Controller {
 	public function settings() {
 
 		$settings = Florrie::convertToFlatArray($this->config);
-		$themes = Florrie::getThemes();
+		$themes = WebController::getThemes();
 
 		// Process form data if it has been submitted
 		if(submitted()) {
