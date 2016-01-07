@@ -24,7 +24,7 @@
 // TODO: File context!!
 function fileContext($config) {
 
-	return realpath(__DIR__.'/../../');
+	return realpath(__DIR__.'/../..');
 }
 
 
@@ -83,7 +83,7 @@ function processFileUpload($config, $index, $fileDir, $fileName, $fileCheck = fa
 	}
 
 	// Glue the file path together
-	$fullPath = fileContext($config).$fileDir.'/'.$fileName;
+	$fullPath = fileContext($config).$fileDir.$fileName;
 
 	// Move file to it's final location
 	// TODO: Does this work with the FTP wrapper? I friggin' hope so.
