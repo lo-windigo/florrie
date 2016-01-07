@@ -169,24 +169,29 @@ class WebController {
 		$themes = array();
 		$themesPath = __DIR__.self::THEMES;
 
-		// Fetch installed themes
+		// Fetch installed themes by looping through the theme directory
 		$themesDir = dir($themesPath);
 
 		while(false !== ($dir = $themesDir->read())) {
 
-			$themeDir = $themesPath.'/'.$dir;
-			$themeInfoFile = $themeDir.'/theme.ini';
+			// Filter out any hidden directories, and the dot entries (. and ..)
+			if(!(substr($dir, 0, 1) === '.')) {
 
-			if(is_dir($themeDir) && file_exists($themeInfoFile)) {
+				$themeDir = $themesPath.$dir;
+				$themeInfoFile = $themeDir.'/theme.ini';
 
-				$theme = parse_ini_file($themeInfoFile);
+				if(is_dir($themeDir) && file_exists($themeInfoFile)) {
 
-				if(!empty($theme['name'])) {
+					$theme = parse_ini_file($themeInfoFile);
 
-					$theme['dir'] = $dir;
+					if(!empty($theme['name'])) {
 
-					// TODO: Validate escaping
-					$themes[] = htmlentities($theme);
+						// TODO: Decent escaping and stuff
+						$theme['name'] = htmlentities($theme['name']);
+						$theme['dir'] = $dir;
+
+						$themes[] = $theme;
+					}
 				}
 			}
 		}

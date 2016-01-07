@@ -29,11 +29,11 @@ require_once __DIR__.'/../lib/forms.php';
 
 class Login extends Controller {
 
-	public function __construct($config) {
+	public function __construct() {
 
-		parent::__construct($config);
+		parent::__construct();
 
-		$this->model = $this->loadModel('User');
+		$this->model = Florrie::loadModel('User');
 	}
 
 
@@ -76,7 +76,7 @@ class Login extends Controller {
 					$page = $_SESSION['page-attempted'];
 				}
 
-				header('Location: '.$this->config['florrie']['url'].);
+				header('Location: '.$this->config['florrie']['url']);
 				return;
 			}
 			catch (FormException $e) {

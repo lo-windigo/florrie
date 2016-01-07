@@ -179,7 +179,7 @@ WRITE;
 			catch(exception $error) {
 
 				// TODO: actual error message, perhaps
-				die('Generic install error: '.$error->getMessage());
+				die('Generic install error: '.$error);
 			}
 		}
 

@@ -26,7 +26,7 @@ class Main extends Controller {
 	// Index page
 	public function index() {
 		
-		$strip = $this->loadModel('Strip');
+		$strip = Florrie::loadModel('Strip');
 		$latest = $strip->getLatest();
 
 		$this->render('index', array('strip' => $latest));

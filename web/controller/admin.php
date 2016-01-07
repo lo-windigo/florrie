@@ -31,20 +31,20 @@ require_once __DIR__.'/../lib/forms.php';
 class Admin extends Controller {
 
 
-	public function __construct($config) {
+	public function __construct() {
 
 		// Check for user credentials
 		if(empty($_SESSION['user'])) {
 
 			// TODO: Save page user was attempting to visit
-			$_SESSION['page-attempted']] = $_SERVER[''];
+			$_SESSION['page-attempted'] = filter_input(INPUT_GET, 'p', FILTER_SANITIZE_URL);
 
 			// Users must be logged in!
 			header('Location: /login', true, 307);
 			exit;
 		}
 
-		parent::__construct($config);
+		parent::__construct();
 	}
 
 
@@ -166,7 +166,7 @@ class Admin extends Controller {
 				processFormInput($values);
 
 				// Create a slug for this comic
-				$userModel = $this->loadModel('user');
+				$userModel = Florrie::loadModel('user');
 
 				// Add the new strip
 				$userModel->addUser($values);
@@ -455,7 +455,7 @@ class Admin extends Controller {
 	//----------------------------------------
 	public function users() {
 
-		$userModel = $this->loadModel('user');
+		$userModel = Florrie::loadModel('user');
 		$users = $userModel->getUsers();
 
 		$this->render('admin-users', array(
@@ -476,7 +476,7 @@ class Admin extends Controller {
 	protected function getStripModel() {
 
 		// Create a slug for this comic
-		$stripModel = $this->loadModel('strip');
+		$stripModel = Florrie::loadModel('strip');
 		$stripModel->unpublished = true;
 
 		return $stripModel;

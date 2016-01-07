@@ -31,11 +31,11 @@ class Feed extends Controller {
 	const TEMPLATE_PRE = 'feed-';
 
 	// Constructor
-	public function __construct($config) {
+	public function __construct() {
 
-		parent::__construct($config);
+		parent::__construct();
 
-		$this->model = $this->loadModel('Strip');
+		$this->model = Florrie::loadModel('Strip');
 	}
 
 

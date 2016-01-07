@@ -25,11 +25,11 @@ require_once __DIR__.'/../lib/controller.php';
 
 class Strip extends Controller {
 
-	public function __construct($config) {
+	public function __construct() {
 
-		parent::__construct($config);
+		parent::__construct();
 
-		$this->model = $this->loadModel('Strip');
+		$this->model = Florrie::loadModel('Strip');
 	}
 
 

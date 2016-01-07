@@ -35,10 +35,10 @@ class Florrie {
 	//  MODELS     - System modules
 	//  STRIPS     - Comic strip images
 	//----------------------------------------
-	const CONFIG = 'config/florrie.cfg';
+	const CONFIG = '/../config/florrie.cfg';
 	const DEBUG  = true;
-	const MODELS = '/florrie/model/';
-	const STRIPS = 'strips/';
+	const MODELS = '/model/';
+	const STRIPS = '/strips/';
 
 
 	// Data members:
@@ -54,7 +54,7 @@ class Florrie {
 
 		try {
 			// Attempt to get required components, like configuration files
-			self::readConfig();
+			self::getConfig();
 			self::getPlugins();
 		}
 		// Florrie is missing a core component; it must not be installed
@@ -71,8 +71,8 @@ class Florrie {
 	static public function filesWritable() {
 
 		// TODO: Allow for FTP writing as well
-		$configFile = __DIR__.'/../'.self::CONFIG;
-		$stripsFile = __DIR__.'/../'.self::CONFIG.'test';
+		$configFile = __DIR__.self::CONFIG;
+		$stripsFile = __DIR__.self::CONFIG.'test';
 		$err = '[filesWriteable] ';
 
 		// Check that the configuration directory is writeable
@@ -216,6 +216,10 @@ class Florrie {
 	//----------------------------------------
 	static public function install($configs)
 	{
+		// Set the config values
+		$configArray = self::convertToConfigArray($configs);
+		self::$config = $configArray;
+
 		// Install the database tables
 		$models = array();
 
@@ -242,7 +246,6 @@ class Florrie {
 			$configs['desc']);
 
 		// Save the configuration
-		$configArray = self::convertToConfigArray($configs);
 		self::saveConfig($configArray);
 	}
 
@@ -253,6 +256,7 @@ class Florrie {
 	static public function getConfig() {
 
 		if(empty(self::$config)) {
+
 			// Save the configuration values for later
 			self::$config = self::readConfig();
 		}
@@ -267,7 +271,7 @@ class Florrie {
 	static protected function readConfig() {
 
 		// Check to see if the configuration file exists
-		$configFile = __DIR__.'/../'.self::CONFIG;
+		$configFile = __DIR__.self::CONFIG;
 
 		if(!file_exists($configFile)) {
 
@@ -315,7 +319,7 @@ class Florrie {
 			return $values;
 		};
 
-		$config = $parse($configNode);
+		return $parse($configNode);
 	}
 
 
@@ -442,7 +446,7 @@ class Florrie {
 		$configData = $configXML->saveXML();
 
 		// TODO Use file API!
-		$configFile = __DIR__.'/../'.self::CONFIG;
+		$configFile = __DIR__.self::CONFIG;
 
 		return (file_put_contents($configFile, $configData) > 0);
 	}
