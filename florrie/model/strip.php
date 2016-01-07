@@ -340,13 +340,14 @@ Q;
 SELECT
 	display, id, img, item_order, posted, slug, title
 FROM strips
-ORDER BY item_order
 Q;
 
 		// Include unpublished strips, if specified
 		if(!$this->unpublished) {
-			$q .= ' WHERE posted < NOW() ';
+			$q .= ' WHERE posted < NOW()';
 		}
+
+		$q .= "\nORDER BY item_order";
 
 		$statement = $this->db->prepare($q);
 		$statement->execute();
