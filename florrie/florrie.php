@@ -24,7 +24,10 @@
 require_once 'lib/error.php';
 
 
-// Main class - kicks things off, starts the party
+//----------------------------------------
+// Core Florrie class
+//----------------------------------------
+
 class Florrie {
 
 	//----------------------------------------
@@ -83,7 +86,7 @@ class Florrie {
 		}
 
 		// Check that the configuration file is writeable, whether present or 
-		//	not
+		// not
 		if(file_exists($configFile) && !is_writeable($configFile)) {
 
 			throw new ServerException($err.'Existing configuration file ('.
