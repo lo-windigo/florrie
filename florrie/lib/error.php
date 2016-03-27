@@ -22,7 +22,6 @@
 
 //----------------------------------------
 // Base exception
-// TODO: Log someplace, please
 //----------------------------------------
 
 class FlorrieException extends exception {
@@ -38,6 +37,9 @@ class FlorrieException extends exception {
 
 		// Set a default priority
 		$this->setPriority();
+
+		// Handle error logging
+
 	}
 
 
@@ -123,8 +125,6 @@ class ServerException extends FlorrieException {
 		// Set a default priority
 		$this->setPriority(E_USER_ERROR);
 	}
-
-
 }
 
 ?>
