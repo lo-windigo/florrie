@@ -55,16 +55,17 @@ class Florrie {
 	//----------------------------------------
 	static public function initialize() {
 
-		try {
+		self::$config = array();
+		//try {
 			// Attempt to get required components, like configuration files
-			self::getConfig();
+			self::loadConfig();
 			self::getPlugins();
-		}
+		//}
 		// Florrie is missing a core component; it must not be installed
-		catch (exception $e) {
-			throw new NotInstalledException('Florrie initialization failed',
-				null, $e);
-		}
+		//catch (exception $e) {
+		//	throw new NotInstalledException('Florrie initialization failed',
+		//		null, $e);
+		//}
 	}
 
 
@@ -258,12 +259,6 @@ class Florrie {
 	//----------------------------------------
 	static public function getConfig() {
 
-		if(empty(self::$config)) {
-
-			// Save the configuration values for later
-			self::$config = self::readConfig();
-		}
-
 		return self::$config;
 	}
 
@@ -271,14 +266,14 @@ class Florrie {
 	//----------------------------------------
 	// Read & store the configuration file
 	//----------------------------------------
-	static protected function readConfig() {
+	static protected function loadConfig() {
 
 		// Check to see if the configuration file exists
 		$configFile = __DIR__.self::CONFIG;
 
 		if(!file_exists($configFile)) {
 
-			throw new InitException('Configuration file not present!');
+			throw new NotInstalledException('Configuration file not present!');
 		}
 
 
@@ -322,7 +317,7 @@ class Florrie {
 			return $values;
 		};
 
-		return $parse($configNode);
+		self::$config = $parse($configNode);
 	}
 
 

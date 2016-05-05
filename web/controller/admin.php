@@ -28,7 +28,7 @@ require_once __DIR__.'/../lib/forms.php';
 
 
 
-class Admin extends Controller {
+class Admin extends WebController {
 
 
 	public function __construct() {

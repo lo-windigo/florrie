@@ -21,25 +21,27 @@
 
 
 // Include the exception classes & error handling
-require_once __DIR__.'/../florrie/lib/error.php';
+require_once __DIR__.'/../florrie/florrie.php';
 
 
 //----------------------------------------
 // Main class - kicks things off, starts the party
 //----------------------------------------
-class WebController {
+class WebModule {
 
 	//----------------------------------------
 	// Class Constants
 	//
-	//  CONTROLLER - Main controllers
-	//  TEMPLATES  - System templates
-	//  THEMES     - User-installable, customizeable templates
+	//  CONTROLLER   - Main controllers
+	//  TEMPLATES    - System templates
+	//  THEMES       - User-installable, customizeable templates
 	//----------------------------------------
 	const CONTROLLER = '/controller/';
 	const TEMPLATES  = '/templates/';
 	const THEMES     = '/themes/';
 
+
+	public static $themeDir;
 
 	//----------------------------------------
 	// Get the appropriate controller object
@@ -83,17 +85,32 @@ class WebController {
 	//----------------------------------------
 	public static function initialize() {
 
-		require_once __DIR__.'/../florrie/florrie.php';
-
 		// shift the controller type off of the URI variables
 		$uri = self::parseURI();
 		$type = array_shift($uri);
 
+
+		// Set up the template system
 		try {
+			self::initTemplates();
+		}
+		catch (InitException $e) {
+
+			if(Florrie::DEBUG) {
+				echo $e;
+			}
+
+			// TODO: Any nicer way to do this?
+			die('Cannot load template library. Did you use "git submodule init"?');
+		}
+
+
+		try {
+			// Initialize Florrie
+			Florrie::initialize();
 
 			// Get controller object, and route the request
 			$controller = self::getController($type);
-			$controller->route($uri);
 		}
 		// If Florrie is not installed, redirect to the installer
 		catch (AuthException $e) {
@@ -101,7 +118,6 @@ class WebController {
 			// TODO: This is wrong.
 			// Get controller object, and route the request
 			$controller = self::getController($type);
-			$controller->index();
 		}
 		// If Florrie is not installed, redirect to the installer
 		catch (NotInstalledException $e) {
@@ -142,6 +158,48 @@ class WebController {
 
 				// Properly handle unexpected errors
 				$controller->unknownError($e);
+			}
+		}
+
+		if(!empty($controller) && $controller instanceof WebController) {
+			$controller->route($uri);
+		}
+		else {
+			// TODO: log, explain, etc
+			echo 'No controller available.';
+		}
+	}
+
+
+	//----------------------------------------
+	// Set up the templating system
+	//----------------------------------------
+	protected static function initTemplates() {
+
+		// Include & initialize the Twig templating library
+		if(!(include_once __DIR__.'/lib/twig/lib/Twig/Autoloader.php')) {
+
+			throw new InitException('Twig libraries not successfully loaded');
+		}
+
+		Twig_Autoloader::register();
+
+		// If there is a theme present, use that folder.
+		// Use basename to prevent directory traversal.
+		$config = Florrie::getConfig();
+
+		if(!empty($config['florrie']) && !empty($config['florrie']['theme'])) {
+
+			# TODO This might need to be refactored due to the move
+			$templatePath = Controller::THEMES.
+				basename($config['florrie']['theme']).'/';
+			$templateDir = __DIR__.'/../'.$templatePath;
+				
+
+			if(is_dir($templateDir)) {
+
+				self::$themeDir = $templateDir;
+				$config['florrie']['themedir'] = $templatePath; 
 			}
 		}
 	}

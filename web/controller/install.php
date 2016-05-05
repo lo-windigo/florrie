@@ -25,30 +25,15 @@ require_once __DIR__.'/../lib/controller.php';
 require_once __DIR__.'/../lib/forms.php';
 
 
-class Install extends Controller {
-
-	public function __construct() {
-
-		try {
-
-			$config = Florrie::getConfig();
-		}
-		catch(exception $e) {
-
-			$config = array();
-		}
-
-		$this->config = $config;
-
-		$this->initTemplates();
-	}
-
+class Install extends WebController {
 
 	// Route the various steps of the installation
-	public function index() {
+	public static function index() {
+
+		$config = Florrie::getConfig();
 
 		// Check for a previous install
-		if(!(empty($this->config) || empty($this->config['florrie']))) {
+		if(!(empty($config) || empty($config['florrie']))) {
 
 			$e = 'The install page cannot be accessed if '.
 				'Florrie has already been installed';
@@ -91,7 +76,7 @@ Please make sure this is installed. On Debian/Ubuntu, you can install the
 MYSQL;
 		}
 
-		// Check for the GD functions
+		// Check for the GD static functions
 		// TODO: Technically only required to resize images. Maybe make it optional?
 		if(!function_exists('imagecreatefromstring')) {
 
@@ -101,7 +86,7 @@ sure this library is installed.
 GD;
 		}
 
-		// Use OpenSSL functions to generate salt
+		// Use OpenSSL static functions to generate salt
 		if(!function_exists('openssl_random_pseudo_bytes')) {
 
 			$missingRecommends[] = <<<OPENSSL
@@ -120,21 +105,21 @@ WRITE;
 
 		if(empty($missingRequirements)) {
 
-			$this->install($missingRecommends);
+			self::installFlorrie($missingRecommends);
 		}
 		else {
 
-			$this->requirements($missingRequirements, $missingRecommends);
+			self::requirements($missingRequirements, $missingRecommends);
 		}
 	}
 
 
 	//----------------------------------------
-	// Internal controller functions
+	// Internal controller static functions
 	//----------------------------------------
 
 	// Handle a Florrie installation via HTML form
-	protected function install($missingRecommends) {
+	protected static function installFlorrie($missingRecommends) {
 
 		// Defaults go here
 		$values = array(
@@ -183,20 +168,20 @@ WRITE;
 			}
 		}
 
-		$this->render('install', array(
+		self::render('install', array(
 			'data'            => $values,
 			'ftp'             => Florrie::filesWritable()?'false':'true',
 			'recommendations' => $missingRecommends,
 			'scripts'         => array('/florrie/templates/js/install.js'),
-			'themes'          => WebController::getThemes()
+			'themes'          => WebModule::getThemes()
 		));
 	}
 
 
 	// Display the requirements for Florrie, if they are not met
-	protected function requirements($missingRequirements, $missingRecommends) {
+	protected static function requirements($missingRequirements, $missingRecommends) {
 
-		$this->render('requirements', array(
+		self::render('requirements', array(
 			'recommendations' => $missingRecommends,
 			'requirements'    => $missingRequirements,
 		));

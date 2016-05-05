@@ -23,7 +23,7 @@
 require_once __DIR__.'/../lib/controller.php';
 
 
-class Strip extends Controller {
+class Strip extends WebController {
 
 	public function __construct() {
 

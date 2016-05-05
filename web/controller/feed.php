@@ -24,7 +24,7 @@
 require_once __DIR__.'/../lib/controller.php';
 
 
-class Feed extends Controller {
+class Feed extends WebController {
 
 	// Override the usual html template extension
 	const TEMPLATE_EXT = '.xml';

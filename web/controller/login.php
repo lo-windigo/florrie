@@ -27,7 +27,7 @@ require_once __DIR__.'/../lib/forms.php';
 
 
 
-class Login extends Controller {
+class Login extends WebController {
 
 	public function __construct() {
 

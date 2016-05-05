@@ -21,7 +21,7 @@
 
 require_once __DIR__.'/../lib/controller.php';
 
-class Main extends Controller {
+class Main extends WebController {
 
 	// Index page
 	public function index() {

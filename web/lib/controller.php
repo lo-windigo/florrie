@@ -1,6 +1,6 @@
 <?php
 /*
-	Abstract Controller Class
+	Abstract View Class
 	Copyright © 2015 Jacob Hume
 
 	This file is part of Florrie.
@@ -24,17 +24,17 @@
 require_once __DIR__.'/../../florrie/florrie.php';
 
 
-abstract class Controller {
+abstract class WebController {
+
 
 	//----------------------------------------
-	// Template prefix and extensions
+	// Class Constants
+	//
+	//  TEMPLATE_EXT - File extension for templates
+	//  TEMPLATE_PRE - Prefix for template files
 	//----------------------------------------
 	const TEMPLATE_EXT = '.html';
 	const TEMPLATE_PRE = 'page-';
-
-
-	public $themeDir;
-
 
 
 	//----------------------------------------
@@ -42,42 +42,6 @@ abstract class Controller {
 	//----------------------------------------
 	public static function initialize() {
 
-		// Initialize Florrie
-		Florrie::initialize();
-		self::initTemplates();
-	}
-
-
-	//----------------------------------------
-	// Set up the templating system
-	//----------------------------------------
-	protected static function initTemplates() {
-
-		// Include & initialize the Twig templating library
-		if( ! ( include_once 'twig/lib/Twig/Autoloader.php' ) ) {
-
-			throw new InitException('Twig libraries not successfully loaded');
-		}
-		Twig_Autoloader::register();
-
-		// If there is a theme present, use that folder.
-		// Use basename to prevent directory traversal.
-		$config = Florrie::getConfig();
-
-		if(!empty($config['florrie']) && !empty($config['florrie']['theme'])) {
-
-			# TODO This might need to be refactored due to the move
-			$templatePath = Controller::THEMES.
-				basename($config['florrie']['theme']).'/';
-			$templateDir = __DIR__.'/../'.$templatePath;
-				
-
-			if(is_dir($templateDir)) {
-
-				self::themeDir = $templateDir;
-				$config['florrie']['themedir'] = $templatePath; 
-			}
-		}
 	}
 
 
@@ -87,12 +51,12 @@ abstract class Controller {
 	protected function render($templateName, $data = array()) {
 
 		// Set up the template system 
-		$loader = new Twig_Loader_Filesystem(__DIR__.'/../'.Controller::TEMPLATES);
+		$loader = new Twig_Loader_Filesystem(__DIR__.'/../'.WebModule::TEMPLATES);
 
 		// Check to make sure the template dir is valid
-		if(!empty(self::themeDir) && realpath(self::themeDir) !== false) {
+		if(!empty(self::$themeDir) && realpath(self::$themeDir) !== false) {
 
-			$loader->prependPath(realpath(self::themeDir));
+			$loader->prependPath(realpath(self::$themeDir));
 		}
 
 		$twig = new Twig_Environment($loader);
@@ -105,7 +69,7 @@ abstract class Controller {
 		$template = $twig->loadTemplate(self::TEMPLATE_PRE.$templateName.
 			self::TEMPLATE_EXT);
 
-		$template->display(array_merge(self::config, $data));
+		$template->display(array_merge(Florrie::getConfig(), $data));
 	}
 
 
@@ -118,7 +82,7 @@ abstract class Controller {
 		// If there is no additional URI data, show the main index
 		if(empty($uriArray)) {
 
-			return self::index();
+			return static::index();
 		}
 
 		// Verify we were sent in a URI array
@@ -134,7 +98,7 @@ abstract class Controller {
 			throw new NotFoundException('Controller: No route for this URI');
 		}
 
-		call_user_func_array(array(self, $view), $uriArray);
+		call_user_func_array("static::${view}", $uriArray);
 	}
 }
 ?>
