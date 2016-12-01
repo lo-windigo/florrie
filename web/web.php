@@ -20,8 +20,8 @@
 */
 
 
-// Include the exception classes & error handling
-require_once __DIR__.'/../florrie/lib/error.php';
+// Include the main florrie module
+require_once __DIR__.'/../florrie/florrie.php';
 
 
 //----------------------------------------
@@ -83,13 +83,13 @@ class WebController {
 	//----------------------------------------
 	public static function initialize() {
 
-		require_once __DIR__.'/../florrie/florrie.php';
-
 		// shift the controller type off of the URI variables
 		$uri = self::parseURI();
 		$type = array_shift($uri);
 
 		try {
+			// Initialize florrie
+			Florrie::initialize();
 
 			// Get controller object, and route the request
 			$controller = self::getController($type);
@@ -116,6 +116,7 @@ class WebController {
 			}
 
 			$controller = self::getController('install');
+			$controller->index();
 		}
 		// Handle the generic error cases (404, 500, etc)
 		catch (exception $e) {
