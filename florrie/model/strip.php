@@ -380,12 +380,12 @@ CREATE TABLE strips
 (
 	id INT NOT NULL AUTO_INCREMENT,
 	title VARCHAR(500),
-	slug VARCHAR(500),
+	slug VARCHAR(100) UNIQUE,
 	display TEXT,
 	img VARCHAR(200) NOT NULL,
 	item_order INT NOT NULL,
 	posted DATETIME NOT NULL,
-	PRIMARY KEY(id, slug)
+	PRIMARY KEY(id)
 )
 Q;
 
