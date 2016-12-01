@@ -3,12 +3,5 @@
 {% block title %}{{ name }}{% endblock %}
 
 {% block content %}
-		{% include 'block-strip.html' with
-		{
-			'img': strip.img,
-			'title': strip.title,
-			'prev': strip.prev,
-			'next': strip.next,
-			'posted': strip.posted
-		} %}
+	{{ include('block-strip.html') }}
 {% endblock %}

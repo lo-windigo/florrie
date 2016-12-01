@@ -1,11 +1,11 @@
 {% import "macro-nav.html" as nav %}
 
 		<h1 class="content-title">
-			{{ title ?: posted|date("l, F jS, Y") }}
+			{{ strip.title ?: strip.posted|date("l, F jS, Y") }}
 		</h1>
 		<ul class="strip-nav">
-		{% if next is empty %}
-			{% if prev is empty %}
+		{% if strip.next is empty %}
+			{% if strip.prev is empty %}
 
 				{{ nav.first("disabled") }}
 				{{ nav.prev("disabled") }}
@@ -16,18 +16,18 @@
 			{% else %}
 
 				{{ nav.first() }}
-				{{ nav.prev('', prev) }}
+				{{ nav.prev('', strip.prev) }}
 				{{ nav.random() }}
 				{{ nav.next("disabled") }}
 				{{ nav.latest("disabled") }}
 
 			{% endif %}
-		{% elseif prev is not empty %}
+		{% elseif strip.prev is not empty %}
 
 				{{ nav.first() }}
-				{{ nav.prev('', prev) }}
+				{{ nav.prev('', strip.prev) }}
 				{{ nav.random() }}
-				{{ nav.next('', next) }}
+				{{ nav.next('', strip.next) }}
 				{{ nav.latest() }}
 
 		{% else %}
@@ -35,16 +35,16 @@
 				{{ nav.first("disabled") }}
 				{{ nav.prev("disabled") }}
 				{{ nav.random() }}
-				{{ nav.next('', next) }}
+				{{ nav.next('', strip.next) }}
 				{{ nav.latest() }}
 
 		{% endif %}
 		</ul>
 		<p class="strip">
-			{% if img is defined %}
-			<img src="{{ img }}"
-				{% if title is defined %}title="{{ title }}"{% endif %}
-				{% if desc is defined %}alt="{{ desc }}"{% endif %}>
+			{% if strip %}
+			<img src="{{ strip.imgPath }}"
+				{% if strip.title %}title="{{ strip.title }}"{% endif %}
+				{% if strip.desc %}alt="{{ strip.desc }}"{% endif %}>
 			{% else %}
 			<p>
 				No strips have been uploaded.
@@ -52,8 +52,8 @@
 			{% endif %}
 		</p>
 		<ul class="strip-nav">
-		{% if next is empty %}
-			{% if prev is empty %}
+		{% if strip.next is empty %}
+			{% if strip.prev is empty %}
 
 				{{ nav.first("disabled") }}
 				{{ nav.prev("disabled") }}
@@ -64,7 +64,7 @@
 			{% else %}
 
 				{{ nav.first() }}
-				{{ nav.prev('', prev) }}
+				{{ nav.prev('', strip.prev) }}
 				{{ nav.random() }}
 				{{ nav.next("disabled") }}
 				{{ nav.latest("disabled") }}
@@ -73,9 +73,9 @@
 		{% elseif prev is not empty %}
 
 				{{ nav.first() }}
-				{{ nav.prev('', prev) }}
+				{{ nav.prev('', strip.prev) }}
 				{{ nav.random() }}
-				{{ nav.next('', next) }}
+				{{ nav.next('', strip.next) }}
 				{{ nav.latest() }}
 
 		{% else %}
@@ -83,7 +83,7 @@
 				{{ nav.first("disabled") }}
 				{{ nav.prev("disabled") }}
 				{{ nav.random() }}
-				{{ nav.next('', next) }}
+				{{ nav.next('', strip.next) }}
 				{{ nav.latest() }}
 
 		{% endif %}
