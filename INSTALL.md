@@ -13,12 +13,14 @@ Installing
 To install Florrie, you can clone it straight from the source! The following
 command will work if you have shell access to your host:
 
-git clone git:// (TODO - get URL!)
+git clone https:// (TODO - get URL!)
+git submodule init
+git submodule update
 
 After you have a copy of the source code, make sure your web server can write to
 the following directories:
 
-- config
+- config (TODO: Not created upon git pull!)
 - strips
 
 From there, you should be able to continue with the install process by simply

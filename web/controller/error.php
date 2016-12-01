@@ -24,7 +24,7 @@
 require_once __DIR__.'/../lib/controller.php';
 
 
-class Error extends Controller {
+class Error extends WebController {
 
 	public function __construct() {
 

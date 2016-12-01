@@ -20,5 +20,5 @@
 */
 
 require 'web.php';
-WebController::initialize();
+WebModule::initialize();
 ?>
