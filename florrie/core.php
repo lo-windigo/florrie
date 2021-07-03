@@ -38,6 +38,6 @@ function FlorrieAutoloader(string $class): void
 	$namespace = substr($class, 0, $firstSlash);
 
 	if($namespace === 'Florrie') {
-		require __DIR__ . substr($class, $firstSlash + 1) . '.php';
+		require __DIR__ . '/lib/' . substr($class, $firstSlash + 1) . '.php';
 	}
 }
