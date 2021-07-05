@@ -1,7 +1,7 @@
 <?php
 /*
-	Controller - Florrie Base Module
-	Copyright © 2015 Jacob Hume
+	FormException - Florrie Base Module
+	Copyright © 2021 Jacob Hume
 
 	This file is part of Florrie.
 
@@ -20,33 +20,10 @@
 */
 
 
-// Authentication exception
-class AuthException extends exception {
-
-	// A loggable message, not to be displayed to the user
-	public $secureMessage;
-}
-
-// Database exception
-class DBException extends exception {}
-
 // Form validation errors
-class FormException extends exception {
+class FormException extends Exception {
 
 	// Contains any and all form data that needs to be passed back
 	public $formData;
 }
 
-// Initialization exception
-class InitException extends exception {}
-
-// HTTP404 - file not found
-class NotFoundException extends exception {}
-
-// Florrie install not present/detected
-class NotInstalledException extends exception {}
-
-// An unrecoverable error
-class ServerException extends exception {}
-
-?>
