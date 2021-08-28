@@ -17,11 +17,17 @@ git clone https:// (TODO - get URL!)
 git submodule init
 git submodule update
 
+You'll need the following PHP extensions enabled: (for development)
+
+* curl
+* ext-dom
+* mbstring
+
 After you have a copy of the source code, make sure your web server can write to
 the following directories:
 
-- config (TODO: Not created upon git pull!)
-- strips
+* config (TODO: Not created upon git pull!)
+* strips
 
 From there, you should be able to continue with the install process by simply
 visiting your web site in your browser. Florrie will walk you through the
